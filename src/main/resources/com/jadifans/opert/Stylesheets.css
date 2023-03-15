@@ -1,0 +1,62 @@
+.parent{
+    -fx-background-color: #F5F5F7;
+}
+.sidebar{
+    -fx-background-color: #2D3039;
+    -fx-background-radius : 0 30 0 0 ;
+     -fx-effect: dropshadow(gaussian, #a5a5c7, 10, 0.5, 3, 3);
+}
+.tiles{
+
+    -fx-background-color: #dfdff2;
+    -fx-border-radius: 10 ;
+    -fx-background-radius : 10;
+    -fx-effect: dropshadow(gaussian, #a5a5c7, 10, 0.5, 3, 3);
+}
+.closebutton {
+    -fx-background-color: #ff776e;
+    -fx-border: none;
+    -fx-background-radius : 50%;
+    -fx-width: 40;
+    -fx-height:40;
+
+}
+.closebutton:hover{
+    -fx-background-color: #cf4d44;
+    -fx-border: none;
+    -fx-background-radius : 50%;
+    -fx-width: 40;
+    -fx-height:40;
+    -fx-effect: dropshadow(gaussian, #a5a5c7, 2, 0.5, 2, 2);
+
+}
+.minimizebutton{
+    -fx-width: 40;
+    -fx-height:40;
+    -fx-background-color: #fae673;
+    -fx-border: none;
+    -fx-background-radius : 50%;
+
+}
+.tileHolder{
+-fx-padding :10 ;
+
+
+}
+.icon{
+      -fx-font-size :16 ;
+          -fx-fill : #a6a6a6 ;
+}
+.icon:hover {
+    -fx-font-size :20 ;
+    -fx-fill : #e8e8e8 ;
+
+}
+.icon2{
+
+    -fx-fill : #6b6b6a ;
+}
+
+.windowBar{
+-fx-background-color : #e4edf5 ;
+}
