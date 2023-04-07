@@ -1,13 +1,22 @@
 module com.jadifans.opert {
+
+    requires java.base;
+    requires java.desktop;
     requires javafx.controls;
     requires javafx.fxml;
     //newly added :
     requires javafx.base;
     requires javafx.graphics;
+
     // add icon pack modules
     requires org.kordamp.ikonli.fontawesome5;
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
+
+
+
+
+
 
     ////was here:
     opens com.jadifans.opert to javafx.fxml;
