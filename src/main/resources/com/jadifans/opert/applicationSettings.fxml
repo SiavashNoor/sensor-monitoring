@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="317.0" prefWidth="538.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.ApplicationSettings">
+   <children>
+      <ChoiceBox fx:id="periodChoiceBox" layoutX="98.0" layoutY="183.0" prefWidth="150.0" />
+      <Button fx:id="settingsSaveButton" layoutX="405.0" layoutY="284.0" mnemonicParsing="false" onMouseClicked="#saveSettings" text="SAVE" />
+      <Button fx:id="settingsCancelButton" layoutX="465.0" layoutY="284.0" mnemonicParsing="false" onMouseClicked="#cancelSettings" text="CANCEL" />
+      <Text layoutX="14.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chart Period :" />
+      <Button fx:id="settingsImportButton" layoutX="122.0" layoutY="284.0" mnemonicParsing="false" onMouseClicked="#importSettings" text="Import" />
+      <Text layoutX="22.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Import Configs:" />
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#d9d9d9" height="130.0" layoutX="392.0" layoutY="43.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="132.0" />
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#d9d9d9" height="130.0" layoutX="14.0" layoutY="43.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="367.0" />
+      <CheckBox layoutX="403.0" layoutY="62.0" mnemonicParsing="false" text="Sensor One" />
+      <CheckBox layoutX="403.0" layoutY="80.0" mnemonicParsing="false" text="Sensor Two" />
+      <CheckBox layoutX="403.0" layoutY="99.0" mnemonicParsing="false" text="Sensor Three" />
+      <CheckBox layoutX="403.0" layoutY="117.0" mnemonicParsing="false" text="Sensor Four" />
+      <CheckBox layoutX="404.0" layoutY="144.0" mnemonicParsing="false" text="Connection" />
+      <Text fill="#434343" layoutX="392.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alarms:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Text>
+      <Line endX="266.0" layoutX="115.0" layoutY="108.0" startX="-100.0" stroke="#a6a6a6" />
+      <Line endX="1.52587890625E-5" endY="-32.0" layoutX="198.0" layoutY="75.0" startX="-0.4999847412109375" startY="98.0" stroke="#919090" />
+      <Text layoutX="50.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station One Name" />
+      <Text layoutX="227.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Two Name" />
+      <Text layoutX="50.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Three Name" />
+      <Text layoutX="227.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Four Nmae" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Line endX="388.0" endY="1.52587890625E-5" layoutX="112.0" layoutY="219.0" startX="-100.0" stroke="#d1cfcf" />
+      <TextField fx:id="ipAddressField" layoutX="99.0" layoutY="227.0" />
+      <Text layoutX="19.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP Address :" />
+      <Text layoutX="309.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number :" />
+      <TextField fx:id="portNumberField" layoutX="391.0" layoutY="226.0" prefHeight="26.0" prefWidth="72.0" />
+   </children>
+</AnchorPane>

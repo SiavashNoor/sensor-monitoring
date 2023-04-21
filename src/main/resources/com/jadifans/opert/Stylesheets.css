@@ -48,6 +48,13 @@
     -fx-fill : #6b6b6a ;
 }
 
+.chartArea{
+   -fx-background-color: #dfdff2;
+
+}
+
 .windowBar{
 -fx-background-color : #e4edf5 ;
 }
+
+

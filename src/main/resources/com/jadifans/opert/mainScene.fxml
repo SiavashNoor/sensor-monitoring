@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -23,8 +27,8 @@
       <Pane prefHeight="200.0" prefWidth="100.0" styleClass="sidebar" stylesheets="@Stylesheets.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <FontIcon iconLiteral="fas-sync-alt" layoutX="41.0" layoutY="525.0" styleClass="icon" text="" />
-            <FontIcon fx:id="addStation" iconLiteral="fas-plus" layoutX="42.0" layoutY="64.0" onMouseClicked="#openStationWindow" styleClass="icon" text="" />
-            <FontIcon iconLiteral="fas-cog" iconSize="20" layoutX="39.0" layoutY="114.0" styleClass="icon" />
+            <FontIcon fx:id="addStation" iconLiteral="fas-plus" layoutX="42.0" layoutY="142.0" onMouseClicked="#openStationWindow" styleClass="icon" text="" />
+            <FontIcon fx:id="Settings" iconLiteral="fas-cog" layoutX="41.0" layoutY="206.0" onMouseClicked="#openSettingsWindow" styleClass="icon" text="" />
          </children></Pane>
       <GridPane hgap="10.0" layoutX="100.0" layoutY="50.0" styleClass="tileHolder" stylesheets="@Stylesheets.css" vgap="10.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <columnConstraints>
@@ -38,11 +42,75 @@
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css">
                <children>
-                  <FontIcon iconLiteral="fas-radiation-alt" iconSize="18" layoutX="210.0" layoutY="117.0" />
+                  <Text fx:id="chart_title1" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="OutDoor">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Text>
+                  <AreaChart fx:id="areaChart1" layoutX="9.0" layoutY="26.0" prefHeight="164.0" prefWidth="305.0">
+                     <xAxis>
+                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickMarkVisible="false" fx:id="xAxis1" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
+                           <effect>
+                              <Glow level="0.42" />
+                           </effect></NumberAxis>
+                     </yAxis>
+                  </AreaChart>
+                  <Text layoutX="119.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp" />
+                  <Text layoutX="218.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum" />
                </children></Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" />
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" GridPane.rowIndex="1" />
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1">
+               <children>
+                  <Text fx:id="chart_title2" layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile 2" />
+                  <AreaChart layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                       <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
+                          <effect>
+                             <Glow level="0.42" />
+                          </effect></NumberAxis>
+                    </yAxis>
+                  </AreaChart>
+                  <Text layoutX="131.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp2" />
+                  <Text layoutX="227.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum2" />
+               </children></Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" GridPane.rowIndex="1">
+               <children>
+                  <Text fx:id="chart_title3" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile3 " />
+                  <AreaChart layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
+                           <effect>
+                              <Glow level="0.42" />
+                           </effect></NumberAxis>
+                     </yAxis>
+                  </AreaChart>
+                  <Text layoutX="110.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp3" />
+                  <Text layoutX="184.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum3" />
+               </children></Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Text fx:id="chart_title4" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile 4" />
+                  <AreaChart layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
+                           <effect>
+                              <Glow level="0.42" />
+                           </effect></NumberAxis>
+                     </yAxis>
+                  </AreaChart>
+                  <Text layoutX="114.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp4" />
+                  <Text layoutX="216.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum4" />
+               </children></Pane>
          </children>
       </GridPane>
       <FontIcon iconLiteral="fab-github" iconSize="16" layoutX="120.0" layoutY="553.0" />
@@ -57,5 +125,7 @@
             <Font size="11.0" />
          </font>
       </Hyperlink>
+      <Text layoutX="292.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection Status :" />
+      <Text layoutX="417.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected/Disconnected" />
    </children>
 </AnchorPane>

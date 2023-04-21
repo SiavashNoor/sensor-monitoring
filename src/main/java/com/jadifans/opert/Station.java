@@ -8,11 +8,14 @@ public class Station {
      int blockNumber;
      boolean includeTemp ;
      boolean includeHumidity;
+     String name;
 
-    private LinkedList<Double> temperatureList = new LinkedList<>() ;
-    private LinkedList<Double> humidityList = new LinkedList<>();
 
-    Station(int number,int blockNumber,boolean includeTemp,boolean includeHumidity){
+    private  LinkedList<Double> temperatureList = new LinkedList<>() ;
+    private  LinkedList<Double> humidityList = new LinkedList<>();
+
+    Station(String name,int number,int blockNumber,boolean includeTemp,boolean includeHumidity){
+        this.name = name;
         this.number = number;
         this.blockNumber = blockNumber;
         this.includeTemp = includeTemp;
@@ -39,12 +42,14 @@ public class Station {
 
     }
 
+
+
     public LinkedList<Double> getTemperatureList(){
+
         return temperatureList;
     }
     public LinkedList<Double> getHumidityList(){
         return humidityList;
     }
-
 
 }
