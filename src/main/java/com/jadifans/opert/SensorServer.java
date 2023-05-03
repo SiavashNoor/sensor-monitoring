@@ -1,30 +1,56 @@
 package com.jadifans.opert;
-import java.net.*;
-import java.io.*;
 
-public class SensorServer {
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import java.io.IOException;
+import java.time.Instant;
 
-        SensorServer(){
 
+public class SensorServer  {
+    Document doc = null;
+    public void connectToServer() {
+
+        String serverURL = "http://192.168.40.2";
+
+        try {
+            doc = Jsoup.connect(serverURL).get();
+        } catch (IOException e) {
+            System.out.println("Not connected to the server! Please check the connection and refresh ");
+           // throw new RuntimeException(e);
         }
-        public  void connectToServer()throws Exception{
-            Socket s=new Socket("192.168.40.2",3333);
-            DataInputStream dataIn=new DataInputStream(s.getInputStream());
-            DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 
-            String str="",str2;
-            while(!str.equals("stop")){
-                str=br.readLine();
-                dout.writeUTF(str);
-                dout.flush();
-                str2=dataIn.readUTF();
-                System.out.println("Server says: "+str2);
-            }
+        System.out.println(doc);
+        if(doc!=null) {
+            Element table = doc.select("table").get(0);
+            Element tBody = table.select("tbody").get(0);
+            Elements row = tBody.select("tr");
+            Elements temps = row.get(0).select("td");
+            Elements humids = row.get(1).select("td");
 
-            dout.close();
-            s.close();
-        }}
+
+            int[] temperatures =new int[temps.size()];
+            int[] humidities = new int[humids.size()];
+            if (temps.size()==humids.size()) {
+                for (int i = 0; i < humidities.length; i++) {
+                    temperatures[i] = Integer.parseInt(temps.get(i).text());
+                    humidities[i] = Integer.parseInt(humids.get(i).text());
+                }
+            }else throw new RuntimeException();
+
+            long unixTimeStampAtThisMoment = Instant.now().getEpochSecond();
+            System.out.println(unixTimeStampAtThisMoment);
+
+            DataSample.AllDataSamples.add(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
+
+        } else System.out.println("failed to get data from server ");
+    }
+
+
+
+}
+
 
 
 

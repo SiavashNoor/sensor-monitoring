@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="174.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.StationAdder">
    <children>
-      <Button layoutX="139.0" layoutY="139.0" mnemonicParsing="false" text="SAVE">
+      <Button layoutX="139.0" layoutY="139.0" mnemonicParsing="false" text="Add" fx:id="saveStation" onMouseClicked="#saveStation">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -20,12 +20,12 @@
       <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Name:" />
       <Text layoutX="14.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Number:" />
       <TextField layoutX="111.0" layoutY="60.0" prefHeight="26.0" prefWidth="44.0" />
-      <Button layoutX="271.0" layoutY="139.0" mnemonicParsing="false" text="Cancle" />
-      <CheckBox layoutX="33.0" layoutY="104.0" mnemonicParsing="false" text="Tempereture" />
+      <Button fx:id="cancelButton" layoutX="271.0" layoutY="139.0" mnemonicParsing="false" text="Cancel" onMouseClicked="#closeWindow" />
+      <CheckBox layoutX="33.0" layoutY="104.0" mnemonicParsing="false" text="Temperature" />
       <CheckBox layoutX="139.0" layoutY="104.0" mnemonicParsing="false" text="Humidity" />
       <Line endX="196.30001831054688" layoutX="126.0" layoutY="94.0" startX="-108.4000015258789" stroke="#d1cccc" />
       <Line endX="196.30001831054688" layoutX="126.0" layoutY="129.0" startX="-108.4000015258789" stroke="#d1cccc" />
-      <Text layoutX="164.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="to block Number :" />
+      <Text layoutX="164.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="to Chart Number :" />
       <TextField layoutX="271.0" layoutY="60.0" prefHeight="26.0" prefWidth="51.0" />
    </children>
 </AnchorPane>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -21,14 +22,29 @@
          <children>
             <FontIcon iconLiteral="fas-times" iconSize="18" layoutX="749.5" layoutY="30.0" />
             <FontIcon iconLiteral="fas-window-minimize" iconSize="16" layoutX="699.5" layoutY="24.5" text="" wrappingWidth="13.0" />
-            <Circle fx:id="minimizeButton" fill="#00dcf0" layoutX="707.0" layoutY="24.0" onMouseClicked="#minimizeApplication" opacity="0.56" radius="16.0" styleClass="minimizebutton" />
-            <Circle fx:id="closeButton" fill="DODGERBLUE" layoutX="756.0" layoutY="24.0" onMouseClicked="#closeApplication" opacity="0.56" radius="16.0" styleClass="closebutton" />
+            <Circle fx:id="minimizeButton" fill="#00dcf0" layoutX="707.0" layoutY="24.0" onMouseClicked="#minimizeApplication" opacity="0.56" radius="16.0" styleClass="minimizebutton">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Circle>
+            <Circle fx:id="closeButton" fill="DODGERBLUE" layoutX="756.0" layoutY="24.0" onMouseClicked="#closeApplication" opacity="0.56" radius="16.0" styleClass="closebutton">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Circle>
          </children></Pane>
       <Pane prefHeight="200.0" prefWidth="100.0" styleClass="sidebar" stylesheets="@Stylesheets.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <FontIcon iconLiteral="fas-sync-alt" layoutX="41.0" layoutY="525.0" styleClass="icon" text="" />
-            <FontIcon fx:id="addStation" iconLiteral="fas-plus" layoutX="42.0" layoutY="142.0" onMouseClicked="#openStationWindow" styleClass="icon" text="" />
-            <FontIcon fx:id="Settings" iconLiteral="fas-cog" layoutX="41.0" layoutY="206.0" onMouseClicked="#openSettingsWindow" styleClass="icon" text="" />
+            <FontIcon iconLiteral="fas-sync-alt" layoutX="41.0" layoutY="525.0" styleClass="icon" text="">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></FontIcon>
+            <FontIcon fx:id="addStation" iconLiteral="fas-plus" layoutX="42.0" layoutY="142.0" onMouseClicked="#openStationWindow" styleClass="icon" text="">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></FontIcon>
+            <FontIcon fx:id="Settings" iconLiteral="fas-cog" layoutX="41.0" layoutY="206.0" onMouseClicked="#openSettingsWindow" styleClass="icon" text="">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></FontIcon>
          </children></Pane>
       <GridPane hgap="10.0" layoutX="100.0" layoutY="50.0" styleClass="tileHolder" stylesheets="@Stylesheets.css" vgap="10.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <columnConstraints>

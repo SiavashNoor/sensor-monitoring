@@ -20,8 +20,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class MainScene implements Initializable {
@@ -66,8 +65,13 @@ public class MainScene implements Initializable {
     @FXML
     public Pane windowBar;
 
+
+
     @FXML
     private AreaChart<String,Integer> areaChart1;
+
+
+
 
 
     public void closeApplication(MouseEvent event) {
@@ -83,10 +87,14 @@ public class MainScene implements Initializable {
 
     }
 
-    public void openGithubLink(MouseEvent event) throws IOException {
+    public void openGithubLink(MouseEvent mouseEvent)  {
         //this class give access to desktop utilities
         Desktop desktop = Desktop.getDesktop();
-        desktop.browse(java.net.URI.create("https://github.com/SiavashNoor"));
+        try {
+            desktop.browse(java.net.URI.create("https://github.com/SiavashNoor"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -94,8 +102,13 @@ public class MainScene implements Initializable {
 
     }
 
-    public void openStationWindow(MouseEvent mouseEvent) throws IOException {
-        Parent root =FXMLLoader.load(HelloApplication.class.getResource("stationAdder.fxml"));
+    public void openStationWindow(MouseEvent mouseEvent)  {
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(HelloApplication.class.getResource("stationAdder.fxml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Stage newStage = new Stage();
         newStage.setTitle("Add New Station");
         Scene scene = new Scene(root);
@@ -105,8 +118,14 @@ public class MainScene implements Initializable {
         newStage.show();
     }
 
-    public void openSettingsWindow(MouseEvent mouseEvent) throws  IOException{
-        Parent settingsRoot = FXMLLoader.load(HelloApplication.class.getResource("applicationSettings.fxml"));
+    public void openSettingsWindow(MouseEvent mouseEvent) {
+
+        Parent settingsRoot = null;
+        try {
+            settingsRoot = FXMLLoader.load(HelloApplication.class.getResource("applicationSettings.fxml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Stage newStage = new Stage();
         newStage.setTitle("Settings");
         Scene scene = new Scene(settingsRoot);
@@ -135,16 +154,24 @@ public class MainScene implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         updateCharts();
+        Settings.setOnMouseClicked(this::openSettingsWindow);
+        addStation.setOnMouseClicked(this::openStationWindow);
+        githubLink.setOnMouseClicked(this::openGithubLink);
 
     }
 
     private void updateCharts() {
+
+
+
         XYChart.Series<String,Integer> series = new XYChart.Series<>();
         series.setName("temp");
         for (int i = 0;i<yvalues.length;i++){
             series.getData().add(new XYChart.Data<>(xvalues[i],yvalues[i]));
         }
+
         XYChart.Series<String,Integer> series2 = new XYChart.Series<>();
         series2.setName("hum");
         series2.getData().add(new XYChart.Data<>("10",20));

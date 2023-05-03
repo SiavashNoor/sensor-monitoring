@@ -1,5 +1,6 @@
 .parent{
     -fx-background-color: #F5F5F7;
+
 }
 .sidebar{
     -fx-background-color: #2D3039;
@@ -54,7 +55,7 @@
 }
 
 .windowBar{
--fx-background-color : #e4edf5 ;
+-fx-background-color : #d4dde5 ;
 }
 
 
