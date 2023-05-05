@@ -49,7 +49,6 @@ public class ApplicationSettings implements Initializable {
         settingsImportButton.setOnMouseClicked(this::importSettings);
         addNewStationButton.setOnMouseClicked(this::openAddStationWindow);
 
-
     }
 
 
