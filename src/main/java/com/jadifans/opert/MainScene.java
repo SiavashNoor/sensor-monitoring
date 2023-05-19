@@ -164,8 +164,6 @@ public class MainScene implements Initializable {
 
     private void updateCharts() {
 
-
-
         XYChart.Series<String,Integer> series = new XYChart.Series<>();
         series.setName("temp");
         for (int i = 0;i<yvalues.length;i++){

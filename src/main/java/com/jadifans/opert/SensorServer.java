@@ -6,16 +6,20 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.TimerTask;
 
 
-public class SensorServer  {
+public class SensorServer extends TimerTask {
     Document doc = null;
+    int counter=1;
     public void connectToServer() {
 
-        String serverURL = "http://192.168.40.2";
+
+        String serverURL = "http://49.12.208.81:1374";
 
         try {
             doc = Jsoup.connect(serverURL).get();
+            System.out.println(doc);
         } catch (IOException e) {
             System.out.println("Not connected to the server! Please check the connection and refresh ");
            // throw new RuntimeException(e);
@@ -47,7 +51,12 @@ public class SensorServer  {
         } else System.out.println("failed to get data from server ");
     }
 
+    @Override
+    public void run() {
+        System.out.println("getting the : "+ counter++ );
 
+        connectToServer();
+    }
 
 }
 
