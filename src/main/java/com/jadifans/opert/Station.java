@@ -11,7 +11,7 @@ public class Station {
      String name;
 
 
-    private  LinkedList<Double> temperatureList = new LinkedList<>() ;
+    private  LinkedList<Integer> temperatureList = new LinkedList<>() ;
     private  LinkedList<Double> humidityList = new LinkedList<>();
 
     Station(String name,int number,int blockNumber,boolean includeTemp,boolean includeHumidity){
@@ -24,7 +24,7 @@ public class Station {
     }
 
 
-    public void updateList(double temp, double humidity){
+    public void updateList(int temp, double humidity){
         if (temperatureList.size() >= 100){
             temperatureList.removeFirst();
             temperatureList.addLast(temp);
@@ -44,7 +44,7 @@ public class Station {
 
 
 
-    public LinkedList<Double> getTemperatureList(){
+    public LinkedList<Integer> getTemperatureList(){
 
         return temperatureList;
     }

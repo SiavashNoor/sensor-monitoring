@@ -1,6 +1,7 @@
 package com.jadifans.opert;
 
 
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.awt.*;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -33,6 +35,8 @@ public class MainScene implements Initializable {
         STATION4
 
     }
+
+
 
     public CategoryAxis xAxis1;
 
@@ -162,23 +166,34 @@ public class MainScene implements Initializable {
 
     }
 
-    private void updateCharts() {
 
+
+
+    private void updateCharts() {
         XYChart.Series<String,Integer> series = new XYChart.Series<>();
+        XYChart.Series<String,Integer> series2 = new XYChart.Series<>();
+
+
+        areaChart1.getData().remove(series);
+        areaChart1.getData().remove(series2);
+
         series.setName("temp");
         for (int i = 0;i<yvalues.length;i++){
             series.getData().add(new XYChart.Data<>(xvalues[i],yvalues[i]));
         }
 
-        XYChart.Series<String,Integer> series2 = new XYChart.Series<>();
         series2.setName("hum");
         series2.getData().add(new XYChart.Data<>("10",20));
         series2.getData().add(new XYChart.Data<>("13",12));
         series2.getData().add(new XYChart.Data<>("14",8));
+
+
         areaChart1.getData().add(series);
         areaChart1.getData().add(series2);
 
     }
+
+
 
 }
 

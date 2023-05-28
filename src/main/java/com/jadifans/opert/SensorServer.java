@@ -6,34 +6,24 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.TimerTask;
-
 
 public class SensorServer extends TimerTask {
     Document doc = null;
     int counter=1;
     public void connectToServer() {
 
-
         String serverURL = "http://49.12.208.81:1374";
 
         try {
             doc = Jsoup.connect(serverURL).get();
-            System.out.println(doc);
-        } catch (IOException e) {
-            System.out.println("Not connected to the server! Please check the connection and refresh ");
-           // throw new RuntimeException(e);
-        }
 
-        System.out.println(doc);
-        if(doc!=null) {
             Element table = doc.select("table").get(0);
             Element tBody = table.select("tbody").get(0);
             Elements row = tBody.select("tr");
             Elements temps = row.get(0).select("td");
             Elements humids = row.get(1).select("td");
-
-
             int[] temperatures =new int[temps.size()];
             int[] humidities = new int[humids.size()];
             if (temps.size()==humids.size()) {
@@ -44,18 +34,34 @@ public class SensorServer extends TimerTask {
             }else throw new RuntimeException();
 
             long unixTimeStampAtThisMoment = Instant.now().getEpochSecond();
-            System.out.println(unixTimeStampAtThisMoment);
 
-            DataSample.AllDataSamples.add(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
+            //every year has 525960 minutes .the maximum size of arrayList that we need .
+            if (DataSample.AllDataSamples.size()<525960) {
+                DataSample.AllDataSamples.addLast(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
+                System.out.println(Arrays.toString(DataSample.AllDataSamples.getLast().temperature));
+            }else{
+                DataSample.AllDataSamples.removeFirst();
+                DataSample.AllDataSamples.addLast(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
 
-        } else System.out.println("failed to get data from server ");
+            }
+            System.out.println("size : "+DataSample.AllDataSamples.size());
+
+            // In here I should inform the part of code which is interested to know if ArrayList is updated with new value .
+
+        } catch (IOException e) {
+            System.out.println("Not connected to the server! Please check the connection and refresh ");
+           // throw new RuntimeException(e);
+        }
+
+
     }
+
 
     @Override
     public void run() {
         System.out.println("getting the : "+ counter++ );
-
         connectToServer();
+
     }
 
 }
