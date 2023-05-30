@@ -6,35 +6,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
 
-public class HelloApplication extends Application {
-    String serverURL = "http://192.168.40.2";
-    SensorServer sensorServer = new SensorServer();
+public class HelloApplication extends Application implements  Runnable {
+    CoreLogic coreLogic = new CoreLogic();
     @Override
     public void start(Stage stage) throws IOException {
-
         showUI(stage);
-
-        Thread serverThread = new Thread(() -> {
-            while (sensorServer.doc!=null) {
-                getDataFromServer();
-                try {
-                    Thread.sleep(30000);
-                } catch (Exception ex) {
-                    System.out.println("thread failed");
-                }
-            }
-        });
-        serverThread.start();
     }
 
-    private void getDataFromServer() {
-       /* ApplicationSettings ap = new ApplicationSettings();
-        String serverURL = "http://" + ap.ipAddressField.getText() ;
-
-      */
-        sensorServer.connectToServer();
-
-    }
 
 
     public void showUI(Stage stage) throws IOException {
@@ -42,7 +20,6 @@ public class HelloApplication extends Application {
         //this is for main application : do not delete this ;
         FXMLLoader fxmlLoader1 = new FXMLLoader(HelloApplication.class.getResource("mainScene.fxml"));
         Scene scene = new Scene(fxmlLoader1.load());
-
         //for main program change this to UNDECORATED.
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("monitoring");
@@ -52,13 +29,25 @@ public class HelloApplication extends Application {
         stage.show();
 
     }
- 
-
 
     public static void main(String[] args) {
-
-
+        HelloApplication ha = new HelloApplication();
+        Thread t1 = new Thread(ha);
+        t1.start();
         launch(args);
+    }
 
+    @Override
+    public void run() {
+//starting corelogic with delay to let ui launches .
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            System.out.println(e);
+            throw new RuntimeException(e);
+        }
+
+        coreLogic.runApplicationBackendLogic();
+        System.out.println("siavash this code is running along side the lunch method .");
     }
 }

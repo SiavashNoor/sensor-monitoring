@@ -24,12 +24,14 @@ import java.util.ResourceBundle;
 public class ApplicationSettings implements Initializable {
 
 
-     Stage stage;
-     Desktop desktop = Desktop.getDesktop();
+    Stage stage;
+    Desktop desktop = Desktop.getDesktop();
 
     @FXML
     public ChoiceBox<String> periodChoiceBox;
-    private final String[] period = {"Hourly","Daily", "Weekly", "Monthly", "Yearly"};
+
+
+    private final String[] period = {"Instantly","Hourly", "Daily", "Weekly", "Monthly", "Yearly"};
     public Button settingsCancelButton;
     public Button settingsSaveButton;
     public Button addNewStationButton;
@@ -38,25 +40,57 @@ public class ApplicationSettings implements Initializable {
     public TextField portNumberField;
 
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        periodChoiceBox.getItems().addAll(period);
-        periodChoiceBox.setValue(period[0]);
+        setUpChoiceBox();
         periodChoiceBox.setOnAction(this::getPeriodValueFromChoiceBox);
         ipAddressField.setOnMouseClicked(this::getIPAddressValue);
         portNumberField.setOnMouseClicked(this::getPortNumberValue);
         settingsImportButton.setOnMouseClicked(this::importSettings);
         addNewStationButton.setOnMouseClicked(this::openAddStationWindow);
+    }
 
-
+    public void setUpChoiceBox() {
+        periodChoiceBox.getItems().addAll(period);
+        periodChoiceBox.setValue(period[0]);
     }
 
 
-
-    public void getPeriodValueFromChoiceBox(ActionEvent event) {
+    public String getPeriodValueFromChoiceBox(ActionEvent event) {
         String choiceBoxValue = periodChoiceBox.getValue();
-        System.out.println("choice box value is " + choiceBoxValue);
+
+        if (choiceBoxValue == null) {
+            setUpChoiceBox();
+        } else {
+            switch (choiceBoxValue.toLowerCase()) {
+
+                case "hourly":
+                    System.out.println("you have chosen hourly");
+                    //create hourly data series  and update the chart .
+
+                    break;
+                case "daily":
+                    System.out.println("you have chosen daily");
+                    break;
+                case "weekly":
+                    System.out.println("you have chosen weekly");
+                    break;
+                case "monthly":
+                    System.out.println("you have chosen monthly");
+                    break;
+                case "yearly":
+                    System.out.println("you have chosen yearly");
+                    break;
+                default:
+                    System.out.println("by default hourly period is chosen for you:)");
+
+            }
+        }
+        return choiceBoxValue;
+    }
+
+    public String getPeriodValueFromChoiceBox() {
+        return periodChoiceBox.getValue();
     }
 
     public void getIPAddressValue(MouseEvent event) {
@@ -77,7 +111,7 @@ public class ApplicationSettings implements Initializable {
         final FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showSaveDialog(stage);
 
-       stage.close();
+        stage.close();
     }
 
     public void cancelSettings(MouseEvent mouseEvent) {
@@ -86,7 +120,7 @@ public class ApplicationSettings implements Initializable {
     }
 
 
-    public void openAddStationWindow(MouseEvent mouseEvent)  {
+    public void openAddStationWindow(MouseEvent mouseEvent) {
         Parent root = null;
         try {
             root = FXMLLoader.load(HelloApplication.class.getResource("stationAdder.fxml"));
@@ -103,7 +137,6 @@ public class ApplicationSettings implements Initializable {
     }
 
 
-
     public void importSettings(MouseEvent mouseEvent) {
 
         final FileChooser fileChooser = new FileChooser();
@@ -113,12 +146,14 @@ public class ApplicationSettings implements Initializable {
             openFile(file);
         }*/
     }
-    public void openFile (File file){
+
+    public void openFile(File file) {
         try {
             desktop.open(file);
         } catch (IOException ignored) {
         }
 
-
     }
+
+
 }

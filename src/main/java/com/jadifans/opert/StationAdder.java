@@ -18,7 +18,7 @@ public class StationAdder implements Initializable {
     public void closeWindow(MouseEvent mouseEvent) {
        stage = (Stage)((Button)mouseEvent.getSource()).getScene().getWindow();
        stage.close();
-        
+
     }
 
     @Override
@@ -29,6 +29,5 @@ public class StationAdder implements Initializable {
     public void saveStation(MouseEvent mouseEvent) {
         stage = (Stage)((Button)mouseEvent.getSource()).getScene().getWindow();
         stage.close();
-
     }
 }
