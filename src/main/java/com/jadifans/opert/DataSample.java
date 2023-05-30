@@ -9,17 +9,14 @@ public class DataSample {
 
     public static LinkedList<DataSample> AllDataSamples =new LinkedList<>();
     int[] temperature;
-     int[] humidity;
+    int[] humidity;
     long timeStamp;
+
     DataSample(int[] temperature,int[] humidity,long timeStamp){
         this.temperature= temperature;
         this.humidity= humidity;
         this.timeStamp=timeStamp;
     }
-
-
-
-
 
 
 

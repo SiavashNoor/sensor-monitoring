@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.TimerTask;
 
 public class SensorServer extends TimerTask {
+
+
     Document doc = null;
     int counter=1;
     public void connectToServer() {
@@ -36,24 +38,21 @@ public class SensorServer extends TimerTask {
             long unixTimeStampAtThisMoment = Instant.now().getEpochSecond();
 
             //every year has 525960 minutes .the maximum size of arrayList that we need .
+            //storing last data in last place of linked list
             if (DataSample.AllDataSamples.size()<525960) {
                 DataSample.AllDataSamples.addLast(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
                 System.out.println(Arrays.toString(DataSample.AllDataSamples.getLast().temperature));
             }else{
                 DataSample.AllDataSamples.removeFirst();
                 DataSample.AllDataSamples.addLast(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
-
             }
+
             System.out.println("size : "+DataSample.AllDataSamples.size());
-
-            // In here I should inform the part of code which is interested to know if ArrayList is updated with new value .
-
+            // In here I should inform the part of code which is interested to know if ArrayList is updated with new value.
         } catch (IOException e) {
             System.out.println("Not connected to the server! Please check the connection and refresh ");
            // throw new RuntimeException(e);
         }
-
-
     }
 
 
@@ -63,7 +62,6 @@ public class SensorServer extends TimerTask {
         connectToServer();
 
     }
-
 }
 
 

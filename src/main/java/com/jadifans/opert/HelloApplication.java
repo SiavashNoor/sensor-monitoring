@@ -7,7 +7,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class HelloApplication extends Application implements  Runnable {
-
+    CoreLogic coreLogic = new CoreLogic();
     @Override
     public void start(Stage stage) throws IOException {
         showUI(stage);
@@ -46,7 +46,7 @@ public class HelloApplication extends Application implements  Runnable {
             System.out.println(e);
             throw new RuntimeException(e);
         }
-        CoreLogic coreLogic = new CoreLogic();
+
         coreLogic.runApplicationBackendLogic();
         System.out.println("siavash this code is running along side the lunch method .");
     }

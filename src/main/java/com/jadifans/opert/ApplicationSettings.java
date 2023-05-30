@@ -48,7 +48,6 @@ public class ApplicationSettings implements Initializable {
         portNumberField.setOnMouseClicked(this::getPortNumberValue);
         settingsImportButton.setOnMouseClicked(this::importSettings);
         addNewStationButton.setOnMouseClicked(this::openAddStationWindow);
-
     }
 
     public void setUpChoiceBox() {
