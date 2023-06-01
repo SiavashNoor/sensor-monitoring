@@ -14,7 +14,6 @@ public class HelloApplication extends Application implements  Runnable {
     }
 
 
-
     public void showUI(Stage stage) throws IOException {
 
         //this is for main application : do not delete this ;
@@ -27,7 +26,6 @@ public class HelloApplication extends Application implements  Runnable {
         stage.setFullScreen(false);
         stage.setResizable(false);
         stage.show();
-
     }
 
     public static void main(String[] args) {
@@ -46,7 +44,6 @@ public class HelloApplication extends Application implements  Runnable {
             System.out.println(e);
             throw new RuntimeException(e);
         }
-
         coreLogic.runApplicationBackendLogic();
         System.out.println("siavash this code is running along side the lunch method .");
     }
