@@ -12,6 +12,10 @@ public class HelloApplication extends Application implements  Runnable {
     public void start(Stage stage) throws IOException {
         showUI(stage);
     }
+    @Override
+    public void stop(){
+
+    }
 
 
     public void showUI(Stage stage) throws IOException {
@@ -31,6 +35,7 @@ public class HelloApplication extends Application implements  Runnable {
     public static void main(String[] args) {
         HelloApplication ha = new HelloApplication();
         Thread t1 = new Thread(ha);
+        t1.setDaemon(true);
         t1.start();
         launch(args);
     }

@@ -18,7 +18,7 @@ public class CoreLogic {
     Timer timer = new Timer();
 
     FXMLLoader mainSceneLoader = new FXMLLoader(getClass().getResource("mainScene.fxml"));
-    MainScene mainScene = mainSceneLoader.getController();
+    MainScene mainScene ;
     String choiceBoxOption;
 
     public void runApplicationBackendLogic() {
@@ -29,8 +29,9 @@ public class CoreLogic {
             System.out.println("unable to load mainScene controller here .");
             throw new RuntimeException(e);
         }
+        mainScene=mainSceneLoader.getController();
 
-        ///////////////this part of code comes from getchoiceBoxOption method :
+        ///////////////this part of code comes from getChoiceBoxOption method :
         //this part handles loading settings in this class:
         try {
             //before writing this line of code I was getting null pointer exception for "applicationSettings" instance.
@@ -66,7 +67,7 @@ public class CoreLogic {
     }
 
 
-    public void makeDataSeries(String choiceBoxOption) {
+    public void makeTrimmedDataSamples(String choiceBoxOption) {
 
         if (getChoiceBoxOption() == null) {
             // applicationSettings.setUpChoiceBox();
@@ -119,9 +120,9 @@ public class CoreLogic {
     //I have created a trigger in ServerClass to invoke periodic tasks in this class.
     public void doPeriodicTasks() {
         //you shouldn't call getChoiceBoxOption twice because it calls  root loader and cause  exception if its called twice .be careful.
-        makeDataSeries(choiceBoxOption);
-
+        makeTrimmedDataSamples(choiceBoxOption);
         forceChartsToUpdate(trimmedDataSamples,mainScene);
-        System.out.println("trimmed data samples:" + trimmedDataSamples.size());
+        System.out.println("trimmed data samples:"+trimmedDataSamples.size());
+
     }
 }
