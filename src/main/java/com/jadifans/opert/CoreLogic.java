@@ -135,7 +135,7 @@ public class CoreLogic extends TimerTask{
 
     public void doPeriodicTasks() {
         //you shouldn't call getChoiceBoxOption twice because it calls  root loader and cause  exception if its called twice .be careful.
-        this.series.getData().add(new XYChart.Data<>("sa",10));
+        series.getData().add(new XYChart.Data<>("sa",10));
         makeTrimmedDataSamples(choiceBoxOption);
         forceChartsToUpdate(trimmedDataSamples,mainScene,series);
         System.out.println("trimmed data samples:"+trimmedDataSamples.size());

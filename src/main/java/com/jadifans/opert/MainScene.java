@@ -1,7 +1,10 @@
 package com.jadifans.opert;
 
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,15 +19,23 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.awt.*;
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.ResourceBundle;
+/**
+About Charts . be careful about  chart behaviour when showing data
+ if data points have same X value they would be shown in the same column whether  the X values are  Stirngs or Numbers.
+ and also good to remember that to ignore error in charts set the animation false
 
+ **/
 public class MainScene implements Initializable {
     XYChart.Series<String,Integer> series =new XYChart.Series<>();
     CoreLogic coreLogic;
@@ -69,6 +80,22 @@ public class MainScene implements Initializable {
     XYChart.Series<String,Integer> tempSeries2_2 = new XYChart.Series<>();
     XYChart.Series<String,Integer> humidSeries2_2 = new XYChart.Series<>();
 
+
+    javafx.event.EventHandler<ActionEvent> chartUpdater = new javafx.event.EventHandler<>() {
+
+        @Override
+        public void handle(ActionEvent event) {
+            Random random = new Random();
+            //without setting animation false I was getting the  " Duplicate series added " error and after just one update
+            //the exception error was being thrown .
+
+            areaChart1_2.setAnimated(false);
+            tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(10)), random.nextInt(100)));
+
+            areaChart1_2.getData().remove(tempSeries1_2);
+            areaChart1_2.getData().add(tempSeries1_2   );
+        }
+    };
 
 
     public void closeApplication(MouseEvent event) {
@@ -129,7 +156,11 @@ public class MainScene implements Initializable {
 
 
         //test
-        coreLogic.runApplicationBackendLogic();
+        //coreLogic.runApplicationBackendLogic();
+
+        Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(3),chartUpdater));
+        updateChart.setCycleCount(Timeline.INDEFINITE);
+        updateChart.play();
     }
 
     public void windowBarPressed(MouseEvent mouseEvent) {
@@ -147,7 +178,7 @@ public class MainScene implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         coreLogic  = new CoreLogic(areaChart1_1);
-        areaChart1_1.setAnimated(false);
+
 
         //areaChart1_1.getData().add(series);
         Settings.setOnMouseClicked(this::openSettingsWindow);
@@ -168,11 +199,11 @@ public class MainScene implements Initializable {
         series2.getData().add(new XYChart.Data<>("10", 20));
         series2.getData().add(new XYChart.Data<>("13", 12));
         series2.getData().add(new XYChart.Data<>("14", 8));
-        areaChart1_1.getData().add(series);
+        //areaChart1_1.getData().add(series);
         //adding empty series to change color of the series .jfx has default colors for series.by adding empty series just
         //skipping those colors . to use it  just uncomment the below line :
         //areaChart1_1.getData().add(new XYChart.Series<>());
-        areaChart1_1.getData().add(series2);
+       // areaChart1_1.getData().add(series2);
     }
 
     public void makeDataSeries(LinkedList<DataSample> trimmedDataSamples,XYChart.Series<String, Integer> series) {
