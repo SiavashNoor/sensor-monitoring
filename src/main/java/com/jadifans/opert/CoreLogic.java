@@ -1,6 +1,9 @@
 package com.jadifans.opert;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -8,20 +11,33 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CoreLogic {
+public class CoreLogic extends TimerTask{
+    //private AreaChart<String, Integer> chart;
+     XYChart.Series<String, Integer> series = new XYChart.Series<>();
 
+
+    public CoreLogic(AreaChart<String,Integer> chart) {
+        System.out.println("core logic instance.");
+      chart.getData().add(series);
+    }
+
+    public CoreLogic(){
+
+    }
     LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
     ApplicationSettings applicationSettings;
+    SensorServer sensorServer =new SensorServer();
     FXMLLoader settingsLoader = new FXMLLoader(getClass().getResource("applicationSettings.fxml"));
 
-    TimerTask task = new SensorServer(this);
+    TimerTask task = this;
     Timer timer = new Timer();
 
     FXMLLoader mainSceneLoader = new FXMLLoader(getClass().getResource("mainScene.fxml"));
     MainScene mainScene ;
     String choiceBoxOption;
+    boolean coreIsRunning = false;
 
-    public void runApplicationBackendLogic() {
+    public  void runApplicationBackendLogic() {
         try {
 
             mainSceneLoader.load();
@@ -44,11 +60,10 @@ public class CoreLogic {
         choiceBoxOption = getChoiceBoxOption();
         getDataFromServer();
 
-
     }
 
-    private void forceChartsToUpdate(LinkedList<DataSample> trimmedDataSamples,MainScene mainScene) {
-        mainScene.makeDataSeries(trimmedDataSamples);
+    private void forceChartsToUpdate(LinkedList<DataSample> trimmedDataSamples,MainScene mainScene,XYChart.Series<String, Integer> series) {
+       mainScene.makeDataSeries(trimmedDataSamples,series);
         System.out.println("charts are getting updated:");
         // mainScene.updateAllCharts(trimmedDataSamples);
     }
@@ -117,12 +132,19 @@ public class CoreLogic {
         Collections.reverse(trimmedDataSamples);
     }
 
-    //I have created a trigger in ServerClass to invoke periodic tasks in this class.
+
     public void doPeriodicTasks() {
         //you shouldn't call getChoiceBoxOption twice because it calls  root loader and cause  exception if its called twice .be careful.
+        this.series.getData().add(new XYChart.Data<>("sa",10));
         makeTrimmedDataSamples(choiceBoxOption);
-        forceChartsToUpdate(trimmedDataSamples,mainScene);
+        forceChartsToUpdate(trimmedDataSamples,mainScene,series);
         System.out.println("trimmed data samples:"+trimmedDataSamples.size());
+    }
 
+    @Override
+    public void run() {
+
+        sensorServer.connectToServer();
+        Platform.runLater(this::doPeriodicTasks);
     }
 }

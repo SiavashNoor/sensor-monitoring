@@ -26,8 +26,8 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class MainScene implements Initializable {
-
-
+    XYChart.Series<String,Integer> series =new XYChart.Series<>();
+    CoreLogic coreLogic;
     public CategoryAxis xAxis1;
     Stage stage;
     private double xOffset = 0;
@@ -126,6 +126,10 @@ public class MainScene implements Initializable {
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.show();
+
+
+        //test
+        coreLogic.runApplicationBackendLogic();
     }
 
     public void windowBarPressed(MouseEvent mouseEvent) {
@@ -140,13 +144,16 @@ public class MainScene implements Initializable {
     }
 
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
-       // updateCharts();
+        coreLogic  = new CoreLogic(areaChart1_1);
+        areaChart1_1.setAnimated(false);
+
+        //areaChart1_1.getData().add(series);
         Settings.setOnMouseClicked(this::openSettingsWindow);
         addStation.setOnMouseClicked(this::openStationWindow);
         githubLink.setOnMouseClicked(this::openGithubLink);
     }
-
 
     private void updateCharts() {
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
@@ -168,16 +175,15 @@ public class MainScene implements Initializable {
         areaChart1_1.getData().add(series2);
     }
 
-    public void makeDataSeries(LinkedList<DataSample> trimmedDataSamples) {
+    public void makeDataSeries(LinkedList<DataSample> trimmedDataSamples,XYChart.Series<String, Integer> series) {
         tempSeries1_1.setName("temp");
         humidSeries1_1.setName("humid");
         tempSeries1_1.getData().clear();
         humidSeries1_1.getData().clear();
         areaChart1_1.getData().clear();
-        areaChart1_1.getData().clear();
+       //
         for (DataSample trimmedDataSample : trimmedDataSamples) {
             System.out.println("this is running in main Scene class " + Arrays.toString(trimmedDataSample.humidity));
-
         }
 
         for (int i=0;i<trimmedDataSamples.size();i++){
@@ -194,12 +200,13 @@ public class MainScene implements Initializable {
             tempSeries2_2.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).temperature[3]));
             humidSeries2_2.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).humidity[3]));
         }
-        System.out.println("this is the series"+tempSeries1_1.getData());
+        System.out.println("this is the series"+series.getData());
 
-            areaChart1_1.getData().add(tempSeries1_1);
-            areaChart1_1.getData().add(humidSeries1_1);
+       // for test : this.series= series;
 
-        areaChart1_1.setAnimated(false);
+            //areaChart1_1.getData().add(humidSeries1_1);
+
+
 
     }
 }

@@ -7,21 +7,16 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.TimerTask;
 
-public class SensorServer extends TimerTask {
-    CoreLogic coreLogic;
+
+public class SensorServer  {
 
     Document doc = null;
     int counter=1;
 
-    SensorServer(CoreLogic coreLogic){
-        this.coreLogic= coreLogic;
+    SensorServer(){
     }
     public void connectToServer() {
-
-
-
         String serverURL = "http://49.12.208.81:1374";
 
         try {
@@ -55,8 +50,7 @@ public class SensorServer extends TimerTask {
 
             System.out.println("size : "+DataSample.AllDataSamples.size());
 
-            coreLogic.doPeriodicTasks();
-            // In here I should inform the part of code which is interested to know if ArrayList is updated with new value.
+
         } catch (IOException e) {
             System.out.println("Not connected to the server! Please check the connection and refresh ");
            // throw new RuntimeException(e);
@@ -64,12 +58,7 @@ public class SensorServer extends TimerTask {
     }
 
 
-    @Override
-    public void run() {
-        System.out.println("getting the : "+ counter++ );
-        connectToServer();
 
-    }
 }
 
 
