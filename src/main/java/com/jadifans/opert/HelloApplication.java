@@ -6,11 +6,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
 
+
 public class HelloApplication extends Application  {
 
     @Override
     public void start(Stage stage) throws IOException {
         showUI(stage);
+
     }
    /* @Override
     public void stop(){

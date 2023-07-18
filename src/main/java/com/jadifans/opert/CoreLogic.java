@@ -1,52 +1,58 @@
 package com.jadifans.opert;
 
-import javafx.application.Platform;
+
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.chart.AreaChart;
+
 import javafx.scene.chart.XYChart;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
-public class CoreLogic extends TimerTask{
-    //private AreaChart<String, Integer> chart;
-     XYChart.Series<String, Integer> series = new XYChart.Series<>();
+public class CoreLogic {
+
+    XYChart.Series<String,Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
+    XYChart.Series<String,Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
+
+    XYChart.Series<String,Integer> tempSeries1_2 = new XYChart.Series<>();
+    XYChart.Series<String,Integer> humidSeries1_2 = new XYChart.Series<>();
+
+    XYChart.Series<String,Integer> tempSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
+    XYChart.Series<String,Integer> humidSeries2_1 = new XYChart.Series<>();
+
+    XYChart.Series<String,Integer> tempSeries2_2 = new XYChart.Series<>();
+    XYChart.Series<String,Integer> humidSeries2_2 = new XYChart.Series<>();
+    SensorServer sensorServer =new SensorServer();
+    ApplicationSettings applicationSettings;
+    LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
+    FXMLLoader settingsLoader = new FXMLLoader(getClass().getResource("applicationSettings.fxml"));
+    FXMLLoader mainSceneLoader = new FXMLLoader(getClass().getResource("mainScene.fxml"));
+    MainScene mainScene;
+    private static String choiceBoxOption;
 
 
-    public CoreLogic(AreaChart<String,Integer> chart) {
-        System.out.println("core logic instance.");
-      chart.getData().add(series);
-    }
 
     public CoreLogic(){
 
     }
-    LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
-    ApplicationSettings applicationSettings;
-    SensorServer sensorServer =new SensorServer();
-    FXMLLoader settingsLoader = new FXMLLoader(getClass().getResource("applicationSettings.fxml"));
 
-    TimerTask task = this;
-    Timer timer = new Timer();
 
-    FXMLLoader mainSceneLoader = new FXMLLoader(getClass().getResource("mainScene.fxml"));
-    MainScene mainScene ;
-    String choiceBoxOption;
-    boolean coreIsRunning = false;
+
+
+
+
+
+
+
 
     public  void runApplicationBackendLogic() {
         try {
-
             mainSceneLoader.load();
         } catch (IOException e) {
             System.out.println("unable to load mainScene controller here .");
             throw new RuntimeException(e);
         }
         mainScene=mainSceneLoader.getController();
-
         ///////////////this part of code comes from getChoiceBoxOption method :
         //this part handles loading settings in this class:
         try {
@@ -58,8 +64,6 @@ public class CoreLogic extends TimerTask{
         applicationSettings = settingsLoader.getController();
         ////////////////////
         choiceBoxOption = getChoiceBoxOption();
-        getDataFromServer();
-
     }
 
     private void forceChartsToUpdate(LinkedList<DataSample> trimmedDataSamples,MainScene mainScene,XYChart.Series<String, Integer> series) {
@@ -72,20 +76,11 @@ public class CoreLogic extends TimerTask{
         return applicationSettings.getPeriodValueFromChoiceBox();
     }
 
-
-    public void getDataFromServer() {
-        System.out.println("hello");
-        //this timer is going to set a one-minute period data picking with a 30 seconds delay at start.
-        timer.scheduleAtFixedRate(task, 30000, 60000);
-        System.out.println("hi");
-
-    }
-
-
     public void makeTrimmedDataSamples(String choiceBoxOption) {
 
+
         if (getChoiceBoxOption() == null) {
-            // applicationSettings.setUpChoiceBox();
+             applicationSettings.setUpChoiceBox();
 
         } else {
             switch (choiceBoxOption.toLowerCase()) {
@@ -133,18 +128,22 @@ public class CoreLogic extends TimerTask{
     }
 
 
-    public void doPeriodicTasks() {
+    public boolean doPeriodicTasks() {
         //you shouldn't call getChoiceBoxOption twice because it calls  root loader and cause  exception if its called twice .be careful.
-        series.getData().add(new XYChart.Data<>("sa",10));
-        makeTrimmedDataSamples(choiceBoxOption);
-        forceChartsToUpdate(trimmedDataSamples,mainScene,series);
-        System.out.println("trimmed data samples:"+trimmedDataSamples.size());
+        boolean connected =sensorServer.connectToServer();
+        if(connected) {
+            makeTrimmedDataSamples(choiceBoxOption);
+
+        }
+        return connected;
     }
 
-    @Override
-    public void run() {
 
-        sensorServer.connectToServer();
-        Platform.runLater(this::doPeriodicTasks);
-    }
+
+
+ public static void setChoiceBoxOption(String ch){
+        choiceBoxOption = ch;
+ }
+
+
 }

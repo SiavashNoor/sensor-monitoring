@@ -7,17 +7,22 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
-
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SensorServer  {
 
+    boolean successfulConnection = true;
     Document doc = null;
     int counter=1;
 
     SensorServer(){
     }
-    public void connectToServer() {
-        String serverURL = "http://49.12.208.81:1374";
+
+//ServerURL for test : http://49.12.208.81:1374
+    public boolean connectToServer() {
+
+
+        String serverURL = getServerAddress();
 
         try {
             doc = Jsoup.connect(serverURL).get();
@@ -37,7 +42,6 @@ public class SensorServer  {
             }else throw new RuntimeException();
 
             long unixTimeStampAtThisMoment = Instant.now().getEpochSecond();
-
             //every year has 525960 minutes .the maximum size of arrayList that we need .
             //storing last data in last place of linked list
             if (DataSample.AllDataSamples.size()<525960) {
@@ -47,16 +51,24 @@ public class SensorServer  {
                 DataSample.AllDataSamples.removeLast();
                 DataSample.AllDataSamples.addFirst(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
             }
-
-            System.out.println("size : "+DataSample.AllDataSamples.size());
-
-
         } catch (IOException e) {
             System.out.println("Not connected to the server! Please check the connection and refresh ");
            // throw new RuntimeException(e);
+            successfulConnection = false;
         }
+       return successfulConnection;
     }
 
+    private String getServerAddress() {
+        AtomicReference<StringBuilder> str = new AtomicReference<>(new StringBuilder());
+        str.get().append("http://");
+        str.get().append(State.IPAddress);
+        str.get().append(":");
+        str.get().append(State.PortNumber);
+
+        return str.toString();
+
+    }
 
 
 }

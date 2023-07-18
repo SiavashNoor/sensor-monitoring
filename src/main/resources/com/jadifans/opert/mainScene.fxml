@@ -62,12 +62,12 @@
                      <font>
                         <Font size="16.0" />
                      </font></Text>
-                  <AreaChart fx:id="areaChart1_1" layoutX="9.0" layoutY="26.0" prefHeight="164.0" prefWidth="305.0">
+                  <AreaChart fx:id="areaChart1_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
-                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickMarkVisible="false" fx:id="xAxis1" />
+                        <CategoryAxis  tickLabelsVisible="false" endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickMarkVisible="false" fx:id="xAxis1"  />
                      </xAxis>
                      <yAxis>
-                        <NumberAxis minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
+                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
                            <effect>
                               <Glow level="0.42" />
                            </effect></NumberAxis>
@@ -81,7 +81,7 @@
                   <Text fx:id="chart_title2" layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile 2" />
                   <AreaChart  fx:id="areaChart1_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <CategoryAxis  tickLabelsVisible="false" side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
@@ -98,7 +98,7 @@
                   <Text fx:id="chart_title3" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile3 " />
                   <AreaChart fx:id="areaChart2_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
-                        <CategoryAxis side="BOTTOM" />
+                        <CategoryAxis tickLabelsVisible="false" side="BOTTOM" />
                      </xAxis>
                      <yAxis>
                         <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
@@ -115,7 +115,7 @@
                   <Text fx:id="chart_title4" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile 4" />
                   <AreaChart fx:id="areaChart2_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
-                        <CategoryAxis side="BOTTOM" />
+                        <CategoryAxis tickLabelsVisible="false" side="BOTTOM" />
                      </xAxis>
                      <yAxis>
                         <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
@@ -142,6 +142,6 @@
          </font>
       </Hyperlink>
       <Text layoutX="292.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection Status :" />
-      <Text layoutX="417.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected/Disconnected" />
+      <Text fx:id="ConnectionStatus" layoutX="417.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected/Disconnected" />
    </children>
 </AnchorPane>

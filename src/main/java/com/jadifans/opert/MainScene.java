@@ -1,8 +1,10 @@
 package com.jadifans.opert;
 
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,36 +18,43 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.awt.*;
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
+
 /**
 About Charts . be careful about  chart behaviour when showing data
- if data points have same X value they would be shown in the same column whether  the X values are  Stirngs or Numbers.
+ if data points have same X value they would be shown in the same column. whether  the X values are  Stirngs or Numbers.
  and also good to remember that to ignore error in charts set the animation false
 
  **/
 public class MainScene implements Initializable {
+
     XYChart.Series<String,Integer> series =new XYChart.Series<>();
-    CoreLogic coreLogic;
+    CoreLogic coreLogic = new CoreLogic();
     public CategoryAxis xAxis1;
     Stage stage;
+    private boolean taskIsRunning = false;
+    Random random = new Random();
+    boolean serverIsConnected ;
     private double xOffset = 0;
     private double yOffset = 0;
     private LinkedList<Station> stations;
     private final String[] xValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11","12","13","14","15"};
     private final Integer[] yValues = {8, 0, 9, 3, 12, 15, 14, 18, 9, 10};
+    private int timerTaskDelay;
+    private int timerTaskPeriod;
+    @FXML
+    public Text ConnectionStatus;
     @FXML
     public FontIcon Settings;
     @FXML
@@ -68,8 +77,8 @@ public class MainScene implements Initializable {
     private AreaChart<String, Integer> areaChart2_2;
 
 
-    XYChart.Series<String,Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-    XYChart.Series<String,Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
+    static XYChart.Series<String,Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
+    static XYChart.Series<String,Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
 
     XYChart.Series<String,Integer> tempSeries1_2 = new XYChart.Series<>();
     XYChart.Series<String,Integer> humidSeries1_2 = new XYChart.Series<>();
@@ -85,17 +94,21 @@ public class MainScene implements Initializable {
 
         @Override
         public void handle(ActionEvent event) {
+            areaChart1_2.getData().remove(tempSeries1_2);
             Random random = new Random();
             //without setting animation false I was getting the  " Duplicate series added " error and after just one update
-            //the exception error was being thrown .
-
+            //the exception error was being thrown.
             areaChart1_2.setAnimated(false);
-            tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(10)), random.nextInt(100)));
-
-            areaChart1_2.getData().remove(tempSeries1_2);
-            areaChart1_2.getData().add(tempSeries1_2   );
+            if (tempSeries1_2.getData().size()<15) {
+                tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+            }else {
+                tempSeries1_2.getData().remove(0);
+                tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+            }
+            areaChart1_2.getData().add(tempSeries1_2);
         }
     };
+
 
 
     public void closeApplication(MouseEvent event) {
@@ -140,27 +153,76 @@ public class MainScene implements Initializable {
     }
 
     public void openSettingsWindow(MouseEvent mouseEvent) {
-        Parent settingsRoot = null;
+        Parent sr;
         try {
-            settingsRoot = FXMLLoader.load(HelloApplication.class.getResource("applicationSettings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("applicationSettings.fxml"));
+            sr = loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         Stage newStage = new Stage();
         newStage.setTitle("Settings");
-        Scene scene = new Scene(settingsRoot);
+        Scene scene = new Scene(sr);
         newStage.setScene(scene);
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.show();
 
 
-        //test
-        //coreLogic.runApplicationBackendLogic();
+        if (!taskIsRunning) {
+            taskIsRunning = true;
 
-        Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(3),chartUpdater));
-        updateChart.setCycleCount(Timeline.INDEFINITE);
-        updateChart.play();
+
+            Timer timer = new Timer();
+            areaChart1_1.setAnimated(false);
+            areaChart1_2.setAnimated(false);
+            areaChart2_1.setAnimated(false);
+            areaChart2_2.setAnimated(false);
+
+            coreLogic.runApplicationBackendLogic();
+
+            TimerTask timerTask = new TimerTask() {
+
+                @Override
+                public void run() {
+
+                    serverIsConnected = coreLogic.doPeriodicTasks();
+
+
+                    //without setting animation false I was getting the  " Duplicate series added " error and after just one update
+                    //the exception error was being thrown .
+
+                    Platform.runLater(() -> {
+
+                        ///////////////////set connection status here using boolean value isConnected
+                        if (serverIsConnected) {
+                            ConnectionStatus.setText("Connected");
+                            ConnectionStatus.setFill(Color.GREEN);
+                        } else {
+                            ConnectionStatus.setText("Disconnected");
+                            ConnectionStatus.setFill(Color.RED);
+                        }
+                        ///////////////////
+
+
+                        areaChart1_1.getData().remove(tempSeries1_1);
+                        if (tempSeries1_1.getData().size() < 15) {
+                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+                        } else {
+                            tempSeries1_1.getData().remove(0);
+                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+                        }
+                        areaChart1_1.getData().add(tempSeries1_1);
+                    });
+                }
+            };
+            timer.scheduleAtFixedRate(timerTask, 30000, 60000);
+
+//////////////////////////
+            Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(60), chartUpdater));
+            updateChart.setCycleCount(Animation.INDEFINITE);
+            updateChart.play();
+        }
     }
 
     public void windowBarPressed(MouseEvent mouseEvent) {
@@ -175,16 +237,62 @@ public class MainScene implements Initializable {
     }
 
     @Override
-
     public void initialize(URL location, ResourceBundle resources) {
-        coreLogic  = new CoreLogic(areaChart1_1);
 
-
-        //areaChart1_1.getData().add(series);
         Settings.setOnMouseClicked(this::openSettingsWindow);
         addStation.setOnMouseClicked(this::openStationWindow);
         githubLink.setOnMouseClicked(this::openGithubLink);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void updateCharts() {
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
@@ -211,7 +319,9 @@ public class MainScene implements Initializable {
         humidSeries1_1.setName("humid");
         tempSeries1_1.getData().clear();
         humidSeries1_1.getData().clear();
-        areaChart1_1.getData().clear();
+        areaChart1_1.setAnimated(false);
+        //areaChart1_1.getData().clear();
+        areaChart1_1.getData().remove(series);
        //
         for (DataSample trimmedDataSample : trimmedDataSamples) {
             System.out.println("this is running in main Scene class " + Arrays.toString(trimmedDataSample.humidity));
@@ -232,12 +342,8 @@ public class MainScene implements Initializable {
             humidSeries2_2.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).humidity[3]));
         }
         System.out.println("this is the series"+series.getData());
-
-       // for test : this.series= series;
-
-            //areaChart1_1.getData().add(humidSeries1_1);
-
-
+        this.series= series;
+           areaChart1_1.getData().add(series);
 
     }
 }
