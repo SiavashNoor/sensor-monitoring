@@ -16,6 +16,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -39,6 +40,7 @@ About Charts . be careful about  chart behaviour when showing data
  **/
 public class MainScene implements Initializable {
 
+
     XYChart.Series<String,Integer> series =new XYChart.Series<>();
     CoreLogic coreLogic = new CoreLogic();
     public CategoryAxis xAxis1;
@@ -53,12 +55,38 @@ public class MainScene implements Initializable {
     private final Integer[] yValues = {8, 0, 9, 3, 12, 15, 14, 18, 9, 10};
     private int timerTaskDelay;
     private int timerTaskPeriod;
+
+    @FXML
+    public FontIcon infoIcon;
+    @FXML
+    public Text hum4;
+    @FXML
+    public Text temp4;
+    @FXML
+    public Text chart4Name;
+    @FXML
+    public Text hum3;
+    @FXML
+    public Text temp3;
+    @FXML
+    public Text chart3Name;
+    @FXML
+    public Text hum2;
+    @FXML
+    public Text temp2;
+    @FXML
+    public Text chart2Name;
+    @FXML
+    public Text hum1;
+    @FXML
+    public Text temp1;
+    @FXML
+    public Text chart1Name;
     @FXML
     public Text ConnectionStatus;
     @FXML
     public FontIcon Settings;
-    @FXML
-    public FontIcon addStation;
+
     @FXML
     public Hyperlink githubLink;
     @FXML
@@ -136,21 +164,7 @@ public class MainScene implements Initializable {
 
     }
 
-    public void openStationWindow(MouseEvent mouseEvent) {
-        Parent root = null;
-        try {
-            root = FXMLLoader.load(HelloApplication.class.getResource("stationAdder.fxml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Stage newStage = new Stage();
-        newStage.setTitle("Add New Station");
-        Scene scene = new Scene(root);
-        newStage.setScene(scene);
-        newStage.setResizable(false);
-        newStage.initModality(Modality.APPLICATION_MODAL);
-        newStage.show();
-    }
+
 
     public void openSettingsWindow(MouseEvent mouseEvent) {
         Parent sr;
@@ -166,6 +180,7 @@ public class MainScene implements Initializable {
         newStage.setScene(scene);
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.getIcons().add(new Image("com/jadifans/opert/img/settings.png"));
         newStage.show();
 
 
@@ -240,7 +255,6 @@ public class MainScene implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         Settings.setOnMouseClicked(this::openSettingsWindow);
-        addStation.setOnMouseClicked(this::openStationWindow);
         githubLink.setOnMouseClicked(this::openGithubLink);
     }
 
@@ -345,6 +359,26 @@ public class MainScene implements Initializable {
         this.series= series;
            areaChart1_1.getData().add(series);
 
+    }
+
+    public void openInfoWindow(MouseEvent mouseEvent) {
+        Parent root ;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("infoWindow.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        Stage stage = new Stage();
+        stage.setTitle("Info");
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.getIcons().add(new Image("com/jadifans/opert/img/IdeaIcon.png"));
+        stage.show();
     }
 }
 
