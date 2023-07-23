@@ -160,9 +160,6 @@ public class MainScene implements Initializable {
         }
     }
 
-    public MainScene() {
-
-    }
 
 
 
@@ -171,6 +168,8 @@ public class MainScene implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("applicationSettings.fxml"));
             sr = loader.load();
+            ApplicationSettings applicationSettings = loader.getController();
+            applicationSettings.setParentController(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -184,60 +183,6 @@ public class MainScene implements Initializable {
         newStage.show();
 
 
-        if (!taskIsRunning) {
-            taskIsRunning = true;
-
-
-            Timer timer = new Timer();
-            areaChart1_1.setAnimated(false);
-            areaChart1_2.setAnimated(false);
-            areaChart2_1.setAnimated(false);
-            areaChart2_2.setAnimated(false);
-
-            coreLogic.runApplicationBackendLogic();
-
-            TimerTask timerTask = new TimerTask() {
-
-                @Override
-                public void run() {
-
-                    serverIsConnected = coreLogic.doPeriodicTasks();
-
-
-                    //without setting animation false I was getting the  " Duplicate series added " error and after just one update
-                    //the exception error was being thrown .
-
-                    Platform.runLater(() -> {
-
-                        ///////////////////set connection status here using boolean value isConnected
-                        if (serverIsConnected) {
-                            ConnectionStatus.setText("Connected");
-                            ConnectionStatus.setFill(Color.GREEN);
-                        } else {
-                            ConnectionStatus.setText("Disconnected");
-                            ConnectionStatus.setFill(Color.RED);
-                        }
-                        ///////////////////
-
-
-                        areaChart1_1.getData().remove(tempSeries1_1);
-                        if (tempSeries1_1.getData().size() < 15) {
-                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-                        } else {
-                            tempSeries1_1.getData().remove(0);
-                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-                        }
-                        areaChart1_1.getData().add(tempSeries1_1);
-                    });
-                }
-            };
-            timer.scheduleAtFixedRate(timerTask, 30000, 60000);
-
-//////////////////////////
-            Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(60), chartUpdater));
-            updateChart.setCycleCount(Animation.INDEFINITE);
-            updateChart.play();
-        }
     }
 
     public void windowBarPressed(MouseEvent mouseEvent) {
@@ -257,45 +202,6 @@ public class MainScene implements Initializable {
         Settings.setOnMouseClicked(this::openSettingsWindow);
         githubLink.setOnMouseClicked(this::openGithubLink);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -358,7 +264,6 @@ public class MainScene implements Initializable {
         System.out.println("this is the series"+series.getData());
         this.series= series;
            areaChart1_1.getData().add(series);
-
     }
 
     public void openInfoWindow(MouseEvent mouseEvent) {
@@ -369,8 +274,6 @@ public class MainScene implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
         Stage stage = new Stage();
         stage.setTitle("Info");
         Scene scene = new Scene(root);
@@ -379,6 +282,58 @@ public class MainScene implements Initializable {
         stage.setResizable(false);
         stage.getIcons().add(new Image("com/jadifans/opert/img/IdeaIcon.png"));
         stage.show();
+    }
+
+    public void runBackEndTasks() {
+
+        if (!taskIsRunning) {
+            taskIsRunning = true;
+
+            Timer timer = new Timer();
+            areaChart1_1.setAnimated(false);
+            areaChart1_2.setAnimated(false);
+            areaChart2_1.setAnimated(false);
+            areaChart2_2.setAnimated(false);
+            coreLogic.runApplicationBackendLogic();
+
+            TimerTask timerTask = new TimerTask() {
+
+                @Override
+                public void run() {
+
+                    serverIsConnected = coreLogic.doPeriodicTasks();
+                    //without setting animation false I was getting the  " Duplicate series added " error and after just one update
+                    //the exception error was being thrown .
+
+                    Platform.runLater(() -> {
+
+                        ///////////////////set connection status here using boolean value isConnected
+                        if (serverIsConnected) {
+                            ConnectionStatus.setText("Connected");
+                            ConnectionStatus.setFill(Color.GREEN);
+                        } else {
+                            ConnectionStatus.setText("Disconnected");
+                            ConnectionStatus.setFill(Color.RED);
+                        }
+                        ///////////////////
+
+                        areaChart1_1.getData().remove(tempSeries1_1);
+                        if (tempSeries1_1.getData().size() < 15) {
+                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+                        } else {
+                            tempSeries1_1.getData().remove(0);
+                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+                        }
+                        areaChart1_1.getData().add(tempSeries1_1);
+                    });
+                }
+            };
+            timer.scheduleAtFixedRate(timerTask, 30000, 60000);
+//////////////////////////
+            Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(60), chartUpdater));
+            updateChart.setCycleCount(Animation.INDEFINITE);
+            updateChart.play();
+        }
     }
 }
 

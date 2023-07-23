@@ -28,9 +28,9 @@ public class ApplicationSettings implements Initializable {
     int stationNumberByPosition;
     Stage stage;
     Desktop desktop = Desktop.getDesktop();
-    StationAdder stationAdder;
+    MainScene mainScene;
     private final String[] period = {"Instantly", "Hourly", "Daily", "Weekly", "Monthly", "Yearly"};
-
+    private boolean taskIsRunning = false;
     @FXML
     public TextField tempThreshold;
     @FXML
@@ -154,10 +154,14 @@ public class ApplicationSettings implements Initializable {
 
         CoreLogic.setChoiceBoxOption(getPeriodValueFromChoiceBox());
         // a mechanism to prevent  empty text fields :
-        System.out.println("save settings :-" + portNumberField.getText() + "-");
+
         if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("")) {
             final FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showSaveDialog(stage);
+
+            //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
+            mainScene.runBackEndTasks();
+
             stage.close();
         } else {
             if (ipAddressField.getText().equals("")) {
@@ -236,9 +240,9 @@ public class ApplicationSettings implements Initializable {
     }
 
     public  void setStationName(String stationName,boolean includeTemp,boolean includeHum) {
-        System.out.println(stationName);
+/*        System.out.println(stationName);
         System.out.println("in set stationName"+stationNumberByPosition);
-        System.out.println("as instance"+this);
+        System.out.println("as instance"+this);*/
         switch (stationNumberByPosition) {
             case 0:
                 stationOne.setText(stationName);
@@ -257,6 +261,12 @@ public class ApplicationSettings implements Initializable {
                 State.stations[3] =new Station(stationName,includeTemp,includeTemp);
                 break;
         }
+
+    }
+
+
+    public void setParentController(MainScene mainScene){
+        this.mainScene = mainScene;
 
     }
 

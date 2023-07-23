@@ -14,6 +14,33 @@
     -fx-background-radius : 10;
     -fx-effect: dropshadow(gaussian, #a5a5c7, 10, 0.5, 3, 3);
 }
+.tempTiles{
+    -fx-pref-width : 45;
+    -fx-pref-height :28;
+    -fx-background-color: #dbbfab;
+    -fx-border-radius:5 ;
+    -fx-background-radius : 5;
+    -fx-effect: dropshadow(gaussian, #a5a5c7, 3, 0.5, 2, 2);
+    -fx-font-size:18px;
+    -fx-font-weight: bold;
+
+
+}
+.humidTiles{
+    -fx-pref-width : 45;
+    -fx-pref-height :28;
+    -fx-background-color: #abd0e0;
+    -fx-border-radius:5 ;
+    -fx-background-radius : 5;
+    -fx-effect: dropshadow(gaussian, #a5a5c7, 3, 0.5, 2, 2);
+    -fx-font-size:18px;
+    -fx-font-weight: bold;
+
+}
+
+
+
+
 .closebutton {
      -fx-fill :  #ff776e;
     -fx-border: none;
@@ -49,6 +76,12 @@
     -fx-fill : #6b6b6a ;
 }
 
+.temphumidicon{
+    -fx-font-size: 20;
+    -fx-fill: #7d7b7b ;
+
+}
+
 .chartArea{
    -fx-background-color: #dfdff2;
 
@@ -56,6 +89,13 @@
 
 .windowBar{
 -fx-background-color : #d4dde5 ;
+
+}
+.stationName{
+    fx-font-size :30;
+    fx-fill : #282a2b;
+    fx-font-weight : bold;
+
 
 }
 

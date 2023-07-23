@@ -5,6 +5,7 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -30,6 +31,11 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Circle>
+            <Text fill="#8e8e8e" layoutX="130.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opert Monitoring ">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Text>
          </children></Pane>
       <Pane prefHeight="200.0" prefWidth="100.0" styleClass="sidebar" stylesheets="@Stylesheets.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -41,7 +47,7 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></FontIcon>
-            <FontIcon fx:id="infoIcon" iconLiteral="fas-info-circle"  layoutX="41.0" layoutY="447.0" styleClass="icon" onMouseClicked="#openInfoWindow" >
+            <FontIcon fx:id="infoIcon" iconLiteral="fas-info-circle" layoutX="41.0" layoutY="447.0" onMouseClicked="#openInfoWindow" styleClass="icon">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></FontIcon>
@@ -58,9 +64,9 @@
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css">
                <children>
-                  <Text fx:id="chart1Name" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="OutDoor">
+                  <Text fx:id="chart1Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="stationName">
                      <font>
-                        <Font size="16.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font></Text>
                   <AreaChart fx:id="areaChart1_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
@@ -73,12 +79,17 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Text fx:id="temp1" layoutX="119.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp" />
-                  <Text fx:id="hum1" layoutX="218.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon fx:id="temp1" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon fx:id="hum1" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1">
                <children>
-                  <Text fx:id="chart2Name" layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile 2" />
+                  <Text fx:id="chart2Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" styleClass="stationName">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font></Text>
                   <AreaChart fx:id="areaChart1_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
@@ -90,12 +101,17 @@
                           </effect></NumberAxis>
                     </yAxis>
                   </AreaChart>
-                  <Text fx:id="temp2" layoutX="131.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp2" />
-                  <Text fx:id="hum2" layoutX="227.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum2" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon fx:id="temp2" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon fx:id="hum2" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" GridPane.rowIndex="1">
                <children>
-                  <Text fx:id="chart3Name" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="chart3Name " />
+                  <Text fx:id="chart3Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="stationName">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font></Text>
                   <AreaChart fx:id="areaChart2_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
@@ -107,12 +123,17 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Text fx:id="temp3" layoutX="110.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp3" />
-                  <Text fx:id="hum3" layoutX="184.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum3" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon fx:id="temp3" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon fx:id="hum3" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Text fx:id="chart4Name" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="chart4Name" />
+                  <Text fx:id="chart4Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="stationName">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font></Text>
                   <AreaChart fx:id="areaChart2_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
@@ -124,14 +145,16 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Text fx:id="temp4" layoutX="114.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="temp4" />
-                  <Text fx:id="hum4" layoutX="216.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hum4" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon fx:id="temp4" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon fx:id="hum4" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
          </children>
       </GridPane>
       <FontIcon iconLiteral="fab-github" iconSize="16" layoutX="120.0" layoutY="553.0" />
       <FontIcon iconLiteral="far-copyright" layoutX="398.0" layoutY="553.0" text="" />
-      <Text layoutX="417.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All Rights Reserved   V 1.0.0">
+      <Text layoutX="417.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All Rights Reserved">
          <font>
             <Font size="11.0" />
          </font>
@@ -143,5 +166,10 @@
       </Hyperlink>
       <Text fx:id="ConnectionStatus" layoutX="417.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected/Disconnected" />
       <Text layoutX="292.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection Status :" />
+      <Text layoutX="637.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opert   v1.0.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

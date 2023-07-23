@@ -31,18 +31,9 @@ public class CoreLogic {
     private static String choiceBoxOption;
 
 
-
     public CoreLogic(){
 
     }
-
-
-
-
-
-
-
-
 
 
     public  void runApplicationBackendLogic() {
@@ -133,7 +124,6 @@ public class CoreLogic {
         boolean connected =sensorServer.connectToServer();
         if(connected) {
             makeTrimmedDataSamples(choiceBoxOption);
-
         }
         return connected;
     }

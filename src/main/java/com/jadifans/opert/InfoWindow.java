@@ -1,8 +1,9 @@
 package com.jadifans.opert;
 
 import javafx.fxml.Initializable;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +16,8 @@ public class InfoWindow implements Initializable {
     private void populateScrollPane(){
        
         textArea.setEditable(false);
+        textArea.setFont(Font.font("Arial", FontWeight.NORMAL, 21));
+
         textArea.setWrapText(true);
         textArea.setText("hello sdlsd  dsld fsd  slf sfl sfsdl kfsdlf sdflksd flsd fsldf sdlf slfj sdlfs fls fslf slf sdlf ,mxcn sl ljrweljf lsdflfsd sfdl sdflsd fs \n " +
                 "le d sl a\n" +
