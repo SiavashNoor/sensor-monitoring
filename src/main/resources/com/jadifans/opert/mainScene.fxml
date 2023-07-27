@@ -79,10 +79,10 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon fx:id="temp1" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon fx:id="hum1" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1">
                <children>
@@ -101,10 +101,10 @@
                           </effect></NumberAxis>
                     </yAxis>
                   </AreaChart>
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon fx:id="temp2" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon fx:id="hum2" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" GridPane.rowIndex="1">
                <children>
@@ -123,10 +123,10 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon fx:id="temp3" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon fx:id="hum3" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
@@ -145,10 +145,10 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon fx:id="temp4" iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon fx:id="hum4" iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
          </children>
       </GridPane>

@@ -16,6 +16,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -33,60 +34,56 @@ import java.net.URL;
 import java.util.*;
 
 /**
-About Charts . be careful about  chart behaviour when showing data
- if data points have same X value they would be shown in the same column. whether  the X values are  Stirngs or Numbers.
- and also good to remember that to ignore error in charts set the animation false
-
+ * About Charts . be careful about  chart behaviour when showing data
+ * if data points have same X value they would be shown in the same column. whether  the X values are  Stirngs or Numbers.
+ * and also good to remember that to ignore error in charts set the animation false
  **/
 public class MainScene implements Initializable {
 
+    SensorServer sensorServer = new SensorServer();
 
-    XYChart.Series<String,Integer> series =new XYChart.Series<>();
-    CoreLogic coreLogic = new CoreLogic();
     public CategoryAxis xAxis1;
     Stage stage;
     private boolean taskIsRunning = false;
     Random random = new Random();
-    boolean serverIsConnected ;
+    boolean serverIsConnected;
     private double xOffset = 0;
     private double yOffset = 0;
-    private LinkedList<Station> stations;
-    private final String[] xValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11","12","13","14","15"};
-    private final Integer[] yValues = {8, 0, 9, 3, 12, 15, 14, 18, 9, 10};
-    private int timerTaskDelay;
-    private int timerTaskPeriod;
+    private final String[] xValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
 
+    LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
+
+
+    @FXML
+    public Label temp1;
+    @FXML
+    public Label hum1;
     @FXML
     public FontIcon infoIcon;
     @FXML
-    public Text hum4;
+    public Label temp4;
     @FXML
-    public Text temp4;
+    public Label hum4;
     @FXML
     public Text chart4Name;
     @FXML
-    public Text hum3;
+    public Label hum3;
     @FXML
-    public Text temp3;
+    public Label temp3;
     @FXML
     public Text chart3Name;
     @FXML
-    public Text hum2;
+    public Label hum2;
     @FXML
-    public Text temp2;
+    public Label temp2;
     @FXML
     public Text chart2Name;
-    @FXML
-    public Text hum1;
-    @FXML
-    public Text temp1;
     @FXML
     public Text chart1Name;
     @FXML
     public Text ConnectionStatus;
     @FXML
     public FontIcon Settings;
-
     @FXML
     public Hyperlink githubLink;
     @FXML
@@ -105,20 +102,21 @@ public class MainScene implements Initializable {
     private AreaChart<String, Integer> areaChart2_2;
 
 
-    static XYChart.Series<String,Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-    static XYChart.Series<String,Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
 
-    XYChart.Series<String,Integer> tempSeries1_2 = new XYChart.Series<>();
-    XYChart.Series<String,Integer> humidSeries1_2 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
+    XYChart.Series<String, Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
 
-    XYChart.Series<String,Integer> tempSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-    XYChart.Series<String,Integer> humidSeries2_1 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> tempSeries1_2 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> humidSeries1_2 = new XYChart.Series<>();
 
-    XYChart.Series<String,Integer> tempSeries2_2 = new XYChart.Series<>();
-    XYChart.Series<String,Integer> humidSeries2_2 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> tempSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
+    XYChart.Series<String, Integer> humidSeries2_1 = new XYChart.Series<>();
 
+    XYChart.Series<String, Integer> tempSeries2_2 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>();
 
-    javafx.event.EventHandler<ActionEvent> chartUpdater = new javafx.event.EventHandler<>() {
+// this is another method to update a chart.not really practically true.
+    /*javafx.event.EventHandler<ActionEvent> chartUpdater = new javafx.event.EventHandler<>() {
 
         @Override
         public void handle(ActionEvent event) {
@@ -127,17 +125,16 @@ public class MainScene implements Initializable {
             //without setting animation false I was getting the  " Duplicate series added " error and after just one update
             //the exception error was being thrown.
             areaChart1_2.setAnimated(false);
-            if (tempSeries1_2.getData().size()<15) {
+            if (tempSeries1_2.getData().size() < 15) {
                 tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-            }else {
+            } else {
                 tempSeries1_2.getData().remove(0);
                 tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
             }
             areaChart1_2.getData().add(tempSeries1_2);
         }
     };
-
-
+*/
 
     public void closeApplication(MouseEvent event) {
         stage = (Stage) ((Circle) event.getSource()).getScene().getWindow();
@@ -161,8 +158,6 @@ public class MainScene implements Initializable {
     }
 
 
-
-
     public void openSettingsWindow(MouseEvent mouseEvent) {
         Parent sr;
         try {
@@ -181,8 +176,6 @@ public class MainScene implements Initializable {
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.getIcons().add(new Image("com/jadifans/opert/img/settings.png"));
         newStage.show();
-
-
     }
 
     public void windowBarPressed(MouseEvent mouseEvent) {
@@ -203,71 +196,8 @@ public class MainScene implements Initializable {
         githubLink.setOnMouseClicked(this::openGithubLink);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    private void updateCharts() {
-        XYChart.Series<String, Integer> series = new XYChart.Series<>();
-        XYChart.Series<String, Integer> series2 = new XYChart.Series<>();
-        areaChart1_1.getData().remove(series);
-        areaChart1_1.getData().remove(series2);
-        series.setName("temp");
-        for (int i = 0; i < yValues.length; i++) {
-            series.getData().add(new XYChart.Data<>(xValues[i], yValues[i]));
-        }
-        series2.setName("hum");
-        series2.getData().add(new XYChart.Data<>("10", 20));
-        series2.getData().add(new XYChart.Data<>("13", 12));
-        series2.getData().add(new XYChart.Data<>("14", 8));
-        //areaChart1_1.getData().add(series);
-        //adding empty series to change color of the series .jfx has default colors for series.by adding empty series just
-        //skipping those colors . to use it  just uncomment the below line :
-        //areaChart1_1.getData().add(new XYChart.Series<>());
-       // areaChart1_1.getData().add(series2);
-    }
-
-    public void makeDataSeries(LinkedList<DataSample> trimmedDataSamples,XYChart.Series<String, Integer> series) {
-        tempSeries1_1.setName("temp");
-        humidSeries1_1.setName("humid");
-        tempSeries1_1.getData().clear();
-        humidSeries1_1.getData().clear();
-        areaChart1_1.setAnimated(false);
-        //areaChart1_1.getData().clear();
-        areaChart1_1.getData().remove(series);
-       //
-        for (DataSample trimmedDataSample : trimmedDataSamples) {
-            System.out.println("this is running in main Scene class " + Arrays.toString(trimmedDataSample.humidity));
-        }
-
-        for (int i=0;i<trimmedDataSamples.size();i++){
-
-            tempSeries1_1.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).temperature[0]));
-            humidSeries1_1.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).humidity[0]));
-
-            tempSeries1_2.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).temperature[1]));
-            humidSeries1_2.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).humidity[1]));
-
-            tempSeries2_1.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).temperature[2]));
-            humidSeries2_1.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).humidity[2]));
-
-            tempSeries2_2.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).temperature[3]));
-            humidSeries2_2.getData().add(new XYChart.Data<>(xValues[i],trimmedDataSamples.get(i).humidity[3]));
-        }
-        System.out.println("this is the series"+series.getData());
-        this.series= series;
-           areaChart1_1.getData().add(series);
-    }
-
     public void openInfoWindow(MouseEvent mouseEvent) {
-        Parent root ;
+        Parent root;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("infoWindow.fxml"));
         try {
             root = loader.load();
@@ -285,7 +215,8 @@ public class MainScene implements Initializable {
     }
 
     public void runBackEndTasks() {
-
+        int timerTaskDelay = 30000;
+        int timerTaskPeriod = 60000;
         if (!taskIsRunning) {
             taskIsRunning = true;
 
@@ -294,45 +225,173 @@ public class MainScene implements Initializable {
             areaChart1_2.setAnimated(false);
             areaChart2_1.setAnimated(false);
             areaChart2_2.setAnimated(false);
-            coreLogic.runApplicationBackendLogic();
 
             TimerTask timerTask = new TimerTask() {
 
                 @Override
                 public void run() {
 
-                    serverIsConnected = coreLogic.doPeriodicTasks();
-                    //without setting animation false I was getting the  " Duplicate series added " error and after just one update
-                    //the exception error was being thrown .
+                    serverIsConnected = sensorServer.connectToServer();
+
 
                     Platform.runLater(() -> {
+                            updateConnectionStatus(serverIsConnected);
+                            updateCharts();
+                            updateLabels();
 
-                        ///////////////////set connection status here using boolean value isConnected
-                        if (serverIsConnected) {
-                            ConnectionStatus.setText("Connected");
-                            ConnectionStatus.setFill(Color.GREEN);
-                        } else {
-                            ConnectionStatus.setText("Disconnected");
-                            ConnectionStatus.setFill(Color.RED);
-                        }
-                        ///////////////////
-
-                        areaChart1_1.getData().remove(tempSeries1_1);
-                        if (tempSeries1_1.getData().size() < 15) {
-                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-                        } else {
-                            tempSeries1_1.getData().remove(0);
-                            tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-                        }
-                        areaChart1_1.getData().add(tempSeries1_1);
+                     /*       areaChart1_1.getData().remove(tempSeries1_1);
+                            if (tempSeries1_1.getData().size() < 15) {
+                                tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+                            } else {
+                                tempSeries1_1.getData().remove(0);
+                                tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+                            }
+                            areaChart1_1.getData().add(tempSeries1_1);*/
                     });
                 }
             };
-            timer.scheduleAtFixedRate(timerTask, 30000, 60000);
-//////////////////////////
-            Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(60), chartUpdater));
+
+            timer.scheduleAtFixedRate(timerTask, timerTaskDelay, timerTaskPeriod);
+
+            //////////////////////////////////////
+            //without setting animation false I was getting the  " Duplicate series added " error and after just one update
+            //the exception error was being thrown .
+           /* Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(60), chartUpdater));
             updateChart.setCycleCount(Animation.INDEFINITE);
-            updateChart.play();
+            updateChart.play();*/
+            ///////////////////////////////////////
+        }
+    }
+
+    private void updateConnectionStatus(boolean serverIsConnected) {
+        ///////////////////set connection status here using boolean value isConnected
+        if (serverIsConnected) {
+            ConnectionStatus.setText("Connected");
+            ConnectionStatus.setFill(Color.GREEN);
+        } else {
+            ConnectionStatus.setText("Disconnected");
+            ConnectionStatus.setFill(Color.RED);
+        }
+    }
+
+
+    private void updateLabels() {
+        // labels are updated based on last dataSample.
+       temp1.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[0]));
+        temp2.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[1]));
+        temp3.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[2]));
+        temp4.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[3]));
+        hum1.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[0]));
+        hum2.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[1]));
+        hum3.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[2]));
+        hum4.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[3]));
+    }
+
+    public void setStationNames(){
+        chart1Name.setText(State.stations[0].name);
+        chart2Name.setText(State.stations[1].name);
+        chart3Name.setText(State.stations[2].name);
+        chart4Name.setText(State.stations[3].name);
+    }
+
+    public void updateCharts() {
+        makeTrimmedDataSamples(State.choiceBoxOption);
+        makeSeries();
+        injectSeriesToCharts();
+    }
+
+    private void injectSeriesToCharts() {
+        areaChart1_1.getData().clear();
+        areaChart1_2.getData().clear();
+        areaChart2_1.getData().clear();
+        areaChart2_2.getData().clear();
+
+       // dding empty series to change color of the series .jfx has default colors for series.by adding empty series just
+        //skipping those colors . to use it  just uncomment the below line :
+        areaChart1_1.getData().add(tempSeries1_1);
+        areaChart1_1.getData().add(new XYChart.Series<>());
+        areaChart1_1.getData().add(new XYChart.Series<>());
+        areaChart1_1.getData().add(humidSeries1_1);
+        areaChart1_2.getData().add(tempSeries1_2);
+        areaChart1_2.getData().add(new XYChart.Series<>());
+        areaChart1_2.getData().add(humidSeries1_2);
+        areaChart2_1.getData().add(tempSeries2_1);
+        areaChart2_1.getData().add(new XYChart.Series<>());
+        areaChart2_1.getData().add(humidSeries2_1);
+        areaChart2_2.getData().add(tempSeries2_2);
+        areaChart2_2.getData().add(new XYChart.Series<>());
+        areaChart2_2.getData().add(humidSeries2_2);
+    }
+
+    private void makeSeries() {
+
+        /// I really don't like to do this shit code I mean hard coding, I know its ridiculous .In the next major Update going to make a big change in this part of app
+        // and make it more flexible .
+
+        for (int i = 0; i < trimmedDataSamples.size(); i++) {
+
+            tempSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[0]));
+            humidSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[0]));
+
+            tempSeries1_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[1]));
+            humidSeries1_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[1]));
+
+            tempSeries2_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[2]));
+            humidSeries2_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[2]));
+
+            tempSeries2_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[3]));
+            humidSeries2_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[3]));
+        }
+    }
+
+
+    public void makeTrimmedDataSamples(String choiceBoxOption) {
+        //sp -> step or step factor
+        int sp = 0;
+
+        switch (choiceBoxOption.toLowerCase()) {
+            case "instantly" -> {
+                System.out.println("you have chosen instantly bro");
+                sp = 1;
+            }
+            case "hourly" -> {
+                System.out.println("you have chosen hourly bro");
+                sp = 4;
+            }
+            case "daily" -> {
+                System.out.println("you have chosen daily bro");
+                sp = 96;
+            }
+            case "weekly" -> {
+                System.out.println("you have chosen weekly bro");
+                sp = 672;
+            }
+            case "monthly" -> {
+                System.out.println("you have chosen monthly bro");
+                sp = 2960;
+            }
+            case "yearly" -> {
+                System.out.println("you have chosen yearly bro");
+                sp = 35040;
+            }
+            default -> {
+                System.out.println("by default instant period is chosen for you:)");
+                sp = 1;
+            }
+        }
+        trimDataSamples(sp);
+    }
+
+
+    private void trimDataSamples(int stepFactor) {
+        trimmedDataSamples.clear();
+        int trimmedListSize = 15;
+        int remainder = DataSample.AllDataSamples.size() % stepFactor;
+        int lastIndex = DataSample.AllDataSamples.size() - 1;
+        for (int i = 0; i < trimmedListSize; i++) {
+            if (lastIndex - (i * stepFactor + remainder) >= 0) {
+                trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
+            } else break;
         }
     }
 }

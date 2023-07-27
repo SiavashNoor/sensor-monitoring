@@ -39,17 +39,21 @@ public class SensorServer  {
                     temperatures[i] = Integer.parseInt(temps.get(i).text());
                     humidities[i] = Integer.parseInt(humids.get(i).text());
                 }
-            }else throw new RuntimeException();
+            }else {
+                successfulConnection = false;
+                throw new RuntimeException();
+            }
 
             long unixTimeStampAtThisMoment = Instant.now().getEpochSecond();
             //every year has 525960 minutes .the maximum size of arrayList that we need .
             //storing last data in last place of linked list
+            successfulConnection = true;
             if (DataSample.AllDataSamples.size()<525960) {
-                DataSample.AllDataSamples.addFirst(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
+                DataSample.AllDataSamples.add(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
                 System.out.println(Arrays.toString(DataSample.AllDataSamples.getLast().temperature));
             }else{
-                DataSample.AllDataSamples.removeLast();
-                DataSample.AllDataSamples.addFirst(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
+                DataSample.AllDataSamples.removeFirst();
+                DataSample.AllDataSamples.add(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
             }
         } catch (IOException e) {
             System.out.println("Not connected to the server! Please check the connection and refresh ");

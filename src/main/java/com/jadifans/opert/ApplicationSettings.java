@@ -30,7 +30,6 @@ public class ApplicationSettings implements Initializable {
     Desktop desktop = Desktop.getDesktop();
     MainScene mainScene;
     private final String[] period = {"Instantly", "Hourly", "Daily", "Weekly", "Monthly", "Yearly"};
-    private boolean taskIsRunning = false;
     @FXML
     public TextField tempThreshold;
     @FXML
@@ -152,7 +151,7 @@ public class ApplicationSettings implements Initializable {
         State.PortNumber = portNumberField.getText();
         State.tempThreshold =Integer.parseInt(tempThreshold.getText());
 
-        CoreLogic.setChoiceBoxOption(getPeriodValueFromChoiceBox());
+
         // a mechanism to prevent  empty text fields :
 
         if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("")) {
@@ -161,7 +160,9 @@ public class ApplicationSettings implements Initializable {
 
             //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
             mainScene.runBackEndTasks();
-
+            //updating charts instantly if any change is applied to the settings .for example any change in period of charts.
+            mainScene.updateCharts();
+            mainScene.setStationNames();
             stage.close();
         } else {
             if (ipAddressField.getText().equals("")) {
