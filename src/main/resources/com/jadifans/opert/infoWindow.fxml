@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="342.0" prefWidth="415.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.InfoWindow">
+   <children>
+      <TextArea fx:id="textArea" layoutX="9.0" layoutY="6.0" prefHeight="331.0" prefWidth="398.0" />
+   </children>
+</AnchorPane>

@@ -18,7 +18,4 @@ public class DataSample {
         this.timeStamp=timeStamp;
     }
 
-
-
-
 }
