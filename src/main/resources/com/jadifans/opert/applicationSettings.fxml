@@ -21,16 +21,16 @@
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></ChoiceBox>
-      <Button fx:id="settingsSaveButton" layoutX="405.0" layoutY="284.0" mnemonicParsing="false" onMouseClicked="#saveSettings" text="SAVE">
+      <Button fx:id="settingsSaveButton" layoutX="405.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#saveSettings" text="SAVE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
-      <Button fx:id="settingsCancelButton" layoutX="465.0" layoutY="284.0" mnemonicParsing="false" onMouseClicked="#cancelSettings" text="CANCEL">
+      <Button fx:id="settingsCancelButton" layoutX="465.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#cancelSettings" text="CANCEL">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
       <Text layoutX="14.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chart Period :" />
-      <Button fx:id="settingsImportButton" layoutX="16.0" layoutY="284.0" mnemonicParsing="false" onMouseClicked="#importSettings" text=" Import Configs">
+      <Button fx:id="settingsImportButton" layoutX="16.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#importSettings" text=" Import Configs">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
@@ -68,6 +68,6 @@
       <Line endX="266.0" layoutX="115.0" layoutY="108.0" startX="-100.0" stroke="#a6a6a6" />
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
       <Text layoutX="337.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temp Threshold:" />
-      <TextField  fx:id="tempThreshold" layoutX="433.0" layoutY="183.0" prefHeight="26.0" prefWidth="60.0" />
+      <TextField fx:id="tempThreshold" layoutX="433.0" layoutY="183.0" prefHeight="26.0" prefWidth="60.0" />
    </children>
 </AnchorPane>

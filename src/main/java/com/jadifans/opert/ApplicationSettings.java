@@ -1,6 +1,6 @@
 package com.jadifans.opert;
 
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -20,11 +21,12 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
 import java.util.ResourceBundle;
 
 
 public class ApplicationSettings implements Initializable {
-
+    State state = State.getInstance();
     int stationNumberByPosition;
     Stage stage;
     Desktop desktop = Desktop.getDesktop();
@@ -74,60 +76,56 @@ public class ApplicationSettings implements Initializable {
         setUpAlarms();
         setUpTempThreshold();
        rectangle.setOnMouseReleased(this::setStation);
-        //settingsSaveButton.setOnMouseClicked(this::saveSettings);
-        periodChoiceBox.setOnAction(this::getPeriodValueFromChoiceBox);
         ipAddressField.setOnMouseClicked(this::getIPAddressValue);
         portNumberField.setOnMouseClicked(this::getPortNumberValue);
         settingsImportButton.setOnMouseClicked(this::importSettings);
     }
 
     private void setUpTempThreshold() {
-        tempThreshold.setText(String.valueOf(State.tempThreshold));
+        tempThreshold.setText(String.valueOf(state.tempThreshold));
     }
 
     private void setUpAlarms(){
         CheckBox[] Alarms ={sensor1Alarm, sensor2Alarm, sensor3Alarm, sensor4Alarm, connectionAlarm};
         for(int i=0;i<Alarms.length;i++){
-            if(State.alarms[i]!=null){
-                Alarms[i].setSelected(State.alarms[i].isSelected());
+            if(state.alarms[i]!=null){
+                Alarms[i].setSelected(state.alarms[i].isSelected());
             }
         }
     }
 
     private void setUpPortNumberField() {
-        if (State.PortNumber != null) {
-            portNumberField.setText(State.PortNumber);
+        if (state.PortNumber != null) {
+            portNumberField.setText(state.PortNumber);
         }
     }
 
     private void setUpIPAddressField() {
-        if (State.IPAddress != null) {
-            ipAddressField.setText(State.IPAddress);
+        if (state.IPAddress != null) {
+            ipAddressField.setText(state.IPAddress);
         }
     }
     private void setStation(){
         Text[] Stations ={stationOne,stationTwo,stationThree,stationFour};
 
         for(int i=0;i<Stations.length;i++){
-            if(State.stations[i]!=null){
-                Stations[i].setText(State.stations[i].name);
+            if(state.stations[i]!=null){
+                Stations[i].setText(state.stations[i].name);
             }
         }
     }
 
     public void setUpChoiceBox() {
         periodChoiceBox.getItems().addAll(period);
-        if (State.choiceBoxOption == null) {
+        if (state.choiceBoxOption == null) {
             periodChoiceBox.setValue(period[0]);
         } else {
-            periodChoiceBox.setValue(State.choiceBoxOption);
+            periodChoiceBox.setValue(state.choiceBoxOption);
         }
     }
 
 
-    public String getPeriodValueFromChoiceBox(ActionEvent event) {
-        return periodChoiceBox.getValue();
-    }
+
 
     public String getPeriodValueFromChoiceBox() {
         return periodChoiceBox.getValue();
@@ -146,15 +144,15 @@ public class ApplicationSettings implements Initializable {
         getPortNumberValue(mouseEvent);
         saveAlarmToState();
 
-        State.choiceBoxOption = getPeriodValueFromChoiceBox();
-        State.IPAddress = ipAddressField.getText();
-        State.PortNumber = portNumberField.getText();
-        State.tempThreshold =Integer.parseInt(tempThreshold.getText());
+        state.choiceBoxOption = getPeriodValueFromChoiceBox();
+        state.IPAddress = ipAddressField.getText();
+        state.PortNumber = portNumberField.getText();
+        state.tempThreshold =Integer.parseInt(tempThreshold.getText());
 
 
         // a mechanism to prevent  empty text fields :
 
-        if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("")) {
+        if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("") && state.stations!=null) {
             final FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showSaveDialog(stage);
 
@@ -171,11 +169,16 @@ public class ApplicationSettings implements Initializable {
             if (portNumberField.getText().equals("")) {
                 portNumberField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             }
+            if(state.isNull(state.stations)){
+                rectangle.setStyle(" -fx-stroke:  #B22222; -fx-stroke-width: 3;");
+            }
         }
     }
 
+
+
     private void saveAlarmToState() {
-        State.alarms = new CheckBox[]{sensor1Alarm, sensor2Alarm, sensor3Alarm, sensor4Alarm, connectionAlarm};
+        state.alarms = new CheckBox[]{sensor1Alarm, sensor2Alarm, sensor3Alarm, sensor4Alarm, connectionAlarm};
     }
 
     public void cancelSettings(MouseEvent mouseEvent) {
@@ -245,22 +248,22 @@ public class ApplicationSettings implements Initializable {
         System.out.println("in set stationName"+stationNumberByPosition);
         System.out.println("as instance"+this);*/
         switch (stationNumberByPosition) {
-            case 0:
+            case 0 -> {
                 stationOne.setText(stationName);
-                State.stations[0] =new Station(stationName,includeTemp,includeHum);
-                break;
-            case 1:
+                state.stations[0] = new Station(stationName, includeTemp, includeHum);
+            }
+            case 1 -> {
                 stationTwo.setText(stationName);
-                State.stations[1] =new Station(stationName,includeTemp,includeHum);
-                break;
-            case 2:
+                state.stations[1] = new Station(stationName, includeTemp, includeHum);
+            }
+            case 2 -> {
                 stationThree.setText(stationName);
-                State.stations[2] =new Station(stationName,includeTemp,includeHum);
-                break;
-            case 3:
+                state.stations[2] = new Station(stationName, includeTemp, includeHum);
+            }
+            case 3 -> {
                 stationFour.setText(stationName);
-                State.stations[3] =new Station(stationName,includeTemp,includeTemp);
-                break;
+                state.stations[3] = new Station(stationName, includeTemp, includeTemp);
+            }
         }
 
     }

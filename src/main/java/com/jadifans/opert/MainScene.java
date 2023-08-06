@@ -1,19 +1,16 @@
 package com.jadifans.opert;
 
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -25,7 +22,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.awt.*;
@@ -42,15 +38,15 @@ public class MainScene implements Initializable {
 
     SensorServer sensorServer = new SensorServer();
 
-    public CategoryAxis xAxis1;
+
     Stage stage;
     private boolean taskIsRunning = false;
-    Random random = new Random();
+    State state = State.getInstance();
     boolean serverIsConnected;
     private double xOffset = 0;
     private double yOffset = 0;
     private final String[] xValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
-
+    int trimmedListSize = 15;
     LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
 
 
@@ -115,26 +111,27 @@ public class MainScene implements Initializable {
     XYChart.Series<String, Integer> tempSeries2_2 = new XYChart.Series<>();
     XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>();
 
-// this is another method to update a chart.not really practically true.
-    /*javafx.event.EventHandler<ActionEvent> chartUpdater = new javafx.event.EventHandler<>() {
+/*
+     this is another method to update a chart.not really practically true.
+    javafx.event.EventHandler<ActionEvent> chartUpdater = new javafx.event.EventHandler<>() {
 
-        @Override
-        public void handle(ActionEvent event) {
-            areaChart1_2.getData().remove(tempSeries1_2);
-            Random random = new Random();
-            //without setting animation false I was getting the  " Duplicate series added " error and after just one update
-            //the exception error was being thrown.
-            areaChart1_2.setAnimated(false);
-            if (tempSeries1_2.getData().size() < 15) {
-                tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-            } else {
-                tempSeries1_2.getData().remove(0);
-                tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-            }
-            areaChart1_2.getData().add(tempSeries1_2);
-        }
-    };
-*/
+         @Override
+         public void handle(ActionEvent event) {
+             areaChart1_2.getData().remove(tempSeries1_2);
+             Random random = new Random();
+             //without setting animation false I was getting the  " Duplicate series added " error and after just one update
+             //the exception error was being thrown.
+             areaChart1_2.setAnimated(false);
+             if (tempSeries1_2.getData().size() < 15) {
+                 tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+             } else {
+                 tempSeries1_2.getData().remove(0);
+                 tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
+             }
+             areaChart1_2.getData().add(tempSeries1_2);
+         }
+     };
+    */
 
     public void closeApplication(MouseEvent event) {
         stage = (Stage) ((Circle) event.getSource()).getScene().getWindow();
@@ -288,14 +285,14 @@ public class MainScene implements Initializable {
     }
 
     public void setStationNames(){
-        chart1Name.setText(State.stations[0].name);
-        chart2Name.setText(State.stations[1].name);
-        chart3Name.setText(State.stations[2].name);
-        chart4Name.setText(State.stations[3].name);
+        chart1Name.setText(state.stations[0].name);
+        chart2Name.setText(state.stations[1].name);
+        chart3Name.setText(state.stations[2].name);
+        chart4Name.setText(state.stations[3].name);
     }
 
     public void updateCharts() {
-        makeTrimmedDataSamples(State.choiceBoxOption);
+        makeTrimmedDataSamples(state.choiceBoxOption);
         makeSeries();
         injectSeriesToCharts();
     }
@@ -314,31 +311,29 @@ public class MainScene implements Initializable {
         areaChart1_1.getData().add(humidSeries1_1);
         areaChart1_2.getData().add(tempSeries1_2);
         areaChart1_2.getData().add(new XYChart.Series<>());
+        areaChart1_2.getData().add(new XYChart.Series<>());
         areaChart1_2.getData().add(humidSeries1_2);
         areaChart2_1.getData().add(tempSeries2_1);
         areaChart2_1.getData().add(new XYChart.Series<>());
+        areaChart2_1.getData().add(new XYChart.Series<>());
         areaChart2_1.getData().add(humidSeries2_1);
         areaChart2_2.getData().add(tempSeries2_2);
+        areaChart2_2.getData().add(new XYChart.Series<>());
         areaChart2_2.getData().add(new XYChart.Series<>());
         areaChart2_2.getData().add(humidSeries2_2);
     }
 
     private void makeSeries() {
-
         /// I really don't like to do this shit code I mean hard coding, I know its ridiculous .In the next major Update going to make a big change in this part of app
         // and make it more flexible .
-
         for (int i = 0; i < trimmedDataSamples.size(); i++) {
 
             tempSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[0]));
             humidSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[0]));
-
             tempSeries1_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[1]));
             humidSeries1_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[1]));
-
             tempSeries2_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[2]));
             humidSeries2_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[2]));
-
             tempSeries2_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[3]));
             humidSeries2_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[3]));
         }
@@ -385,11 +380,12 @@ public class MainScene implements Initializable {
 
     private void trimDataSamples(int stepFactor) {
         trimmedDataSamples.clear();
-        int trimmedListSize = 15;
-        int remainder = DataSample.AllDataSamples.size() % stepFactor;
-        int lastIndex = DataSample.AllDataSamples.size() - 1;
+        int size = DataSample.AllDataSamples.size();
+        int remainder = size % stepFactor;
+        int lastIndex = size - 1;
+
         for (int i = 0; i < trimmedListSize; i++) {
-            if (lastIndex - (i * stepFactor + remainder) >= 0) {
+            if (size - (i * stepFactor + remainder) >= 0) {
                 trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
             } else break;
         }

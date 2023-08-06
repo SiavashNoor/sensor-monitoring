@@ -1,5 +1,6 @@
 .parent{
     -fx-background-color: #F5F5F7;
+     -fx-background-radius : 7 ;
 
 }
 .sidebar{
@@ -70,7 +71,7 @@
 }
 .icon:hover {
     -fx-font-size :24 ;
-    -fx-fill : #e8e8e8 ;
+    -fx-fill : #8c8c8c ;
 }
 .icon2{
     -fx-fill : #6b6b6a ;
@@ -89,6 +90,7 @@
 
 .windowBar{
 -fx-background-color : #d4dde5 ;
+   -fx-background-radius : 7 7 0 0  ;
 
 }
 .stationName{
