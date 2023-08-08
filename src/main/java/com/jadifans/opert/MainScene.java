@@ -102,11 +102,11 @@ public class MainScene implements Initializable {
     XYChart.Series<String, Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
     XYChart.Series<String, Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
 
-    XYChart.Series<String, Integer> tempSeries1_2 = new XYChart.Series<>();
-    XYChart.Series<String, Integer> humidSeries1_2 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> tempSeries1_2 = new XYChart.Series<>(FXCollections.observableArrayList());
+    XYChart.Series<String, Integer> humidSeries1_2 = new XYChart.Series<>(FXCollections.observableArrayList());
 
     XYChart.Series<String, Integer> tempSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-    XYChart.Series<String, Integer> humidSeries2_1 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> humidSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
 
     XYChart.Series<String, Integer> tempSeries2_2 = new XYChart.Series<>();
     XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>();
@@ -326,6 +326,15 @@ public class MainScene implements Initializable {
     private void makeSeries() {
         /// I really don't like to do this shit code I mean hard coding, I know its ridiculous .In the next major Update going to make a big change in this part of app
         // and make it more flexible .
+        tempSeries1_1.getData().clear();
+        tempSeries1_2.getData().clear();
+        tempSeries2_1.getData().clear();
+        tempSeries2_2.getData().clear();
+        humidSeries1_1.getData().clear();
+        humidSeries1_2.getData().clear();
+        humidSeries2_1.getData().clear();
+        humidSeries2_2.getData().clear();
+
         for (int i = 0; i < trimmedDataSamples.size(); i++) {
 
             tempSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[0]));
@@ -385,8 +394,9 @@ public class MainScene implements Initializable {
         int lastIndex = size - 1;
 
         for (int i = 0; i < trimmedListSize; i++) {
-            if (size - (i * stepFactor + remainder) >= 0) {
+            if (lastIndex - (i * stepFactor + remainder) >= 0) {
                 trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
+                System.out.println("selected indexes:"+(lastIndex - (i * stepFactor + remainder)));
             } else break;
         }
     }
