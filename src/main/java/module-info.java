@@ -14,12 +14,6 @@ module com.jadifans.opert {
     requires org.kordamp.ikonli.javafx;
     requires  org.jsoup;
 
-
-
-
-
-
-
     ////was here:
     opens com.jadifans.opert to javafx.fxml;
     exports com.jadifans.opert;
