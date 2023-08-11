@@ -2,12 +2,13 @@ package com.jadifans.opert;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
 
 
-public class HelloApplication extends Application  {
+public class OpertApplication extends Application  {
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -23,10 +24,12 @@ public class HelloApplication extends Application  {
     public void showUI(Stage stage) throws IOException {
 
         //this is for main application : do not delete this ;
-        FXMLLoader fxmlLoader1 = new FXMLLoader(HelloApplication.class.getResource("mainScene.fxml"));
+        FXMLLoader fxmlLoader1 = new FXMLLoader(OpertApplication.class.getResource("mainScene.fxml"));
         Scene scene = new Scene(fxmlLoader1.load());
+        scene.setFill(Color.TRANSPARENT);
         //for main program change this to UNDECORATED.
         stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setTitle("monitoring");
         stage.setScene(scene);
         stage.setFullScreen(false);

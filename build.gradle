@@ -3,11 +3,11 @@ plugins {
     id 'application'
     id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin' version '0.0.13'
-    id 'org.beryx.jlink' version '2.25.0'
+    id 'org.beryx.jlink' version '2.26.0'
 }
 
 group 'com.jadifans'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.jadifans.opert'
-    mainClass = 'com.jadifans.opert.HelloApplication'
+    mainClass = 'com.jadifans.opert.OpertApplication'
 }
 
 javafx {
@@ -38,36 +38,100 @@ javafx {
 dependencies {
     implementation group: 'com.jfoenix', name: 'jfoenix', version: '9.0.9'
     implementation 'org.jetbrains:annotations:23.0.0'
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    /*testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")*/
     implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
     implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.1'
     implementation 'org.openjfx:javafx-swing:21-ea+5'
     implementation group: 'org.openjfx', name: 'javafx-web', version: '19'
     implementation group: 'org.openjfx', name: 'javafx-media', version: '19'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: '19'
-// https://mvnrepository.com/artifact/org.jsoup/jsoup
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.16.1'
-
-
-
-
 }
 
-
-
-test {
-    useJUnitPlatform()
-}
 
 jlink {
-    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    imageZip = project.file("${buildDir}/distributions/app.zip")
+    // Some default options
+   // options = ['--strip-debug', '--compress', '--no-header-files', '--no-man-pages']
     launcher {
-        name = 'app'
+        name = 'Opert-Monitoring'
+    }
+    // Does some magic to log4j JARs that don't want to merge
+
+
+    jpackage {
+        // Could be taken from command line, here it is defined statically
+        // project.findProperty('installerOs')
+        //    (example: -PinstallerOs=mac)
+         targetPlatformName = 'win'
+        // Resource directory for native package overrides,
+        // you can do lots of magic here too...
+        resourceDir = file('src/main/java/com/jadifans/opert')
+        if (targetPlatformName == 'mac') { // we are on mac
+            targetPlatform("mac") {
+                // Use downloaded Eclipse Temurin JDK
+                jdkHome = '/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home'
+                // Use another local JDK
+                //jdkHome = '/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home'
+            }
+            installerType = 'pkg' // we want to have macOS PKG
+        }
+        if (targetPlatformName == 'win') { // we are on Windows
+            targetPlatform("win") {
+                jdkHome = 'E:/java JDK/jdk19'
+            }
+            installerType = 'exe'
+        }
+        if (targetPlatformName == 'linux') { // we are on linux
+            targetPlatform("linux") {
+            }
+            installerType = 'deb'
+        }
+        // Add jpackage-specific options
+        installerOptions = [
+                '--name', 'Opert-Monitoring', // installer name
+                //'--description', project.description,
+                '--copyright', 'Copyrigth 2023 Siavash',
+                '--vendor', 'Siavash.N']
+        // We also could take the installer type from comand line
+        // installerType = project.findProperty('installerType')
+        // We would pass this from the command line
+        //    (example: -PinstallerType=msi)
+        // Add platform-specific options for the target image and for jpackage
+        if (installerType == 'pkg') {
+            imageOptions += ['--icon', 'src/main/resources/com.jadifans.opert/img/AppIcon.png']
+            installerOptions += [
+                    '--license-file', 'package/LICENSE-OS-Installer.txt'
+            ]
+        }
+        if (installerType == 'exe') {
+            imageOptions += ['--icon', 'E:/javaprg/opert/src/main/resources/com/jadifans/opert/img/OpertIcon.ico']
+            installerOptions += [
+                    '--win-per-user-install' , // Install only for current user
+                    '--win-console', // Shows what Java outputs to the console
+                    '--win-dir-chooser',
+                    '--win-menu',
+                    '--win-shortcut'
+            ]
+        }
+        if (installerType in ['deb', 'rpm']) {
+            imageOptions += ['--icon', 'src/main/resources/com/jadifans/opert/img/icon_256x256.png']
+            installerOptions += [
+                    '--linux-menu-group', 'Network',
+                    '--linux-shortcut'
+            ]
+        }
+        if (installerType == 'deb') {
+            installerOptions += [
+                    '--linux-deb-maintainer', 'info@autumo.ch'
+            ]
+        }
+        if (installerType == 'rpm') {
+            installerOptions += [
+                    '--linux-rpm-license-type', 'GPLv3'
+            ]
+        }
     }
 }
 
-jlinkZip {
-    group = 'distribution'
-}

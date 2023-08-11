@@ -13,17 +13,15 @@ public class SensorServer  {
 
     boolean successfulConnection = true;
     Document doc = null;
-    int counter=1;
+    State state = State.getInstance();
+
 
     SensorServer(){
     }
 
 //ServerURL for test : http://49.12.208.81:1374
     public boolean connectToServer() {
-
-
         String serverURL = getServerAddress();
-
         try {
             doc = Jsoup.connect(serverURL).get();
 
@@ -66,15 +64,11 @@ public class SensorServer  {
     private String getServerAddress() {
         AtomicReference<StringBuilder> str = new AtomicReference<>(new StringBuilder());
         str.get().append("http://");
-        str.get().append(State.IPAddress);
+        str.get().append(state.IPAddress);
         str.get().append(":");
-        str.get().append(State.PortNumber);
-
+        str.get().append(state.PortNumber);
         return str.toString();
-
     }
-
-
 }
 
 

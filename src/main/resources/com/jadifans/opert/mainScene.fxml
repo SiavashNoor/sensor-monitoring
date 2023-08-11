@@ -17,42 +17,34 @@
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane prefHeight="580.0" prefWidth="780.0" styleClass="parent" stylesheets="@Stylesheets.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.MainScene">
+<AnchorPane prefHeight="581.0" prefWidth="780.0" styleClass="parent" stylesheets="@Stylesheets.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.MainScene">
    <children>
       <Pane fx:id="windowBar" onMouseDragged="#windowBarDragged" onMousePressed="#windowBarPressed" prefHeight="46.0" prefWidth="780.0" styleClass="windowBar" stylesheets="@Stylesheets.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <FontIcon iconLiteral="fas-times" iconSize="18" layoutX="749.5" layoutY="30.0" />
             <FontIcon iconLiteral="fas-window-minimize" iconSize="16" layoutX="699.5" layoutY="24.5" text="" wrappingWidth="13.0" />
-            <Circle fx:id="minimizeButton" fill="#00dcf0" layoutX="707.0" layoutY="24.0" onMouseClicked="#minimizeApplication" opacity="0.56" radius="16.0" styleClass="minimizebutton">
+            <Circle fx:id="minimizeButton" fill="#00dcf0" layoutX="707.5" layoutY="24.0" onMouseClicked="#minimizeApplication" opacity="0.56" radius="13.0" styleClass="minimizebutton">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Circle>
-            <Circle fx:id="closeButton" fill="DODGERBLUE" layoutX="756.0" layoutY="24.0" onMouseClicked="#closeApplication" opacity="0.56" radius="16.0" styleClass="closebutton">
+            <Circle fx:id="closeButton" fill="DODGERBLUE" layoutX="755.5" layoutY="24.0" onMouseClicked="#closeApplication" opacity="0.56" radius="13.0" styleClass="closebutton">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Circle>
-            <Text fill="#8e8e8e" layoutX="130.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opert Monitoring ">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Text>
-         </children></Pane>
-      <Pane prefHeight="200.0" prefWidth="100.0" styleClass="sidebar" stylesheets="@Stylesheets.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <FontIcon iconLiteral="fas-sync-alt" layoutX="41.0" layoutY="525.0" styleClass="icon" text="">
+            <FontIcon fx:id="Settings" iconLiteral="fas-cog" layoutX="14.0" layoutY="30.0" onMouseClicked="#openSettingsWindow" styleClass="icon" text="">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></FontIcon>
-            <FontIcon fx:id="Settings" iconLiteral="fas-cog" layoutX="41.0" layoutY="116.0" onMouseClicked="#openSettingsWindow" styleClass="icon" text="">
+            <FontIcon fx:id="infoIcon" iconLiteral="fas-info-circle" layoutX="91.0" layoutY="30.0" onMouseClicked="#openInfoWindow" styleClass="icon">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></FontIcon>
-            <FontIcon fx:id="infoIcon" iconLiteral="fas-info-circle" layoutX="41.0" layoutY="447.0" onMouseClicked="#openInfoWindow" styleClass="icon">
+            <FontIcon iconLiteral="fas-sync-alt" layoutX="50.0" layoutY="30.0" styleClass="icon" text="">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></FontIcon>
          </children></Pane>
-      <GridPane hgap="10.0" layoutX="100.0" layoutY="50.0" styleClass="tileHolder" stylesheets="@Stylesheets.css" vgap="10.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+      <GridPane hgap="10.0" layoutY="72.0" prefHeight="467.0" prefWidth="780.0" styleClass="tileHolder" stylesheets="@Stylesheets.css" vgap="10.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -68,9 +60,9 @@
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font></Text>
-                  <AreaChart fx:id="areaChart1_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                  <AreaChart fx:id="areaChart1_1" layoutX="7.0" layoutY="28.0" opacity="0.6" prefHeight="178.0" prefWidth="342.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
-                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" fx:id="xAxis1" />
+                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
                      </xAxis>
                      <yAxis>
                         <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
@@ -79,10 +71,10 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Label fx:id="temp1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1">
                <children>
@@ -90,21 +82,21 @@
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font></Text>
-                  <AreaChart fx:id="areaChart1_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
-                    </xAxis>
-                    <yAxis>
-                       <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
-                          <effect>
-                             <Glow level="0.42" />
-                          </effect></NumberAxis>
-                    </yAxis>
+                  <AreaChart fx:id="areaChart1_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="178" prefWidth="342" styleClass="chartArea" verticalGridLinesVisible="false">
+                     <xAxis>
+                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
+                           <effect>
+                              <Glow level="0.42" />
+                           </effect></NumberAxis>
+                     </yAxis>
                   </AreaChart>
-                  <Label fx:id="temp2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" GridPane.rowIndex="1">
                <children>
@@ -112,21 +104,21 @@
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font></Text>
-                  <AreaChart fx:id="areaChart2_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                  <AreaChart fx:id="areaChart2_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="178" prefWidth="342" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
-                        <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
+                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
                      </xAxis>
-                     <yAxis>
+                     <yAxis>     
                         <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
                            <effect>
                               <Glow level="0.42" />
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Label fx:id="temp3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
@@ -134,9 +126,9 @@
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font></Text>
-                  <AreaChart fx:id="areaChart2_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                  <AreaChart fx:id="areaChart2_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="178" prefWidth="342" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
-                        <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
+                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
                      </xAxis>
                      <yAxis>
                         <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
@@ -145,28 +137,22 @@
                            </effect></NumberAxis>
                      </yAxis>
                   </AreaChart>
-                  <Label fx:id="temp4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="108.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon  iconLiteral="fas-temperature-high" layoutX="162.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon  iconLiteral="fas-tint" layoutX="280.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="226.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
+                  <Label fx:id="temp4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
+                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
+                  <Label fx:id="hum4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
                </children></Pane>
          </children>
       </GridPane>
-      <FontIcon iconLiteral="fab-github" iconSize="16" layoutX="120.0" layoutY="553.0" />
-      <FontIcon iconLiteral="far-copyright" layoutX="398.0" layoutY="553.0" text="" />
-      <Text layoutX="417.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All Rights Reserved">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Text>
-      <Hyperlink fx:id="githubLink" layoutX="142.0" layoutY="536.0" onMouseClicked="#openGithubLink" text="SIAVASH" textFill="#2e2b2b" underline="true">
+      <FontIcon iconLiteral="fab-github" iconSize="16" layoutX="29.0" layoutY="561.0" />
+      <Hyperlink fx:id="githubLink" layoutX="45.0" layoutY="543.0" onMouseClicked="#openGithubLink" text="SIAVASH" textFill="#2e2b2b" underline="true">
          <font>
             <Font size="11.0" />
          </font>
       </Hyperlink>
-      <Text fx:id="ConnectionStatus" layoutX="417.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected/Disconnected" />
-      <Text layoutX="292.0" layoutY="513.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection Status :" />
-      <Text layoutX="637.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opert   v1.0.0">
+      <Text fx:id="ConnectionStatus" layoutX="360.0" layoutY="558.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected/Disconnected" />
+      <Text layoutX="235.0" layoutY="558.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection Status :" />
+      <Text layoutX="675.0" layoutY="559.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opert   v1.0.0">
          <font>
             <Font size="11.0" />
          </font>
