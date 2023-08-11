@@ -3,7 +3,7 @@ plugins {
     id 'application'
     id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin' version '0.0.13'
-    id 'org.beryx.jlink' version '2.25.0'
+    id 'org.beryx.jlink' version '2.26.0'
 }
 
 group 'com.jadifans'
@@ -50,26 +50,6 @@ dependencies {
 }
 
 
-
-/*
-test {
-    useJUnitPlatform()
-}
-
-
-jlink {
-    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
-    launcher {
-
-        name = 'app'
-    }
-}
-
-jlinkZip {
-    group = 'distribution'
-}
-*/
 jlink {
     imageZip = project.file("${buildDir}/distributions/app.zip")
     // Some default options
@@ -87,7 +67,7 @@ jlink {
          targetPlatformName = 'win'
         // Resource directory for native package overrides,
         // you can do lots of magic here too...
-        resourceDir = file('com.jadifans.opert/')
+        resourceDir = file('src/main/java/com/jadifans/opert')
         if (targetPlatformName == 'mac') { // we are on mac
             targetPlatform("mac") {
                 // Use downloaded Eclipse Temurin JDK
@@ -113,24 +93,23 @@ jlink {
                 '--name', 'Opert-Monitoring', // installer name
                 //'--description', project.description,
                 '--copyright', 'Copyrigth 2023 Siavash',
-                '--vendor', 'Siavash.N'
-        ]
+                '--vendor', 'Siavash.N']
         // We also could take the installer type from comand line
         // installerType = project.findProperty('installerType')
         // We would pass this from the command line
         //    (example: -PinstallerType=msi)
         // Add platform-specific options for the target image and for jpackage
         if (installerType == 'pkg') {
-            imageOptions += ['--icon', 'src/main/resources/com.jadifans.opert/img/OpertIcon.png']
+            imageOptions += ['--icon', 'src/main/resources/com.jadifans.opert/img/AppIcon.png']
             installerOptions += [
                     '--license-file', 'package/LICENSE-OS-Installer.txt'
             ]
         }
         if (installerType == 'exe') {
-            imageOptions += ['--icon', '/src/main/resources/com/jadifans/opert/img/OpertIcon.png']
+            imageOptions += ['--icon', 'E:/javaprg/opert/src/main/resources/com/jadifans/opert/img/OpertIcon.ico']
             installerOptions += [
-                    //'--win-per-user-install', // Install only for current user
-                    // '--win-console', // Shows what Java outputs to the console
+                    '--win-per-user-install' , // Install only for current user
+                    '--win-console', // Shows what Java outputs to the console
                     '--win-dir-chooser',
                     '--win-menu',
                     '--win-shortcut'

@@ -111,6 +111,7 @@ public class MainScene implements Initializable {
     XYChart.Series<String, Integer> tempSeries2_2 = new XYChart.Series<>();
     XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>();
 
+
 /*
      this is another method to update a chart.not really practically true.
     javafx.event.EventHandler<ActionEvent> chartUpdater = new javafx.event.EventHandler<>() {
