@@ -14,8 +14,6 @@ public class SensorServer  {
     boolean successfulConnection = true;
     Document doc = null;
     State state = State.getInstance();
-
-
     SensorServer(){
     }
 
