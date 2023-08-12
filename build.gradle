@@ -108,8 +108,8 @@ jlink {
         if (installerType == 'exe') {
             imageOptions += ['--icon', 'E:/javaprg/opert/src/main/resources/com/jadifans/opert/img/OpertIcon.ico']
             installerOptions += [
-                    '--win-per-user-install' , // Install only for current user
-                    '--win-console', // Shows what Java outputs to the console
+                   // '--win-per-user-install' , // Install only for current user
+                   // '--win-console', // Shows what Java outputs to the console
                     '--win-dir-chooser',
                     '--win-menu',
                     '--win-shortcut'

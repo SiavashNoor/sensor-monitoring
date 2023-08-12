@@ -12,16 +12,16 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -75,7 +75,7 @@ public class ApplicationSettings implements Initializable {
         setStation();
         setUpAlarms();
         setUpTempThreshold();
-       rectangle.setOnMouseReleased(this::setStation);
+        rectangle.setOnMouseReleased(this::setStation);
         ipAddressField.setOnMouseClicked(this::getIPAddressValue);
         portNumberField.setOnMouseClicked(this::getPortNumberValue);
         settingsImportButton.setOnMouseClicked(this::importSettings);
@@ -85,10 +85,10 @@ public class ApplicationSettings implements Initializable {
         tempThreshold.setText(String.valueOf(state.tempThreshold));
     }
 
-    private void setUpAlarms(){
-        CheckBox[] Alarms ={sensor1Alarm, sensor2Alarm, sensor3Alarm, sensor4Alarm, connectionAlarm};
-        for(int i=0;i<Alarms.length;i++){
-            if(state.alarms[i]!=null){
+    private void setUpAlarms() {
+        CheckBox[] Alarms = {sensor1Alarm, sensor2Alarm, sensor3Alarm, sensor4Alarm, connectionAlarm};
+        for (int i = 0; i < Alarms.length; i++) {
+            if (state.alarms[i] != null) {
                 Alarms[i].setSelected(state.alarms[i].isSelected());
             }
         }
@@ -105,11 +105,12 @@ public class ApplicationSettings implements Initializable {
             ipAddressField.setText(state.IPAddress);
         }
     }
-    private void setStation(){
-        Text[] Stations ={stationOne,stationTwo,stationThree,stationFour};
 
-        for(int i=0;i<Stations.length;i++){
-            if(state.stations[i]!=null){
+    private void setStation() {
+        Text[] Stations = {stationOne, stationTwo, stationThree, stationFour};
+
+        for (int i = 0; i < Stations.length; i++) {
+            if (state.stations[i] != null) {
                 Stations[i].setText(state.stations[i].name);
             }
         }
@@ -124,12 +125,10 @@ public class ApplicationSettings implements Initializable {
         }
     }
 
-
-
-
     public String getPeriodValueFromChoiceBox() {
         return periodChoiceBox.getValue();
     }
+
     public void getIPAddressValue(MouseEvent event) {
         System.out.println(ipAddressField.getText());
     }
@@ -147,12 +146,12 @@ public class ApplicationSettings implements Initializable {
         state.choiceBoxOption = getPeriodValueFromChoiceBox();
         state.IPAddress = ipAddressField.getText();
         state.PortNumber = portNumberField.getText();
-        state.tempThreshold =Integer.parseInt(tempThreshold.getText());
+        state.tempThreshold = Integer.parseInt(tempThreshold.getText());
 
 
         // a mechanism to prevent  empty text fields :
 
-        if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("") && state.stations!=null) {
+        if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("") && state.stations != null) {
             final FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showSaveDialog(stage);
 
@@ -169,12 +168,11 @@ public class ApplicationSettings implements Initializable {
             if (portNumberField.getText().equals("")) {
                 portNumberField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             }
-            if(state.isNull(state.stations)){
+            if (state.isNull(state.stations)) {
                 rectangle.setStyle(" -fx-stroke:  #B22222; -fx-stroke-width: 3;");
             }
         }
     }
-
 
 
     private void saveAlarmToState() {
@@ -206,12 +204,11 @@ public class ApplicationSettings implements Initializable {
         //getting the click position of mouse . need to know which part of rectangle is selected .
         stationNumberByPosition = returnStationNumberBasedOnClickPosition(mouseEvent);
 
-
-       Parent root;
+        Parent root;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("stationAdder.fxml"));
-            root =loader.load();
-             StationAdder stationAdder = loader.getController();
+            root = loader.load();
+            StationAdder stationAdder = loader.getController();
 
             //this is how I pass the same instance to the other scene and let it send back data to this  scene which is considered as a parent
             stationAdder.setParentController(this);
@@ -226,7 +223,7 @@ public class ApplicationSettings implements Initializable {
         newStage.setScene(scene);
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
-        newStage.getIcons().add(new Image("com/jadifans/opert/img/plusIcon.png"));
+        newStage.getIcons().add(new Image(Objects.requireNonNull(MainScene.class.getResourceAsStream("img/plusIcon.png"))));
         newStage.show();
     }
 
@@ -243,7 +240,7 @@ public class ApplicationSettings implements Initializable {
         return ry * 2 + rx;
     }
 
-    public  void setStationName(String stationName,boolean includeTemp,boolean includeHum) {
+    public void setStationName(String stationName, boolean includeTemp, boolean includeHum) {
 /*        System.out.println(stationName);
         System.out.println("in set stationName"+stationNumberByPosition);
         System.out.println("as instance"+this);*/
@@ -265,13 +262,11 @@ public class ApplicationSettings implements Initializable {
                 state.stations[3] = new Station(stationName, includeTemp, includeTemp);
             }
         }
-
     }
 
 
-    public void setParentController(MainScene mainScene){
+    public void setParentController(MainScene mainScene) {
         this.mainScene = mainScene;
-
     }
 
 }

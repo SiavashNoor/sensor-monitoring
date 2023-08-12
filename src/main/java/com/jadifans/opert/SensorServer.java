@@ -67,7 +67,7 @@ public class SensorServer  {
         str.get().append(state.IPAddress);
         str.get().append(":");
         str.get().append(state.PortNumber);
-        return str.toString();
+        return str.toString().trim();
     }
 }
 

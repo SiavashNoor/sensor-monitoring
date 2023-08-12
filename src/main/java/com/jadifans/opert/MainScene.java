@@ -1,10 +1,7 @@
 package com.jadifans.opert;
 
-
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -48,7 +45,8 @@ public class MainScene implements Initializable {
     private final String[] xValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
     int trimmedListSize = 15;
     LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
-
+    int timerTaskDelay = 8000;
+    int timerTaskPeriod = 60000;
 
     @FXML
     public Label temp1;
@@ -98,7 +96,6 @@ public class MainScene implements Initializable {
     private AreaChart<String, Integer> areaChart2_2;
 
 
-
     XYChart.Series<String, Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
     XYChart.Series<String, Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
 
@@ -112,27 +109,6 @@ public class MainScene implements Initializable {
     XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>();
 
 
-/*
-     this is another method to update a chart.not really practically true.
-    javafx.event.EventHandler<ActionEvent> chartUpdater = new javafx.event.EventHandler<>() {
-
-         @Override
-         public void handle(ActionEvent event) {
-             areaChart1_2.getData().remove(tempSeries1_2);
-             Random random = new Random();
-             //without setting animation false I was getting the  " Duplicate series added " error and after just one update
-             //the exception error was being thrown.
-             areaChart1_2.setAnimated(false);
-             if (tempSeries1_2.getData().size() < 15) {
-                 tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-             } else {
-                 tempSeries1_2.getData().remove(0);
-                 tempSeries1_2.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-             }
-             areaChart1_2.getData().add(tempSeries1_2);
-         }
-     };
-    */
 
     public void closeApplication(MouseEvent event) {
         stage = (Stage) ((Circle) event.getSource()).getScene().getWindow();
@@ -172,7 +148,7 @@ public class MainScene implements Initializable {
         newStage.setScene(scene);
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
-        newStage.getIcons().add(new Image("com/jadifans/opert/img/settings.png"));
+        newStage.getIcons().add(new Image(Objects.requireNonNull(MainScene.class.getResourceAsStream("img/settings.png"))));
         newStage.show();
     }
 
@@ -208,17 +184,17 @@ public class MainScene implements Initializable {
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
-        stage.getIcons().add(new Image("com/jadifans/opert/img/IdeaIcon.png"));
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainScene.class.getResourceAsStream("img/IdeaIcon.png"))));
         stage.show();
     }
 
     public void runBackEndTasks() {
-        int timerTaskDelay = 30000;
-        int timerTaskPeriod = 60000;
+
         if (!taskIsRunning) {
             taskIsRunning = true;
 
             Timer timer = new Timer();
+
             areaChart1_1.setAnimated(false);
             areaChart1_2.setAnimated(false);
             areaChart2_1.setAnimated(false);
@@ -233,31 +209,18 @@ public class MainScene implements Initializable {
 
 
                     Platform.runLater(() -> {
-                            updateConnectionStatus(serverIsConnected);
-                            updateCharts();
-                            updateLabels();
+                        updateConnectionStatus(serverIsConnected);
+                        updateCharts();
+                        updateLabels();
 
-                     /*       areaChart1_1.getData().remove(tempSeries1_1);
-                            if (tempSeries1_1.getData().size() < 15) {
-                                tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-                            } else {
-                                tempSeries1_1.getData().remove(0);
-                                tempSeries1_1.getData().add(new XYChart.Data<>(String.valueOf(random.nextInt(1000)), random.nextInt(100)));
-                            }
-                            areaChart1_1.getData().add(tempSeries1_1);*/
                     });
                 }
             };
 
+
             timer.scheduleAtFixedRate(timerTask, timerTaskDelay, timerTaskPeriod);
 
-            //////////////////////////////////////
-            //without setting animation false I was getting the  " Duplicate series added " error and after just one update
-            //the exception error was being thrown .
-           /* Timeline updateChart = new Timeline(new KeyFrame(Duration.seconds(60), chartUpdater));
-            updateChart.setCycleCount(Animation.INDEFINITE);
-            updateChart.play();*/
-            ///////////////////////////////////////
+
         }
     }
 
@@ -275,17 +238,19 @@ public class MainScene implements Initializable {
 
     private void updateLabels() {
         // labels are updated based on last dataSample.
-       temp1.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[0]));
-        temp2.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[1]));
-        temp3.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[2]));
-        temp4.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[3]));
-        hum1.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[0]));
-        hum2.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[1]));
-        hum3.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[2]));
-        hum4.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[3]));
+        if (DataSample.AllDataSamples.size() > 0) {
+            temp1.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[0]));
+            temp2.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[1]));
+            temp3.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[2]));
+            temp4.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[3]));
+            hum1.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[0]));
+            hum2.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[1]));
+            hum3.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[2]));
+            hum4.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[3]));
+        }
     }
 
-    public void setStationNames(){
+    public void setStationNames() {
         chart1Name.setText(state.stations[0].name);
         chart2Name.setText(state.stations[1].name);
         chart3Name.setText(state.stations[2].name);
@@ -304,24 +269,51 @@ public class MainScene implements Initializable {
         areaChart2_1.getData().clear();
         areaChart2_2.getData().clear();
 
-       // dding empty series to change color of the series .jfx has default colors for series.by adding empty series just
+        // dding empty series to change color of the series .jfx has default colors for series.by adding empty series just
         //skipping those colors . to use it  just uncomment the below line :
-        areaChart1_1.getData().add(tempSeries1_1);
+        if (state.stations[0].includeTemp) {
+            areaChart1_1.getData().add(tempSeries1_1);
+        } else {
+            areaChart1_1.getData().add(new XYChart.Series<>());
+        }
         areaChart1_1.getData().add(new XYChart.Series<>());
         areaChart1_1.getData().add(new XYChart.Series<>());
-        areaChart1_1.getData().add(humidSeries1_1);
-        areaChart1_2.getData().add(tempSeries1_2);
+        if (state.stations[0].includeHumidity) {
+            areaChart1_1.getData().add(humidSeries1_1);
+        }
+
+        if (state.stations[1].includeTemp) {
+            areaChart1_2.getData().add(tempSeries1_2);
+        } else {
+            areaChart1_2.getData().add(new XYChart.Series<>());
+        }
         areaChart1_2.getData().add(new XYChart.Series<>());
         areaChart1_2.getData().add(new XYChart.Series<>());
-        areaChart1_2.getData().add(humidSeries1_2);
-        areaChart2_1.getData().add(tempSeries2_1);
+        if (state.stations[1].includeHumidity) {
+            areaChart1_2.getData().add(humidSeries1_2);
+        }
+
+        if (state.stations[2].includeTemp) {
+            areaChart2_1.getData().add(tempSeries2_1);
+        } else {
+            areaChart1_2.getData().add(new XYChart.Series<>());
+        }
         areaChart2_1.getData().add(new XYChart.Series<>());
         areaChart2_1.getData().add(new XYChart.Series<>());
-        areaChart2_1.getData().add(humidSeries2_1);
-        areaChart2_2.getData().add(tempSeries2_2);
+        if (state.stations[2].includeHumidity) {
+            areaChart2_1.getData().add(humidSeries2_1);
+        }
+
+        if (state.stations[3].includeTemp) {
+            areaChart2_2.getData().add(tempSeries2_2);
+        } else {
+            areaChart2_2.getData().add(new XYChart.Series<>());
+        }
         areaChart2_2.getData().add(new XYChart.Series<>());
         areaChart2_2.getData().add(new XYChart.Series<>());
-        areaChart2_2.getData().add(humidSeries2_2);
+        if (state.stations[3].includeHumidity) {
+            areaChart2_2.getData().add(humidSeries2_2);
+        }
     }
 
     private void makeSeries() {
@@ -352,7 +344,7 @@ public class MainScene implements Initializable {
 
     public void makeTrimmedDataSamples(String choiceBoxOption) {
         //sp -> step or step factor
-        int sp = 0;
+        int sp;
 
         switch (choiceBoxOption.toLowerCase()) {
             case "instantly" -> {
@@ -397,7 +389,7 @@ public class MainScene implements Initializable {
         for (int i = 0; i < trimmedListSize; i++) {
             if (lastIndex - (i * stepFactor + remainder) >= 0) {
                 trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
-                System.out.println("selected indexes:"+(lastIndex - (i * stepFactor + remainder)));
+                System.out.println("selected indexes:" + (lastIndex - (i * stepFactor + remainder)));
             } else break;
         }
     }
