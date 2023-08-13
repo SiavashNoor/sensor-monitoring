@@ -13,13 +13,7 @@ public class OpertApplication extends Application  {
     @Override
     public void start(Stage stage) throws IOException {
         showUI(stage);
-
     }
-   /* @Override
-    public void stop(){
-
-    }*/
-
 
     public void showUI(Stage stage) throws IOException {
 

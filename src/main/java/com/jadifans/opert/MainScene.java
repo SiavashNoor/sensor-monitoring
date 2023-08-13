@@ -21,6 +21,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
@@ -35,7 +37,7 @@ public class MainScene implements Initializable {
 
     SensorServer sensorServer = new SensorServer();
 
-
+    AlertPlayer player = new AlertPlayer();
     Stage stage;
     private boolean taskIsRunning = false;
     State state = State.getInstance();
@@ -43,7 +45,7 @@ public class MainScene implements Initializable {
     private double xOffset = 0;
     private double yOffset = 0;
     private final String[] xValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
-    int trimmedListSize = 15;
+    int trimmedListSize = 16;
     LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
     int timerTaskDelay = 8000;
     int timerTaskPeriod = 60000;
@@ -105,9 +107,11 @@ public class MainScene implements Initializable {
     XYChart.Series<String, Integer> tempSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
     XYChart.Series<String, Integer> humidSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
 
-    XYChart.Series<String, Integer> tempSeries2_2 = new XYChart.Series<>();
-    XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>();
+    XYChart.Series<String, Integer> tempSeries2_2 = new XYChart.Series<>(FXCollections.observableArrayList());
+    XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>(FXCollections.observableArrayList());
 
+    public MainScene()  {
+    }
 
 
     public void closeApplication(MouseEvent event) {
@@ -192,37 +196,34 @@ public class MainScene implements Initializable {
 
         if (!taskIsRunning) {
             taskIsRunning = true;
-
             Timer timer = new Timer();
-
             areaChart1_1.setAnimated(false);
             areaChart1_2.setAnimated(false);
             areaChart2_1.setAnimated(false);
             areaChart2_2.setAnimated(false);
-
             TimerTask timerTask = new TimerTask() {
-
                 @Override
                 public void run() {
-
                     serverIsConnected = sensorServer.connectToServer();
-
-
                     Platform.runLater(() -> {
                         updateConnectionStatus(serverIsConnected);
                         updateCharts();
                         updateLabels();
-
+                            checkThreshold();
                     });
                 }
             };
-
-
             timer.scheduleAtFixedRate(timerTask, timerTaskDelay, timerTaskPeriod);
-
-
         }
     }
+
+    private void checkThreshold() {
+        if(state.isThereAnyDataAboveThreshold()){
+            System.out.println(state.isThereAnyDataAboveThreshold());
+           player.playAlert();
+        }
+    }
+
 
     private void updateConnectionStatus(boolean serverIsConnected) {
         ///////////////////set connection status here using boolean value isConnected
@@ -282,6 +283,7 @@ public class MainScene implements Initializable {
             areaChart1_1.getData().add(humidSeries1_1);
         }
 
+
         if (state.stations[1].includeTemp) {
             areaChart1_2.getData().add(tempSeries1_2);
         } else {
@@ -292,6 +294,7 @@ public class MainScene implements Initializable {
         if (state.stations[1].includeHumidity) {
             areaChart1_2.getData().add(humidSeries1_2);
         }
+
 
         if (state.stations[2].includeTemp) {
             areaChart2_1.getData().add(tempSeries2_1);
@@ -328,8 +331,7 @@ public class MainScene implements Initializable {
         humidSeries2_1.getData().clear();
         humidSeries2_2.getData().clear();
 
-        for (int i = 0; i < trimmedDataSamples.size(); i++) {
-
+        for (int i = 0; i <trimmedDataSamples.size(); i++) {
             tempSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[0]));
             humidSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[0]));
             tempSeries1_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[1]));
@@ -386,7 +388,7 @@ public class MainScene implements Initializable {
         int lastIndex = size - 1;
         int remainder = lastIndex % stepFactor;
 
-        for (int i = 0; i <= lastIndex; i++) {
+        for (int i = 0; i <trimmedListSize; i++) {
             if (lastIndex - (i * stepFactor + remainder) >= 0) {
                 trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
                 System.out.println("selected indexes:" + (lastIndex - (i * stepFactor + remainder)));

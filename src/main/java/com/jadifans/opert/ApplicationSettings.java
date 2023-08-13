@@ -259,7 +259,7 @@ public class ApplicationSettings implements Initializable {
             }
             case 3 -> {
                 stationFour.setText(stationName);
-                state.stations[3] = new Station(stationName, includeTemp, includeTemp);
+                state.stations[3] = new Station(stationName, includeTemp, includeHum);
             }
         }
     }

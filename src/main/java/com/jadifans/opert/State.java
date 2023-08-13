@@ -9,6 +9,10 @@ public class State {
    public String choiceBoxOption ;
    public String IPAddress ;
    public String PortNumber;
+    Station[] stations = new Station[4];
+    //four alarms for stations and the last one is for connection.
+    CheckBox[] alarms = new CheckBox[5];
+   int tempThreshold= 40;
 
   private State(){
   }
@@ -20,11 +24,6 @@ public class State {
     return state;
   }
 
-   Station[] stations = new Station[4];
-  //four alarms for stations and the last one is for connection.
-   CheckBox[] alarms = new CheckBox[5];
-   int tempThreshold= 40;
-
   public  <T> boolean isNull(T[] t ){
       boolean b = false;
       for ( T i:t) {
@@ -35,7 +34,19 @@ public class State {
       }
       System.out.println(b);
       return b ;
+  }
 
+
+  public boolean isThereAnyDataAboveThreshold() {
+      boolean isAbove = false;
+      if (DataSample.AllDataSamples.size() >0) {
+          for (int i = 0; i < DataSample.AllDataSamples.getFirst().temperature.length; i++) {
+              if (DataSample.AllDataSamples.getLast().temperature[i] >= tempThreshold && stations[i].includeTemp) {
+                  isAbove = true;
+              }
+          }
+      }
+      return isAbove;
   }
 }
 

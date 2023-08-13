@@ -7,6 +7,8 @@ module com.jadifans.opert {
     //newly added :
     requires javafx.base;
     requires javafx.graphics;
+    requires javafx.media;
+
 
     // add icon pack modules
     requires org.kordamp.ikonli.fontawesome5;
