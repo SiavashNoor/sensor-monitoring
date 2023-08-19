@@ -7,23 +7,19 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class SensorServer extends TimerTask {
-    CoreLogic coreLogic;
+public class SensorServer  {
 
+    boolean successfulConnection = true;
     Document doc = null;
-    int counter=1;
-
-    SensorServer(CoreLogic coreLogic){
-        this.coreLogic= coreLogic;
+    State state = State.getInstance();
+    SensorServer(){
     }
-    public void connectToServer() {
 
-
-
-        String serverURL = "http://49.12.208.81:1374";
-
+//ServerURL for test : http://49.12.208.81:1374
+    public boolean connectToServer() {
+        String serverURL = getServerAddress();
         try {
             doc = Jsoup.connect(serverURL).get();
 
@@ -39,36 +35,37 @@ public class SensorServer extends TimerTask {
                     temperatures[i] = Integer.parseInt(temps.get(i).text());
                     humidities[i] = Integer.parseInt(humids.get(i).text());
                 }
-            }else throw new RuntimeException();
-
-            long unixTimeStampAtThisMoment = Instant.now().getEpochSecond();
-
-            //every year has 525960 minutes .the maximum size of arrayList that we need .
-            //storing last data in last place of linked list
-            if (DataSample.AllDataSamples.size()<525960) {
-                DataSample.AllDataSamples.addFirst(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
-                System.out.println(Arrays.toString(DataSample.AllDataSamples.getLast().temperature));
-            }else{
-                DataSample.AllDataSamples.removeLast();
-                DataSample.AllDataSamples.addFirst(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
+            }else {
+                successfulConnection = false;
+                throw new RuntimeException();
             }
 
-            System.out.println("size : "+DataSample.AllDataSamples.size());
-
-            coreLogic.doPeriodicTasks();
-            // In here I should inform the part of code which is interested to know if ArrayList is updated with new value.
+            long unixTimeStampAtThisMoment = Instant.now().getEpochSecond();
+            //every year has 525960 minutes .the maximum size of arrayList that we need .
+            //storing last data in last place of linked list
+            successfulConnection = true;
+            if (DataSample.AllDataSamples.size()<525960) {
+                DataSample.AllDataSamples.add(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
+                System.out.println(Arrays.toString(DataSample.AllDataSamples.getLast().temperature));
+            }else{
+                DataSample.AllDataSamples.removeFirst();
+                DataSample.AllDataSamples.add(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
+            }
         } catch (IOException e) {
             System.out.println("Not connected to the server! Please check the connection and refresh ");
            // throw new RuntimeException(e);
+            successfulConnection = false;
         }
+       return successfulConnection;
     }
 
-
-    @Override
-    public void run() {
-        System.out.println("getting the : "+ counter++ );
-        connectToServer();
-
+    private String getServerAddress() {
+        AtomicReference<StringBuilder> str = new AtomicReference<>(new StringBuilder());
+        str.get().append("http://");
+        str.get().append(state.IPAddress);
+        str.get().append(":");
+        str.get().append(state.PortNumber);
+        return str.toString().trim();
     }
 }
 
