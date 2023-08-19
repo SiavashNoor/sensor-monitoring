@@ -58,39 +58,12 @@ public class ApplicationSettings implements Initializable {
 
     public String getPeriodValueFromChoiceBox(ActionEvent event) {
         String choiceBoxValue = periodChoiceBox.getValue();
-
-        if (choiceBoxValue == null) {
-            setUpChoiceBox();
-        } else {
-            switch (choiceBoxValue.toLowerCase()) {
-
-                case "hourly":
-                    System.out.println("you have chosen hourly");
-                    //create hourly data series  and update the chart .
-
-                    break;
-                case "daily":
-                    System.out.println("you have chosen daily");
-                    break;
-                case "weekly":
-                    System.out.println("you have chosen weekly");
-                    break;
-                case "monthly":
-                    System.out.println("you have chosen monthly");
-                    break;
-                case "yearly":
-                    System.out.println("you have chosen yearly");
-                    break;
-                default:
-                    System.out.println("by default hourly period is chosen for you:)");
-
-            }
-        }
         return choiceBoxValue;
     }
 
     public String getPeriodValueFromChoiceBox() {
         return periodChoiceBox.getValue();
+
     }
 
     public void getIPAddressValue(MouseEvent event) {
@@ -138,9 +111,7 @@ public class ApplicationSettings implements Initializable {
 
 
     public void importSettings(MouseEvent mouseEvent) {
-
         final FileChooser fileChooser = new FileChooser();
-
         File file = fileChooser.showOpenDialog(stage);
         /*if (file != null) {
             openFile(file);

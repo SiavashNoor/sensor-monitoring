@@ -10,11 +10,17 @@ import java.util.Arrays;
 import java.util.TimerTask;
 
 public class SensorServer extends TimerTask {
-
+    CoreLogic coreLogic;
 
     Document doc = null;
     int counter=1;
+
+    SensorServer(CoreLogic coreLogic){
+        this.coreLogic= coreLogic;
+    }
     public void connectToServer() {
+
+
 
         String serverURL = "http://49.12.208.81:1374";
 
@@ -40,14 +46,16 @@ public class SensorServer extends TimerTask {
             //every year has 525960 minutes .the maximum size of arrayList that we need .
             //storing last data in last place of linked list
             if (DataSample.AllDataSamples.size()<525960) {
-                DataSample.AllDataSamples.addLast(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
+                DataSample.AllDataSamples.addFirst(new DataSample(temperatures, humidities, unixTimeStampAtThisMoment));
                 System.out.println(Arrays.toString(DataSample.AllDataSamples.getLast().temperature));
             }else{
-                DataSample.AllDataSamples.removeFirst();
-                DataSample.AllDataSamples.addLast(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
+                DataSample.AllDataSamples.removeLast();
+                DataSample.AllDataSamples.addFirst(new DataSample(temperatures,humidities,unixTimeStampAtThisMoment));
             }
 
             System.out.println("size : "+DataSample.AllDataSamples.size());
+
+            coreLogic.doPeriodicTasks();
             // In here I should inform the part of code which is interested to know if ArrayList is updated with new value.
         } catch (IOException e) {
             System.out.println("Not connected to the server! Please check the connection and refresh ");

@@ -62,7 +62,7 @@
                      <font>
                         <Font size="16.0" />
                      </font></Text>
-                  <AreaChart fx:id="areaChart1" layoutX="9.0" layoutY="26.0" prefHeight="164.0" prefWidth="305.0">
+                  <AreaChart fx:id="areaChart1_1" layoutX="9.0" layoutY="26.0" prefHeight="164.0" prefWidth="305.0">
                      <xAxis>
                         <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickMarkVisible="false" fx:id="xAxis1" />
                      </xAxis>
@@ -79,7 +79,7 @@
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1">
                <children>
                   <Text fx:id="chart_title2" layoutX="9.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile 2" />
-                  <AreaChart layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                  <AreaChart  fx:id="areaChart1_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -96,7 +96,7 @@
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" GridPane.rowIndex="1">
                <children>
                   <Text fx:id="chart_title3" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile3 " />
-                  <AreaChart layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                  <AreaChart fx:id="areaChart2_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
@@ -113,7 +113,7 @@
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Text fx:id="chart_title4" layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tile 4" />
-                  <AreaChart layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
+                  <AreaChart fx:id="areaChart2_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="164.0" prefWidth="305.0" styleClass="chartArea" verticalGridLinesVisible="false">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
