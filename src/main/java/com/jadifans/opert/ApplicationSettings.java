@@ -1,15 +1,18 @@
 package com.jadifans.opert;
 
 
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -26,12 +29,15 @@ import java.util.ResourceBundle;
 
 
 public class ApplicationSettings implements Initializable {
+
+
     State state = State.getInstance();
     int stationNumberByPosition;
     Stage stage;
     Desktop desktop = Desktop.getDesktop();
     MainScene mainScene;
     private final String[] period = {"Instantly", "Hourly", "Daily", "Weekly", "Monthly", "Yearly"};
+    private Property<ObservableList<Station>> stationListProperty = new SimpleObjectProperty<>(state.observableStations);
     @FXML
     public TextField tempThreshold;
     @FXML
@@ -66,7 +72,28 @@ public class ApplicationSettings implements Initializable {
     public TextField ipAddressField;
     @FXML
     public TextField portNumberField;
-
+    @FXML
+    private TableView<Station> table;
+    @FXML
+    private TableColumn<String, Integer> idColumn;
+    @FXML
+    private TableColumn<Station, String> nameColumn;
+    @FXML
+    private TableColumn<Station, Boolean> temperatureColumn;
+    @FXML
+    private TableColumn<Station, Boolean> humidityColumn;
+    @FXML
+    private TableColumn<Station, Boolean> alertColumn;
+    @FXML
+    public TextField addName;
+    @FXML
+    public Button addStation;
+    @FXML
+    public CheckBox addTemp;
+    @FXML
+    public CheckBox addHum;
+    @FXML
+    public CheckBox addAlert;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setUpChoiceBox();
@@ -79,6 +106,18 @@ public class ApplicationSettings implements Initializable {
         ipAddressField.setOnMouseClicked(this::getIPAddressValue);
         portNumberField.setOnMouseClicked(this::getPortNumberValue);
         settingsImportButton.setOnMouseClicked(this::importSettings);
+        setUpTableView();
+    }
+
+    private void setUpTableView() {
+        //the station class need to have getter and setter classes because the PropertyValueFactory won't work without that. .
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        temperatureColumn.setCellValueFactory(new PropertyValueFactory<>("includeTemp"));
+        humidityColumn.setCellValueFactory(new PropertyValueFactory<>("includeHumidity"));
+        alertColumn.setCellValueFactory(new PropertyValueFactory<>("includeAlert"));
+        table.setEditable(true);
+        table.itemsProperty().bind(stationListProperty);
+
     }
 
     private void setUpTempThreshold() {
@@ -264,9 +303,35 @@ public class ApplicationSettings implements Initializable {
         }
     }
 
-
     public void setParentController(MainScene mainScene) {
         this.mainScene = mainScene;
     }
 
+
+
+    public void addStationToObservableList(MouseEvent mouseEvent) {
+        String stationName =addName.getText();
+        if(!stationName.isBlank() && (addHum.isSelected() || addTemp.isSelected())){
+            state.observableStations.add(new Station(addName.getText(),addTemp.isSelected(),addHum.isSelected(),addAlert.isSelected()));
+            //to clear data entries when the data submit was successful.
+            addName.clear();
+            addTemp.setSelected(false);
+            addHum.setSelected(false);
+            addAlert.setSelected(false);
+
+            //to remove red border around nodes If it was previously added to them.and reset it to the default one .
+            addName.setStyle(null);
+            addTemp.setStyle(null);
+            addHum.setStyle(null);
+        }else{
+            //will make the border red , if it is empty
+            if(stationName.isBlank()){
+                addName.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            } if (!addHum.isSelected()) {
+                addHum.setStyle("-fx-check-box-border: #B22222; -fx-border-color: #B22222; -fx-focus-color: #B22222;");
+            }if(!addTemp.isSelected()){
+                addTemp.setStyle("-fx-check-box-border: #B22222; -fx-border-color: #B22222; -fx-focus-color: #B22222;");
+            }
+        }
+    }
 }

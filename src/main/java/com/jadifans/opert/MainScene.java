@@ -153,7 +153,7 @@ public class MainScene implements Initializable {
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.getIcons().add(new Image(Objects.requireNonNull(MainScene.class.getResourceAsStream("img/settings.png"))));
-        newStage.show();
+        newStage. show();
     }
 
     public void windowBarPressed(MouseEvent mouseEvent) {
@@ -209,7 +209,7 @@ public class MainScene implements Initializable {
                         updateConnectionStatus(serverIsConnected);
                         updateCharts();
                         updateLabels();
-                            checkThreshold();
+                        checkThreshold();
                     });
                 }
             };
