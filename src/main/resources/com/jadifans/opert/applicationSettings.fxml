@@ -64,7 +64,7 @@
       <CheckBox fx:id="addTemp" layoutX="205.0" layoutY="261.0" mnemonicParsing="false" text="temp" />
       <CheckBox fx:id="addHum" layoutX="296.0" layoutY="261.0" mnemonicParsing="false" text="hum" />
       <CheckBox fx:id="addAlert" layoutX="387.0" layoutY="261.0" mnemonicParsing="false" text="alert" />
-      <TableView fx:id="table" editable="true" layoutX="20.0" layoutY="43.0" prefHeight="200.0" prefWidth="419.0">
+      <TableView fx:id="table" editable="true" layoutX="20.0" layoutY="43.0" prefHeight="200.0" prefWidth="419.0" >
          <columns>
             <TableColumn fx:id="idColumn" prefWidth="36.00000190734863" text="#" />
             <TableColumn fx:id="nameColumn" prefWidth="128.0" text="Station Name" />
@@ -73,9 +73,9 @@
             <TableColumn fx:id="alertColumn" prefWidth="59.19999999999999" text="Alert" />
          </columns>
       </TableView>
-      <Button layoutX="467.0" layoutY="211.0" mnemonicParsing="false" text="Edit" />
-      <Button layoutX="461.0" layoutY="169.0" mnemonicParsing="false" text="Delete" />
-      <Button layoutX="452.0" layoutY="130.0" mnemonicParsing="false" text="Delete All" />
+      <Button fx:id="editTableView" layoutX="467.0" layoutY="211.0" mnemonicParsing="false" text="Edit" onMouseClicked="#editTableViewContent"  />
+      <Button layoutX="461.0" layoutY="169.0" mnemonicParsing="false" text="Delete" onMouseClicked="#deleteSpecificRow" />
+      <Button layoutX="452.0" layoutY="130.0" mnemonicParsing="false" text="Delete All" onMouseClicked="#deleteAllRowsInTableview" />
       <Line endX="388.0" endY="1.52587890625E-5" layoutX="127.0" layoutY="297.0" startX="-100.0" stroke="#d1cfcf" />
    </children>
 </AnchorPane>

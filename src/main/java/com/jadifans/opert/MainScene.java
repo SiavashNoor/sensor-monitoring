@@ -321,7 +321,5 @@ for(int i = 0; i<state.stations.size(); i++){
         //this is number is hard-coded .it shows  the size of Data.
         return Math.min(4, state.stations.size());
     }
-
-
 }
 

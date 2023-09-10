@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import javafx.stage.FileChooser;
@@ -30,7 +31,8 @@ import java.util.ResourceBundle;
 
 public class ApplicationSettings implements Initializable {
 
-
+    public Button editTableView;
+    boolean isEditMode =false;
     State state = State.getInstance();
     Stage stage;
     Desktop desktop = Desktop.getDesktop();
@@ -133,25 +135,22 @@ public class ApplicationSettings implements Initializable {
 
     public void saveSettings(MouseEvent mouseEvent) {
         stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
-
-
         state.choiceBoxOption = getPeriodValueFromChoiceBox();
         state.IPAddress = ipAddressField.getText();
         state.PortNumber = portNumberField.getText();
         state.tempThreshold = Integer.parseInt(tempThreshold.getText());
         mainScene.addTilesToScene();
-
+        mainScene.setStationNames();
+        System.out.println("stationlist size: "+state.stations.size());
         // a mechanism to prevent  empty text fields :
 
         if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("") && state.stations != null) {
             final FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showSaveDialog(stage);
-
             //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
             mainScene.runBackEndTasks();
             //updating charts instantly if any change is applied to the settings .for example any change in period of charts.
             mainScene.updateCharts();
-            mainScene.setStationNames();
             stage.close();
         } else {
             if (ipAddressField.getText().equals("")) {
@@ -165,7 +164,6 @@ public class ApplicationSettings implements Initializable {
             }
         }
     }
-
 
     public void cancelSettings(MouseEvent mouseEvent) {
         stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
@@ -187,33 +185,33 @@ public class ApplicationSettings implements Initializable {
         }
     }
 
-
     public void setParentController(MainScene mainScene) {
         this.mainScene = mainScene;
     }
 
-
-
     public void addStationToObservableList(MouseEvent mouseEvent) {
-
         //load the fxml file and associate a controller ot it and save it into the observable array list of Stations .
         String stationName =addName.getText();
         //just make sure some checkboxes are selected :
         if(!stationName.isBlank() && (addHum.isSelected() || addTemp.isSelected())){
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("StationTile.fxml"));
-
             try {
                 Parent root  = loader.load();
                 StationTile stationTileInstance = loader.getController();
-                state.stations.add(new Station(stationName,addTemp.isSelected(),addHum.isSelected(),addAlert.isSelected(),root,stationTileInstance
-                        ));
+                if(isEditMode){
+                    state.stations.set(getIndexOfSelectedRow(),new Station(stationName,addTemp.isSelected(),addHum.isSelected(),addAlert.isSelected(),root,stationTileInstance
+                    ));
+                }else{
+                    state.stations.add (new Station(stationName,addTemp.isSelected(),addHum.isSelected(),addAlert.isSelected(),root,stationTileInstance
+                    ));
+                }
+                isEditMode = false;
+                editTableView.setDisable(false);
+                addStation.setText("Add");
             } catch (IOException e) {
                 System.out.println(" failed to create an instance of StationTile!");
                 throw new RuntimeException(e);
             }
-
-
             //to clear data entries when the data submit was successful.
             addName.clear();
             addTemp.setSelected(false);
@@ -237,5 +235,31 @@ public class ApplicationSettings implements Initializable {
     }
 
 
+    public void deleteAllRowsInTableview(MouseEvent mouseEvent) {
+        state.stations.clear();
+    }
 
+    public void deleteSpecificRow(MouseEvent mouseEvent){
+        if(!state.stations.isEmpty()) {
+            int i = table.getSelectionModel().getFocusedIndex();
+            state.stations.remove(i);
+            System.out.println("row"+i);
+        }
+    }
+
+    public void editTableViewContent(MouseEvent mouseEvent) {
+        isEditMode =true;
+        int i  =table.getSelectionModel().getFocusedIndex();
+        addName.setText(state.stations.get(i).name);
+        addTemp.setSelected(state.stations.get(i).includeTemp);
+        addHum.setSelected(state.stations.get(i).includeHumidity);
+        addAlert.setSelected(state.stations.get(i).includeAlert);
+
+        editTableView.setDisable(true);
+        addStation.setText("Apply");
+    }
+
+    private int getIndexOfSelectedRow(){
+        return table.getSelectionModel().getFocusedIndex();
+    }
 }
