@@ -5,9 +5,12 @@ module com.jadifans.opert {
     requires javafx.controls;
     requires javafx.fxml;
     //newly added :
-    requires javafx.base;
-    requires javafx.graphics;
+
+     requires javafx.base;
+   requires javafx.graphics;
     requires javafx.media;
+
+
 
 
     // add icon pack modules

@@ -39,7 +39,7 @@ public class StationAdder implements Initializable {
 
         String stationName =nameField.getText();
         if(!stationName.isBlank() && (includeHum.isSelected() || includeTemp.isSelected())){
-                applicationSettings.setStationName(stationName,includeTemp.isSelected(),includeHum.isSelected());
+               // applicationSettings.setStationName(stationName,includeTemp.isSelected(),includeHum.isSelected());
                     stage = (Stage)((Button)mouseEvent.getSource()).getScene().getWindow();
             stage.close();
         }else{

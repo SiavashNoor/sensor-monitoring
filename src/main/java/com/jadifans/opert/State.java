@@ -1,7 +1,7 @@
 package com.jadifans.opert;
 
-import javafx.scene.control.CheckBox;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 //this is a singleton design pattern to save configs just in one instance.
 public class State {
    private static State state = null;
@@ -9,9 +9,8 @@ public class State {
    public String choiceBoxOption ;
    public String IPAddress ;
    public String PortNumber;
-    Station[] stations = new Station[4];
-    //four alarms for stations and the last one is for connection.
-    CheckBox[] alarms = new CheckBox[5];
+   ObservableList<Station> stations = FXCollections.observableArrayList();
+
    int tempThreshold= 40;
 
   private State(){
@@ -37,17 +36,7 @@ public class State {
   }
 
 
-  public boolean isThereAnyDataAboveThreshold() {
-      boolean isAbove = false;
-      if (DataSample.AllDataSamples.size() >0) {
-          for (int i = 0; i < DataSample.AllDataSamples.getFirst().temperature.length; i++) {
-              if (DataSample.AllDataSamples.getLast().temperature[i] >= tempThreshold && stations[i].includeTemp) {
-                  isAbove = true;
-              }
-          }
-      }
-      return isAbove;
-  }
+
 }
 
 
