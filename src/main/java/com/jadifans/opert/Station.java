@@ -1,23 +1,33 @@
 package com.jadifans.opert;
 
+import javafx.scene.Parent;
+
+
+
 public class Station {
+
     boolean includeTemp;
     boolean includeHumidity;
     boolean includeAlert;
     String name;
+    StationTile stationTile;
+    Parent root;
 
-
-    //this is temporary
-    Station(String name, boolean includeTemp, boolean includeHumidity) {
-        this.name = name;
-        this.includeTemp = includeTemp;
-        this.includeHumidity = includeHumidity;
-    }
-    Station(String name, boolean includeTemp, boolean includeHumidity,boolean includeAlert) {
-        this.name = name;
-        this.includeTemp = includeTemp;
+    Station(String name, boolean includeTemp, boolean includeHumidity, boolean includeAlert, Parent root, StationTile stationTile) {
+        this.name =name;
+        this.includeTemp =includeTemp;
         this.includeHumidity = includeHumidity;
         this.includeAlert = includeAlert;
+        this.stationTile = stationTile;
+        this.root = root;
+    }
+
+    public StationTile getStationTile() {
+        return stationTile;
+    }
+
+    public void setStationTile(StationTile stationTile) {
+        this.stationTile = stationTile;
     }
 
     public boolean isIncludeTemp() {

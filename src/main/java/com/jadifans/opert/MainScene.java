@@ -1,19 +1,18 @@
 package com.jadifans.opert;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -21,8 +20,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +33,6 @@ import java.util.*;
 public class MainScene implements Initializable {
 
     SensorServer sensorServer = new SensorServer();
-
     AlertPlayer player = new AlertPlayer();
     Stage stage;
     private boolean taskIsRunning = false;
@@ -51,31 +47,9 @@ public class MainScene implements Initializable {
     int timerTaskPeriod = 60000;
 
     @FXML
-    public Label temp1;
-    @FXML
-    public Label hum1;
+    public TilePane tilePane;
     @FXML
     public FontIcon infoIcon;
-    @FXML
-    public Label temp4;
-    @FXML
-    public Label hum4;
-    @FXML
-    public Text chart4Name;
-    @FXML
-    public Label hum3;
-    @FXML
-    public Label temp3;
-    @FXML
-    public Text chart3Name;
-    @FXML
-    public Label hum2;
-    @FXML
-    public Label temp2;
-    @FXML
-    public Text chart2Name;
-    @FXML
-    public Text chart1Name;
     @FXML
     public Text ConnectionStatus;
     @FXML
@@ -87,30 +61,10 @@ public class MainScene implements Initializable {
     @FXML
     public Circle minimizeButton;
     @FXML
-    public Pane windowBar;
-    @FXML
-    private AreaChart<String, Integer> areaChart1_1;
-    @FXML
-    private AreaChart<String, Integer> areaChart1_2;
-    @FXML
-    private AreaChart<String, Integer> areaChart2_1;
-    @FXML
-    private AreaChart<String, Integer> areaChart2_2;
+    public AnchorPane windowBar;
 
 
-    XYChart.Series<String, Integer> tempSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-    XYChart.Series<String, Integer> humidSeries1_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-
-    XYChart.Series<String, Integer> tempSeries1_2 = new XYChart.Series<>(FXCollections.observableArrayList());
-    XYChart.Series<String, Integer> humidSeries1_2 = new XYChart.Series<>(FXCollections.observableArrayList());
-
-    XYChart.Series<String, Integer> tempSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-    XYChart.Series<String, Integer> humidSeries2_1 = new XYChart.Series<>(FXCollections.observableArrayList());
-
-    XYChart.Series<String, Integer> tempSeries2_2 = new XYChart.Series<>(FXCollections.observableArrayList());
-    XYChart.Series<String, Integer> humidSeries2_2 = new XYChart.Series<>(FXCollections.observableArrayList());
-
-    public MainScene()  {
+    public MainScene() {
     }
 
 
@@ -153,7 +107,7 @@ public class MainScene implements Initializable {
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.getIcons().add(new Image(Objects.requireNonNull(MainScene.class.getResourceAsStream("img/settings.png"))));
-        newStage. show();
+        newStage.show();
     }
 
     public void windowBarPressed(MouseEvent mouseEvent) {
@@ -169,10 +123,11 @@ public class MainScene implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         Settings.setOnMouseClicked(this::openSettingsWindow);
         githubLink.setOnMouseClicked(this::openGithubLink);
+        addTilesToScene();
     }
+
 
     public void openInfoWindow(MouseEvent mouseEvent) {
         Parent root;
@@ -197,10 +152,10 @@ public class MainScene implements Initializable {
         if (!taskIsRunning) {
             taskIsRunning = true;
             Timer timer = new Timer();
-            areaChart1_1.setAnimated(false);
-            areaChart1_2.setAnimated(false);
-            areaChart2_1.setAnimated(false);
-            areaChart2_2.setAnimated(false);
+            for(int i = 0; i<state.stations.size(); i++){
+                state.stations.get(i).stationTile.areaChart.setAnimated(false);
+            }
+
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -218,12 +173,23 @@ public class MainScene implements Initializable {
     }
 
     private void checkThreshold() {
-        if(state.isThereAnyDataAboveThreshold()){
-            System.out.println(state.isThereAnyDataAboveThreshold());
-           player.playAlert();
+        if (isThereAnyDataAboveThreshold()) {
+            player.playAlert();
         }
     }
 
+
+    public boolean isThereAnyDataAboveThreshold() {
+        boolean isAbove = false;
+        if (!DataSample.AllDataSamples.isEmpty()) {
+            for (int i = 0; i < DataSample.AllDataSamples.getFirst().temperature.length; i++) {
+                if (DataSample.AllDataSamples.getLast().temperature[i] >= state.tempThreshold && state.stations.get(i).includeTemp) {
+                    isAbove = true;
+                }
+            }
+        }
+        return isAbove;
+    }
 
     private void updateConnectionStatus(boolean serverIsConnected) {
         ///////////////////set connection status here using boolean value isConnected
@@ -236,26 +202,28 @@ public class MainScene implements Initializable {
         }
     }
 
-
     private void updateLabels() {
         // labels are updated based on last dataSample.
-        if (DataSample.AllDataSamples.size() > 0) {
-            temp1.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[0]));
-            temp2.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[1]));
-            temp3.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[2]));
-            temp4.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[3]));
-            hum1.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[0]));
-            hum2.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[1]));
-            hum3.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[2]));
-            hum4.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[3]));
+        if (!DataSample.AllDataSamples.isEmpty()) {
+            for(int i =0;i<IterationSize();i++){
+                state.stations.get(i).stationTile.temperatureLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[i]));
+                state.stations.get(i).stationTile.humidityLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[i]));
+            }
         }
     }
 
+    //tiles are added to tilePane to crowd it.
+    public void addTilesToScene(){
+        tilePane.getChildren().clear();
+for(int i = 0; i<state.stations.size(); i++){
+    tilePane.getChildren().add(state.stations.get(i).root );
+}
+    }
+
     public void setStationNames() {
-        chart1Name.setText(state.stations[0].name);
-        chart2Name.setText(state.stations[1].name);
-        chart3Name.setText(state.stations[2].name);
-        chart4Name.setText(state.stations[3].name);
+        for(int i = 0; i<state.stations.size(); i++){
+            state.stations.get(i).stationTile.chartName.setText(state.stations.get(i).name);
+        }
     }
 
     public void updateCharts() {
@@ -265,81 +233,34 @@ public class MainScene implements Initializable {
     }
 
     private void injectSeriesToCharts() {
-        areaChart1_1.getData().clear();
-        areaChart1_2.getData().clear();
-        areaChart2_1.getData().clear();
-        areaChart2_2.getData().clear();
+        for(int i = 0; i<state.stations.size(); i++){
+            state.stations.get(i).stationTile.areaChart.getData().clear();
 
-        // dding empty series to change color of the series .jfx has default colors for series.by adding empty series just
-        //skipping those colors . to use it  just uncomment the below line :
-        if (state.stations[0].includeTemp) {
-            areaChart1_1.getData().add(tempSeries1_1);
-        } else {
-            areaChart1_1.getData().add(new XYChart.Series<>());
-        }
-        areaChart1_1.getData().add(new XYChart.Series<>());
-        areaChart1_1.getData().add(new XYChart.Series<>());
-        if (state.stations[0].includeHumidity) {
-            areaChart1_1.getData().add(humidSeries1_1);
-        }
+            if(state.stations.get(i).includeTemp){
+                state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.tempSeries);
+            }else{
+                state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
+            }
+            state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
+            state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
 
-
-        if (state.stations[1].includeTemp) {
-            areaChart1_2.getData().add(tempSeries1_2);
-        } else {
-            areaChart1_2.getData().add(new XYChart.Series<>());
-        }
-        areaChart1_2.getData().add(new XYChart.Series<>());
-        areaChart1_2.getData().add(new XYChart.Series<>());
-        if (state.stations[1].includeHumidity) {
-            areaChart1_2.getData().add(humidSeries1_2);
-        }
-
-
-        if (state.stations[2].includeTemp) {
-            areaChart2_1.getData().add(tempSeries2_1);
-        } else {
-            areaChart1_2.getData().add(new XYChart.Series<>());
-        }
-        areaChart2_1.getData().add(new XYChart.Series<>());
-        areaChart2_1.getData().add(new XYChart.Series<>());
-        if (state.stations[2].includeHumidity) {
-            areaChart2_1.getData().add(humidSeries2_1);
-        }
-
-        if (state.stations[3].includeTemp) {
-            areaChart2_2.getData().add(tempSeries2_2);
-        } else {
-            areaChart2_2.getData().add(new XYChart.Series<>());
-        }
-        areaChart2_2.getData().add(new XYChart.Series<>());
-        areaChart2_2.getData().add(new XYChart.Series<>());
-        if (state.stations[3].includeHumidity) {
-            areaChart2_2.getData().add(humidSeries2_2);
+            if(state.stations.get(i).includeHumidity){
+                state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.humidSeries);
+            }
         }
     }
 
-    private void makeSeries() {
-        /// I really don't like to do this shit code I mean hard coding, I know its ridiculous .In the next major Update going to make a big change in this part of app
-        // and make it more flexible .
-        tempSeries1_1.getData().clear();
-        tempSeries1_2.getData().clear();
-        tempSeries2_1.getData().clear();
-        tempSeries2_2.getData().clear();
-        humidSeries1_1.getData().clear();
-        humidSeries1_2.getData().clear();
-        humidSeries2_1.getData().clear();
-        humidSeries2_2.getData().clear();
 
-        for (int i = 0; i <trimmedDataSamples.size(); i++) {
-            tempSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[0]));
-            humidSeries1_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[0]));
-            tempSeries1_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[1]));
-            humidSeries1_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[1]));
-            tempSeries2_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[2]));
-            humidSeries2_1.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[2]));
-            tempSeries2_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).temperature[3]));
-            humidSeries2_2.getData().add(new XYChart.Data<>(xValues[i], trimmedDataSamples.get(i).humidity[3]));
+    private void makeSeries() {
+        for (int i = 0; i < state.stations.size(); i++) {
+            state.stations.get(i).stationTile.tempSeries.getData().clear();
+            state.stations.get(i).stationTile.humidSeries.getData().clear();
+        }
+        for (int i = 0; i < IterationSize(); i++) {
+            for (int j = 0; j < trimmedDataSamples.size(); j++) {
+                state.stations.get(i).stationTile.tempSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).temperature[i]));
+                state.stations.get(i).stationTile.humidSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).humidity[i]));
+            }
         }
     }
 
@@ -388,12 +309,19 @@ public class MainScene implements Initializable {
         int lastIndex = size - 1;
         int remainder = lastIndex % stepFactor;
 
-        for (int i = 0; i <trimmedListSize; i++) {
+        for (int i = 0; i < trimmedListSize; i++) {
             if (lastIndex - (i * stepFactor + remainder) >= 0) {
                 trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
                 System.out.println("selected indexes:" + (lastIndex - (i * stepFactor + remainder)));
             } else break;
         }
     }
+
+    private int IterationSize() {
+        //this is number is hard-coded .it shows  the size of Data.
+        return Math.min(4, state.stations.size());
+    }
+
+
 }
 

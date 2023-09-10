@@ -1,161 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.chart.AreaChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane prefHeight="581.0" prefWidth="780.0" styleClass="parent" stylesheets="@Stylesheets.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.MainScene">
+<AnchorPane minHeight="581.0" minWidth="780.0" prefHeight="581.0" prefWidth="780.0" styleClass="parent" stylesheets="@Stylesheets.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.MainScene">
    <children>
-      <Pane fx:id="windowBar" onMouseDragged="#windowBarDragged" onMousePressed="#windowBarPressed" prefHeight="46.0" prefWidth="780.0" styleClass="windowBar" stylesheets="@Stylesheets.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="windowBar" layoutX="-40.0" layoutY="-35.0" maxHeight="46.0" minHeight="46.0" onMouseDragged="#windowBarDragged" onMousePressed="#windowBarPressed" prefHeight="46.0" prefWidth="780.0" styleClass="windowBar" stylesheets="@Stylesheets.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <FontIcon iconLiteral="fas-times" iconSize="18" layoutX="749.5" layoutY="30.0" />
-            <FontIcon iconLiteral="fas-window-minimize" iconSize="16" layoutX="699.5" layoutY="24.5" text="" wrappingWidth="13.0" />
-            <Circle fx:id="minimizeButton" fill="#00dcf0" layoutX="707.5" layoutY="24.0" onMouseClicked="#minimizeApplication" opacity="0.56" radius="13.0" styleClass="minimizebutton">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></Circle>
-            <Circle fx:id="closeButton" fill="DODGERBLUE" layoutX="755.5" layoutY="24.0" onMouseClicked="#closeApplication" opacity="0.56" radius="13.0" styleClass="closebutton">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></Circle>
-            <FontIcon fx:id="Settings" iconLiteral="fas-cog" layoutX="14.0" layoutY="30.0" onMouseClicked="#openSettingsWindow" styleClass="icon" text="">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></FontIcon>
-            <FontIcon fx:id="infoIcon" iconLiteral="fas-info-circle" layoutX="91.0" layoutY="30.0" onMouseClicked="#openInfoWindow" styleClass="icon">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></FontIcon>
-            <FontIcon iconLiteral="fas-sync-alt" layoutX="50.0" layoutY="30.0" styleClass="icon" text="">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></FontIcon>
-         </children></Pane>
-      <GridPane hgap="10.0" layoutY="72.0" prefHeight="467.0" prefWidth="780.0" styleClass="tileHolder" stylesheets="@Stylesheets.css" vgap="10.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+            <HBox layoutX="14.0" layoutY="-27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="151.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <FontIcon fx:id="Settings" iconLiteral="fas-cog" onMouseClicked="#openSettingsWindow" styleClass="icon" text="">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </FontIcon>
+                  <FontIcon iconLiteral="fas-sync-alt" styleClass="icon" text="">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </FontIcon>
+                  <FontIcon fx:id="infoIcon" iconLiteral="fas-info-circle" onMouseClicked="#openInfoWindow" styleClass="icon">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </FontIcon>
+               </children>
+               <padding>
+                  <Insets left="20.0" right="20.0" top="12.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="TOP_CENTER" layoutX="580.0" layoutY="-13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="130.0" spacing="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Pane>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                     <children>
+                        <FontIcon iconLiteral="fas-window-minimize" iconSize="16" layoutX="15.0" layoutY="24.0" text="" wrappingWidth="13.0" />
+                        <Circle fx:id="minimizeButton" fill="#00dcf0" layoutX="23.0" layoutY="23.0" onMouseClicked="#minimizeApplication" opacity="0.56" radius="13.0" styleClass="minimizebutton">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Circle>
+                     </children>
+                  </Pane>
+                  <Pane>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                     <children>
+                        <FontIcon iconLiteral="fas-times" iconSize="18" layoutX="17.0" layoutY="29.0" />
+                        <Circle fx:id="closeButton" fill="DODGERBLUE" layoutX="23.0" layoutY="23.0" onMouseClicked="#closeApplication" opacity="0.56" radius="13.0" styleClass="closebutton">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Circle>
+                     </children>
+                  </Pane>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="-3.0" />
+               </padding>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="48.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0">
+         <children>
+            <TilePane fx:id="tilePane" hgap="10.0" prefHeight="200.0" prefWidth="200.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </TilePane>
+         </children>
+      </AnchorPane>
+      <Pane layoutX="-122.0" layoutY="513.0" prefHeight="48.0" styleClass="bottomRibbon" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <effect>
+            <BoxBlur />
+         </effect>
+      </Pane>
+      <GridPane prefHeight="48.0" prefWidth="188.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css">
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
                <children>
-                  <Text fx:id="chart1Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="stationName">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Opert   v1.0.0">
                      <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font></Text>
-                  <AreaChart fx:id="areaChart1_1" layoutX="7.0" layoutY="28.0" opacity="0.6" prefHeight="178.0" prefWidth="342.0" styleClass="chartArea" verticalGridLinesVisible="false">
-                     <xAxis>
-                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
-                           <effect>
-                              <Glow level="0.42" />
-                           </effect></NumberAxis>
-                     </yAxis>
-                  </AreaChart>
-                  <Label fx:id="temp1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum1" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
-               </children></Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1">
+                        <Font size="11.0" />
+                     </font>
+                  </Text>
+               </children>
+               <opaqueInsets>
+                  <Insets right="30.0" />
+               </opaqueInsets>
+               <padding>
+                  <Insets right="30.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER" spacing="3.0" GridPane.columnIndex="1">
                <children>
-                  <Text fx:id="chart2Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" styleClass="stationName">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font></Text>
-                  <AreaChart fx:id="areaChart1_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="178" prefWidth="342" styleClass="chartArea" verticalGridLinesVisible="false">
-                     <xAxis>
-                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
-                           <effect>
-                              <Glow level="0.42" />
-                           </effect></NumberAxis>
-                     </yAxis>
-                  </AreaChart>
-                  <Label fx:id="temp2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum2" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
-               </children></Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" GridPane.rowIndex="1">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Connection Status :" />
+                  <Text fx:id="ConnectionStatus" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Text fx:id="chart3Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="stationName">
+                  <FontIcon iconLiteral="fab-github" iconSize="16" />
+                  <Hyperlink fx:id="githubLink" onMouseClicked="#openGithubLink" text="SIAVASH" textFill="#2e2b2b" underline="true">
                      <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font></Text>
-                  <AreaChart fx:id="areaChart2_1" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="178" prefWidth="342" styleClass="chartArea" verticalGridLinesVisible="false">
-                     <xAxis>
-                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
-                     </xAxis>
-                     <yAxis>     
-                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
-                           <effect>
-                              <Glow level="0.42" />
-                           </effect></NumberAxis>
-                     </yAxis>
-                  </AreaChart>
-                  <Label fx:id="temp3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum3" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
-               </children></Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="tiles" stylesheets="@Stylesheets.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <children>
-                  <Text fx:id="chart4Name" fill="#363333" fontSmoothingType="LCD" layoutX="14.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="stationName">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font></Text>
-                  <AreaChart fx:id="areaChart2_2" layoutX="9.0" layoutY="26.0" opacity="0.6" prefHeight="178" prefWidth="342" styleClass="chartArea" verticalGridLinesVisible="false">
-                     <xAxis>
-                        <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0" tickLabelsVisible="false" tickMarkVisible="false" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis autoRanging="false" minorTickLength="3.0" side="LEFT" tickLabelFill="#0d0d0d" tickLabelGap="0.0" tickLength="6.0">
-                           <effect>
-                              <Glow level="0.42" />
-                           </effect></NumberAxis>
-                     </yAxis>
-                  </AreaChart>
-                  <Label fx:id="temp4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="128.0" layoutY="5.0" styleClass="tempTiles" stylesheets="@Stylesheets.css" />
-                  <FontIcon iconLiteral="fas-temperature-high" layoutX="182.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <FontIcon iconLiteral="fas-tint" layoutX="300.0" layoutY="28.0" styleClass="temphumidicon" />
-                  <Label fx:id="hum4" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="49.0" layoutX="246.0" layoutY="5.0" styleClass="humidTiles" stylesheets="@Stylesheets.css" />
-               </children></Pane>
+                        <Font size="11.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+            </HBox>
          </children>
       </GridPane>
-      <FontIcon iconLiteral="fab-github" iconSize="16" layoutX="29.0" layoutY="561.0" />
-      <Hyperlink fx:id="githubLink" layoutX="45.0" layoutY="543.0" onMouseClicked="#openGithubLink" text="SIAVASH" textFill="#2e2b2b" underline="true">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Hyperlink>
-      <Text fx:id="ConnectionStatus" layoutX="360.0" layoutY="558.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected/Disconnected" />
-      <Text layoutX="235.0" layoutY="558.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection Status :" />
-      <Text layoutX="675.0" layoutY="559.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opert   v1.0.0">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Text>
    </children>
 </AnchorPane>

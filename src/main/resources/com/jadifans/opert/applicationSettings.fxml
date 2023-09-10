@@ -13,77 +13,69 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="639.0" prefWidth="538.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.ApplicationSettings">
+<AnchorPane prefHeight="494.0" prefWidth="538.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jadifans.opert.ApplicationSettings">
    <children>
-      <Text fx:id="stationFour" layoutX="227.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Four Nmae" />
-      <Text fx:id="stationThree" layoutX="50.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Three Name" />
-      <Text fx:id="stationTwo" layoutX="227.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Two Name" />
-      <Text fx:id="stationOne" layoutX="50.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station One Name" />
-      <ChoiceBox fx:id="periodChoiceBox" layoutX="98.0" layoutY="183.0" prefWidth="150.0">
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#e7e7e7" height="94.0" layoutX="7.0" layoutY="306.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="524.0" />
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#e4e4e4" height="277.0" layoutX="11.0" layoutY="11.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="518.0" />
+      <ChoiceBox fx:id="periodChoiceBox" layoutX="121.0" layoutY="318.0" prefWidth="150.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></ChoiceBox>
-      <Button fx:id="settingsSaveButton" layoutX="405.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#saveSettings" text="SAVE">
+      <Button fx:id="settingsSaveButton" layoutX="463.0" layoutY="457.0" mnemonicParsing="false" onMouseClicked="#saveSettings" text="SAVE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
-      <Button fx:id="settingsCancelButton" layoutX="465.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#cancelSettings" text="CANCEL">
+      <Button fx:id="settingsCancelButton" layoutX="374.0" layoutY="457.0" mnemonicParsing="false" onMouseClicked="#cancelSettings" text="CANCEL">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
-      <Text layoutX="14.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chart Period :" />
-      <Button fx:id="settingsImportButton" layoutX="16.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#importSettings" text=" Import Configs">
+      <Text layoutX="37.0" layoutY="336.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chart Period :" />
+      <Button fx:id="settingsImportButton" layoutX="24.0" layoutY="457.0" mnemonicParsing="false" onMouseClicked="#importSettings" text=" Import Configs">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
-      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#d9d9d9" height="130.0" layoutX="392.0" layoutY="43.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="132.0" />
-      <Rectangle fx:id="rectangle" arcHeight="10.0" arcWidth="10.0" fill="#a4a4a4" height="130.0" layoutX="14.0" layoutY="43.0" onMouseReleased="#setStation" opacity="0.27" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.0" width="367.0">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Rectangle>
-      <CheckBox fx:id="sensor1Alarm" layoutX="403.0" layoutY="62.0" mnemonicParsing="false" text="Sensor One" />
-      <CheckBox fx:id="sensor2Alarm" layoutX="403.0" layoutY="80.0" mnemonicParsing="false" text="Sensor Two" />
-      <CheckBox fx:id="sensor3Alarm" layoutX="403.0" layoutY="99.0" mnemonicParsing="false" text="Sensor Three" />
-      <CheckBox fx:id="sensor4Alarm" layoutX="403.0" layoutY="117.0" mnemonicParsing="false" text="Sensor Four" />
-      <CheckBox fx:id="connectionAlarm" layoutX="404.0" layoutY="144.0" mnemonicParsing="false" text="Connection" />
-      <Text fill="#434343" layoutX="395.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alarms:">
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#d9d9d9" height="37.0" layoutX="82.0" layoutY="410.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="132.0" />
+      <CheckBox fx:id="connectionAlarm" layoutX="95.0" layoutY="420.0" mnemonicParsing="false" text="Connection" />
+      <Text fill="#434343" layoutX="24.0" layoutY="434.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alarms:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
-      <Line endX="388.0" endY="1.52587890625E-5" layoutX="112.0" layoutY="219.0" startX="-100.0" stroke="#d1cfcf" />
-      <TextField fx:id="ipAddressField" layoutX="99.0" layoutY="227.0">
+      <Line endX="388.0" endY="1.52587890625E-5" layoutX="135.0" layoutY="354.0" startX="-100.0" stroke="#d1cfcf" />
+      <TextField fx:id="ipAddressField" layoutX="122.0" layoutY="362.0">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor></TextField>
-      <Text layoutX="19.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP Address :" />
-      <Text layoutX="309.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number :" />
-      <TextField fx:id="portNumberField" layoutX="391.0" layoutY="226.0" prefHeight="26.0" prefWidth="72.0">
+      <Text layoutX="42.0" layoutY="379.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP Address :" />
+      <Text layoutX="332.0" layoutY="379.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number :" />
+      <TextField fx:id="portNumberField" layoutX="414.0" layoutY="361.0" prefHeight="26.0" prefWidth="72.0">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor></TextField>
-      <Text layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Config:">
+      <Text layoutX="24.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Config:">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Text>
-      <Line endX="1.52587890625E-5" endY="-32.0" layoutX="198.0" layoutY="75.0" startX="-0.4999847412109375" startY="98.0" stroke="#919090" />
-      <Line endX="266.0" layoutX="115.0" layoutY="108.0" startX="-100.0" stroke="#a6a6a6" />
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Text layoutX="337.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temp Threshold:" />
-      <TextField fx:id="tempThreshold" layoutX="433.0" layoutY="183.0" prefHeight="26.0" prefWidth="60.0" />
-      <TextField fx:id="addName" layoutX="34.0" layoutY="548.0" promptText="Station Name" />
-      <Button fx:id="addStation" layoutX="474.0" layoutY="548.0" mnemonicParsing="false" onMouseClicked="#addStationToObservableList" text="Add" />
-      <CheckBox fx:id="addTemp" layoutX="199.0" layoutY="552.0" mnemonicParsing="false" text="temp" />
-      <CheckBox fx:id="addHum" layoutX="290.0" layoutY="552.0" mnemonicParsing="false" text="hum" />
-      <CheckBox fx:id="addAlert" layoutX="381.0" layoutY="552.0" mnemonicParsing="false" text="alert" />
-      <TableView fx:id="table" editable="true" layoutX="44.0" layoutY="330.0" prefHeight="200.0" prefWidth="419.0">
+      <Text layoutX="360.0" layoutY="336.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temp Threshold:" />
+      <TextField fx:id="tempThreshold" layoutX="456.0" layoutY="318.0" prefHeight="26.0" prefWidth="60.0" />
+      <TextField fx:id="addName" layoutX="40.0" layoutY="257.0" promptText="Station Name" />
+      <Button fx:id="addStation" layoutX="467.0" layoutY="257.0" mnemonicParsing="false" onMouseClicked="#addStationToObservableList" text="Add" />
+      <CheckBox fx:id="addTemp" layoutX="205.0" layoutY="261.0" mnemonicParsing="false" text="temp" />
+      <CheckBox fx:id="addHum" layoutX="296.0" layoutY="261.0" mnemonicParsing="false" text="hum" />
+      <CheckBox fx:id="addAlert" layoutX="387.0" layoutY="261.0" mnemonicParsing="false" text="alert" />
+      <TableView fx:id="table" editable="true" layoutX="20.0" layoutY="43.0" prefHeight="200.0" prefWidth="419.0">
          <columns>
             <TableColumn fx:id="idColumn" prefWidth="36.00000190734863" text="#" />
             <TableColumn fx:id="nameColumn" prefWidth="128.0" text="Station Name" />
             <TableColumn fx:id="temperatureColumn" prefWidth="95.99998474121094" text="Temperature " />
             <TableColumn fx:id="humidityColumn" prefWidth="97.60003662109375" text="Humidity" />
-            <TableColumn fx:id="alertColumn" prefWidth="53.60003662109375" text="Alert" />
+            <TableColumn fx:id="alertColumn" prefWidth="59.19999999999999" text="Alert" />
          </columns>
       </TableView>
+      <Button layoutX="467.0" layoutY="211.0" mnemonicParsing="false" text="Edit" />
+      <Button layoutX="461.0" layoutY="169.0" mnemonicParsing="false" text="Delete" />
+      <Button layoutX="452.0" layoutY="130.0" mnemonicParsing="false" text="Delete All" />
+      <Line endX="388.0" endY="1.52587890625E-5" layoutX="127.0" layoutY="297.0" startX="-100.0" stroke="#d1cfcf" />
    </children>
 </AnchorPane>

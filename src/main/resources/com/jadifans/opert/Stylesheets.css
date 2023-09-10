@@ -101,4 +101,12 @@
 
 }
 
-
+.bottomRibbon{
+-fx-background-color : #d4dde5 ;
+}
+.testPosition{
+-fx-background-color : #00dde5 ;
+}
+.testPosition2{
+-fx-background-color : #d400e5 ;
+}
