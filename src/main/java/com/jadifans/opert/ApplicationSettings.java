@@ -14,7 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import javafx.scene.input.KeyEvent;
+
 import javafx.scene.input.MouseEvent;
 
 import javafx.stage.FileChooser;
@@ -144,7 +144,7 @@ public class ApplicationSettings implements Initializable {
         System.out.println("stationlist size: "+state.stations.size());
         // a mechanism to prevent  empty text fields :
 
-        if (!ipAddressField.getText().equals("") && !portNumberField.getText().equals("") && state.stations != null) {
+        if (!ipAddressField.getText().isEmpty() && !portNumberField.getText().isEmpty() && state.stations != null) {
             final FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showSaveDialog(stage);
             //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
@@ -153,10 +153,10 @@ public class ApplicationSettings implements Initializable {
             mainScene.updateCharts();
             stage.close();
         } else {
-            if (ipAddressField.getText().equals("")) {
+            if (ipAddressField.getText().isEmpty()) {
                 ipAddressField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             }
-            if (portNumberField.getText().equals("")) {
+            if (portNumberField.getText().isEmpty()) {
                 portNumberField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             }
             if (state.isNull(state.stations.toArray())) {
