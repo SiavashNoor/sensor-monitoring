@@ -13,11 +13,13 @@ module com.jadifans.opert {
 
 
 
+
     // add icon pack modules
     requires org.kordamp.ikonli.fontawesome5;
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires  org.jsoup;
+    requires com.google.gson;
 
     ////was here:
     opens com.jadifans.opert to javafx.fxml;

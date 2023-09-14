@@ -2,18 +2,25 @@ package com.jadifans.opert;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.io.Serializable;
+
+
+
 //this is a singleton design pattern to save configs just in one instance.
-public class State {
+public class State implements Serializable {
+
+
    private static State state = null;
 
    public String choiceBoxOption ;
    public String IPAddress ;
    public String PortNumber;
-   ObservableList<Station> stations = FXCollections.observableArrayList();
+//this is transient because it contains unSerializable objects .
+   transient  ObservableList<Station> stations = FXCollections.observableArrayList();
 
    int tempThreshold= 40;
-
   private State(){
+
   }
 
   public static synchronized State getInstance(){
@@ -34,7 +41,6 @@ public class State {
       System.out.println(b);
       return b ;
   }
-
 
 
 }

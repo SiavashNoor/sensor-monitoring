@@ -9,7 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
+// need to review this class and customize it for this application
 public class ResizeHelper {
 
     public static void addResizeListener(Stage stage) {

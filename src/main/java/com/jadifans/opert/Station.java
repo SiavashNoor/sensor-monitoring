@@ -2,9 +2,10 @@ package com.jadifans.opert;
 
 import javafx.scene.Parent;
 
+import java.io.Serializable;
 
 
-public class Station {
+public class Station implements Serializable {
 
     boolean includeTemp;
     boolean includeHumidity;

@@ -8,10 +8,11 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StationTile implements Initializable {
+public class StationTile implements Initializable , Serializable {
     @FXML
     public Text chartName;
     @FXML

@@ -22,8 +22,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 
 import java.util.ResourceBundle;
@@ -41,10 +40,8 @@ public class ApplicationSettings implements Initializable {
     private Property<ObservableList<Station>> stationListProperty = new SimpleObjectProperty<>(state.stations);
     @FXML
     public TextField tempThreshold;
-
     @FXML
     public CheckBox connectionAlarm;
-
     @FXML
     public ChoiceBox<String> periodChoiceBox;
     @FXML
@@ -145,8 +142,8 @@ public class ApplicationSettings implements Initializable {
         // a mechanism to prevent  empty text fields :
 
         if (!ipAddressField.getText().isEmpty() && !portNumberField.getText().isEmpty() && state.stations != null) {
-            final FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showSaveDialog(stage);
+            saveStateToFile(state,stage);
+
             //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
             mainScene.runBackEndTasks();
             //updating charts instantly if any change is applied to the settings .for example any change in period of charts.
@@ -164,6 +161,37 @@ public class ApplicationSettings implements Initializable {
             }
         }
     }
+
+    private void saveStateToFile(State state,Stage stage) {
+
+        final FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter fileExtension = new FileChooser.ExtensionFilter("Opert files","*.opt");
+        fileChooser.getExtensionFilters().add(fileExtension);
+        File file = fileChooser.showSaveDialog(stage);
+        System.out.println(file.getAbsolutePath() +"this is the file");
+
+        if(file!=null){
+            System.out.println("state is being written to the selected file: ...");
+            //the object that we want ot write should be Serializable. and the ExportHandler class handles that.
+            ExportHandler exportHandler = new ExportHandler(state);
+
+            try (final FileOutputStream fout = new FileOutputStream(file.getAbsolutePath());
+                 final ObjectOutputStream out = new ObjectOutputStream(fout)) {
+                out.writeObject(state);
+                out.flush();
+                out.close();
+                fout.close();
+                System.out.println("successful file writing....");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
+
+    }
+
 
     public void cancelSettings(MouseEvent mouseEvent) {
         stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();

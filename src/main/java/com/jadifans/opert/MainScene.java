@@ -32,6 +32,7 @@ import java.util.*;
  **/
 public class MainScene implements Initializable {
 
+    boolean isApplicationTerminated = false;
     SensorServer sensorServer = new SensorServer();
     AlertPlayer player = new AlertPlayer();
     Stage stage;
@@ -70,8 +71,13 @@ public class MainScene implements Initializable {
 
     public void closeApplication(MouseEvent event) {
         stage = (Stage) ((Circle) event.getSource()).getScene().getWindow();
+        isApplicationTerminated = true;
         stage.close();
+        Platform.exit();
+
     }
+
+
 
 
     public void minimizeApplication(MouseEvent event) {
@@ -159,18 +165,26 @@ public class MainScene implements Initializable {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
+
+
                     serverIsConnected = sensorServer.connectToServer();
                     Platform.runLater(() -> {
+
                         updateConnectionStatus(serverIsConnected);
                         updateCharts();
                         updateLabels();
                         checkThreshold();
+
                     });
                 }
             };
+
             timer.scheduleAtFixedRate(timerTask, timerTaskDelay, timerTaskPeriod);
+
         }
     }
+
+
 
     private void checkThreshold() {
         if (isThereAnyDataAboveThreshold()) {
