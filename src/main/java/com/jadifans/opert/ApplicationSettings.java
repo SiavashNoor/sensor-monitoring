@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 
 
 public class ApplicationSettings implements Initializable {
-
+    int SelectedRowNum;
     public Button editTableView;
     boolean isEditMode =false;
     State state = State.getInstance();
@@ -84,6 +84,11 @@ public class ApplicationSettings implements Initializable {
         setUpTempThreshold();
         settingsImportButton.setOnMouseClicked(this::importSettings);
         setUpTableView();
+        setConnectionAlarmStatus();
+    }
+
+    private void setConnectionAlarmStatus() {
+        connectionAlarm.setSelected(state.hasConnectionAlert);
     }
 
     private void setUpTableView() {
@@ -136,11 +141,11 @@ public class ApplicationSettings implements Initializable {
         state.IPAddress = ipAddressField.getText();
         state.PortNumber = portNumberField.getText();
         state.tempThreshold = Integer.parseInt(tempThreshold.getText());
+        state.hasConnectionAlert =connectionAlarm.isSelected();
         mainScene.addTilesToScene();
         mainScene.setStationNames();
-        System.out.println("stationlist size: "+state.stations.size());
-        // a mechanism to prevent  empty text fields :
 
+        // a mechanism to prevent  empty text fields :
         if (!ipAddressField.getText().isEmpty() && !portNumberField.getText().isEmpty() && state.stations != null) {
             saveStateToFile(state,stage);
 
@@ -233,8 +238,9 @@ public class ApplicationSettings implements Initializable {
                     state.stations.add (new Station(stationName,addTemp.isSelected(),addHum.isSelected(),addAlert.isSelected(),root,stationTileInstance
                     ));
                 }
+                // after any manipulation in charts for example adding new chart , the animation for that should be set unanimated,otherwise it throws null pointer exception .
+                mainScene.setChartsUnAnimated();
                 isEditMode = false;
-                editTableView.setDisable(false);
                 addStation.setText("Add");
             } catch (IOException e) {
                 System.out.println(" failed to create an instance of StationTile!");
@@ -277,17 +283,19 @@ public class ApplicationSettings implements Initializable {
 
     public void editTableViewContent(MouseEvent mouseEvent) {
         isEditMode =true;
-        int i  =table.getSelectionModel().getFocusedIndex();
-        addName.setText(state.stations.get(i).name);
-        addTemp.setSelected(state.stations.get(i).includeTemp);
-        addHum.setSelected(state.stations.get(i).includeHumidity);
-        addAlert.setSelected(state.stations.get(i).includeAlert);
+         SelectedRowNum  =table.getSelectionModel().getFocusedIndex();
 
-        editTableView.setDisable(true);
+        // load the table selected row data to the add station part .
+        addName.setText(state.stations.get(SelectedRowNum).name);
+        addTemp.setSelected(state.stations.get(SelectedRowNum).includeTemp);
+        addHum.setSelected(state.stations.get(SelectedRowNum).includeHumidity);
+        addAlert.setSelected(state.stations.get(SelectedRowNum).includeAlert);
+
         addStation.setText("Apply");
     }
 
     private int getIndexOfSelectedRow(){
-        return table.getSelectionModel().getFocusedIndex();
+        System.out.println(SelectedRowNum);
+        return SelectedRowNum;
     }
 }

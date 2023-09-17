@@ -11,7 +11,7 @@ public class State implements Serializable {
 
 
    private static State state = null;
-
+   public boolean hasConnectionAlert;
    public String choiceBoxOption ;
    public String IPAddress ;
    public String PortNumber;

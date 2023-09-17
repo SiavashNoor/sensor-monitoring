@@ -78,8 +78,6 @@ public class MainScene implements Initializable {
     }
 
 
-
-
     public void minimizeApplication(MouseEvent event) {
         stage = (Stage) ((Circle) event.getSource()).getScene().getWindow();
         stage.setIconified(true);
@@ -143,6 +141,7 @@ public class MainScene implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         Stage stage = new Stage();
         stage.setTitle("Info");
         Scene scene = new Scene(root);
@@ -158,37 +157,33 @@ public class MainScene implements Initializable {
         if (!taskIsRunning) {
             taskIsRunning = true;
             Timer timer = new Timer();
-            for(int i = 0; i<state.stations.size(); i++){
-                state.stations.get(i).stationTile.areaChart.setAnimated(false);
-            }
+
+            setChartsUnAnimated();
+
 
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-
-
                     serverIsConnected = sensorServer.connectToServer();
                     Platform.runLater(() -> {
-
                         updateConnectionStatus(serverIsConnected);
                         updateCharts();
                         updateLabels();
                         checkThreshold();
-
                     });
                 }
             };
-
             timer.scheduleAtFixedRate(timerTask, timerTaskDelay, timerTaskPeriod);
-
         }
     }
 
 
-
     private void checkThreshold() {
-        if (isThereAnyDataAboveThreshold()) {
-            player.playAlert();
+        if (isThereAnyDataAboveThreshold() || !serverIsConnected) {
+            if (state.hasConnectionAlert) {
+                //TODO change audio player constructor to add path from here and make it more general.
+                player.playAlert();
+            }
         }
     }
 
@@ -219,7 +214,7 @@ public class MainScene implements Initializable {
     private void updateLabels() {
         // labels are updated based on last dataSample.
         if (!DataSample.AllDataSamples.isEmpty()) {
-            for(int i =0;i<IterationSize();i++){
+            for (int i = 0; i < IterationSize(); i++) {
                 state.stations.get(i).stationTile.temperatureLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[i]));
                 state.stations.get(i).stationTile.humidityLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[i]));
             }
@@ -227,15 +222,15 @@ public class MainScene implements Initializable {
     }
 
     //tiles are added to tilePane to crowd it.
-    public void addTilesToScene(){
+    public void addTilesToScene() {
         tilePane.getChildren().clear();
-for(int i = 0; i<state.stations.size(); i++){
-    tilePane.getChildren().add(state.stations.get(i).root );
-}
+        for (int i = 0; i < state.stations.size(); i++) {
+            tilePane.getChildren().add(state.stations.get(i).root);
+        }
     }
 
     public void setStationNames() {
-        for(int i = 0; i<state.stations.size(); i++){
+        for (int i = 0; i < state.stations.size(); i++) {
             state.stations.get(i).stationTile.chartName.setText(state.stations.get(i).name);
         }
     }
@@ -246,19 +241,21 @@ for(int i = 0; i<state.stations.size(); i++){
         injectSeriesToCharts();
     }
 
+    //TODO I think this method is causing the problem.
     private void injectSeriesToCharts() {
-        for(int i = 0; i<state.stations.size(); i++){
+        for (int i = 0; i < state.stations.size(); i++) {
             state.stations.get(i).stationTile.areaChart.getData().clear();
 
-            if(state.stations.get(i).includeTemp){
+            if (state.stations.get(i).includeTemp) {
                 state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.tempSeries);
-            }else{
+            } else {
                 state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
             }
             state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
             state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
 
-            if(state.stations.get(i).includeHumidity){
+            if (state.stations.get(i).includeHumidity) {
+                System.out.println("this is the problem fountain stattions size : " + state.stations.size() + "  " + state.stations);
                 state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.humidSeries);
             }
         }
@@ -266,14 +263,21 @@ for(int i = 0; i<state.stations.size(); i++){
 
 
     private void makeSeries() {
+        //TODO check the iteration limits and test them.
         for (int i = 0; i < state.stations.size(); i++) {
             state.stations.get(i).stationTile.tempSeries.getData().clear();
             state.stations.get(i).stationTile.humidSeries.getData().clear();
+
         }
-        for (int i = 0; i < IterationSize(); i++) {
-            for (int j = 0; j < trimmedDataSamples.size(); j++) {
-                state.stations.get(i).stationTile.tempSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).temperature[i]));
-                state.stations.get(i).stationTile.humidSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).humidity[i]));
+        for (int i = 0; i < state.stations.size(); i++) {
+            if (i < IterationSize()) {
+                for (int j = 0; j < trimmedDataSamples.size(); j++) {
+                    state.stations.get(i).stationTile.tempSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).temperature[i]));
+                    state.stations.get(i).stationTile.humidSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).humidity[i]));
+                }
+            } else {
+                state.stations.get(i).stationTile.tempSeries.getData().add(new XYChart.Data<>());
+                state.stations.get(i).stationTile.humidSeries.getData().add(new XYChart.Data<>());
             }
         }
     }
@@ -332,8 +336,15 @@ for(int i = 0; i<state.stations.size(); i++){
     }
 
     private int IterationSize() {
+        //TODO solve the hardcoded variable .
         //this is number is hard-coded .it shows  the size of Data.
         return Math.min(4, state.stations.size());
+    }
+
+    public void setChartsUnAnimated() {
+        for (int i = 0; i < state.stations.size(); i++) {
+            state.stations.get(i).stationTile.areaChart.setAnimated(false);
+        }
     }
 }
 
