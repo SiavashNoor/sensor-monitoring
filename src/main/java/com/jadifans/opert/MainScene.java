@@ -34,7 +34,6 @@ public class MainScene implements Initializable {
 
     boolean isApplicationTerminated = false;
     SensorServer sensorServer = new SensorServer();
-    AlertPlayer player = new AlertPlayer();
     Stage stage;
     private boolean taskIsRunning = false;
     State state = State.getInstance();
@@ -157,10 +156,7 @@ public class MainScene implements Initializable {
         if (!taskIsRunning) {
             taskIsRunning = true;
             Timer timer = new Timer();
-
             setChartsUnAnimated();
-
-
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -169,7 +165,7 @@ public class MainScene implements Initializable {
                         updateConnectionStatus(serverIsConnected);
                         updateCharts();
                         updateLabels();
-                        checkThreshold();
+                        checkForAlarms();
                     });
                 }
             };
@@ -177,22 +173,22 @@ public class MainScene implements Initializable {
         }
     }
 
-
-    private void checkThreshold() {
+//TODO need to review this code .
+    private void checkForAlarms() {
         if (isThereAnyDataAboveThreshold() || !serverIsConnected) {
-            if (state.hasConnectionAlert) {
-                //TODO change audio player constructor to add path from here and make it more general.
+                AlertPlayer player = new AlertPlayer("/com/jadifans/opert/soundEffects/alarm.mp3");
                 player.playAlert();
-            }
         }
     }
 
-
+//TODO need to review this code.
     public boolean isThereAnyDataAboveThreshold() {
         boolean isAbove = false;
-        if (!DataSample.AllDataSamples.isEmpty()) {
-            for (int i = 0; i < DataSample.AllDataSamples.getFirst().temperature.length; i++) {
-                if (DataSample.AllDataSamples.getLast().temperature[i] >= state.tempThreshold && state.stations.get(i).includeTemp) {
+
+        if (!DataSample.AllDataSamples.isEmpty() && !state.stations.isEmpty()) {
+            for (int i = 0; i < IterationSize(); i++) {
+                if ( state.stations.get(i).temperature.checkThreshold(  DataSample.AllDataSamples.getLast().temperature[i] )||
+                        state.stations.get(i).humidity.checkThreshold(DataSample.AllDataSamples.getLast().humidity[i])) {
                     isAbove = true;
                 }
             }
@@ -241,12 +237,12 @@ public class MainScene implements Initializable {
         injectSeriesToCharts();
     }
 
-    //TODO I think this method is causing the problem.
+
     private void injectSeriesToCharts() {
         for (int i = 0; i < state.stations.size(); i++) {
             state.stations.get(i).stationTile.areaChart.getData().clear();
 
-            if (state.stations.get(i).includeTemp) {
+            if (state.stations.get(i).temperature.thisPropertyIncluded) {
                 state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.tempSeries);
             } else {
                 state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
@@ -254,7 +250,7 @@ public class MainScene implements Initializable {
             state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
             state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
 
-            if (state.stations.get(i).includeHumidity) {
+            if (state.stations.get(i).humidity.thisPropertyIncluded) {
                 System.out.println("this is the problem fountain stattions size : " + state.stations.size() + "  " + state.stations);
                 state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.humidSeries);
             }
@@ -263,11 +259,10 @@ public class MainScene implements Initializable {
 
 
     private void makeSeries() {
-        //TODO check the iteration limits and test them.
+
         for (int i = 0; i < state.stations.size(); i++) {
             state.stations.get(i).stationTile.tempSeries.getData().clear();
             state.stations.get(i).stationTile.humidSeries.getData().clear();
-
         }
         for (int i = 0; i < state.stations.size(); i++) {
             if (i < IterationSize()) {
@@ -326,7 +321,6 @@ public class MainScene implements Initializable {
         int size = DataSample.AllDataSamples.size();
         int lastIndex = size - 1;
         int remainder = lastIndex % stepFactor;
-
         for (int i = 0; i < trimmedListSize; i++) {
             if (lastIndex - (i * stepFactor + remainder) >= 0) {
                 trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
@@ -335,11 +329,13 @@ public class MainScene implements Initializable {
         }
     }
 
+
     private int IterationSize() {
         //TODO solve the hardcoded variable .
         //this is number is hard-coded .it shows  the size of Data.
         return Math.min(4, state.stations.size());
     }
+
 
     public void setChartsUnAnimated() {
         for (int i = 0; i < state.stations.size(); i++) {

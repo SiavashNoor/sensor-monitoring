@@ -4,34 +4,37 @@ package com.jadifans.opert;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-
-import javafx.scene.control.*;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
 import javafx.scene.control.cell.PropertyValueFactory;
-
-
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-
 import javafx.stage.FileChooser;
-
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
-
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
 public class ApplicationSettings implements Initializable {
     int SelectedRowNum;
     public Button editTableView;
-    boolean isEditMode =false;
+    boolean isEditMode = false;
     State state = State.getInstance();
     Stage stage;
     Desktop desktop = Desktop.getDesktop();
@@ -66,22 +69,16 @@ public class ApplicationSettings implements Initializable {
     private TableColumn<Station, Boolean> humidityColumn;
     @FXML
     private TableColumn<Station, Boolean> alertColumn;
-    @FXML
-    public TextField addName;
+
     @FXML
     public Button addStation;
-    @FXML
-    public CheckBox addTemp;
-    @FXML
-    public CheckBox addHum;
-    @FXML
-    public CheckBox addAlert;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setUpChoiceBox();
         setUpIPAddressField();
         setUpPortNumberField();
-        setUpTempThreshold();
         settingsImportButton.setOnMouseClicked(this::importSettings);
         setUpTableView();
         setConnectionAlarmStatus();
@@ -93,18 +90,17 @@ public class ApplicationSettings implements Initializable {
 
     private void setUpTableView() {
         //the station class need to have getter and setter classes because the PropertyValueFactory won't work without that. .
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         temperatureColumn.setCellValueFactory(new PropertyValueFactory<>("includeTemp"));
         humidityColumn.setCellValueFactory(new PropertyValueFactory<>("includeHumidity"));
         alertColumn.setCellValueFactory(new PropertyValueFactory<>("includeAlert"));
-        table.setEditable(true);
+        table.setEditable(false);
         table.itemsProperty().bind(stationListProperty);
 
     }
 
-    private void setUpTempThreshold() {
-        tempThreshold.setText(String.valueOf(state.tempThreshold));
-    }
+
 
 
     private void setUpPortNumberField() {
@@ -118,7 +114,6 @@ public class ApplicationSettings implements Initializable {
             ipAddressField.setText(state.IPAddress);
         }
     }
-
 
 
     public void setUpChoiceBox() {
@@ -140,14 +135,13 @@ public class ApplicationSettings implements Initializable {
         state.choiceBoxOption = getPeriodValueFromChoiceBox();
         state.IPAddress = ipAddressField.getText();
         state.PortNumber = portNumberField.getText();
-        state.tempThreshold = Integer.parseInt(tempThreshold.getText());
-        state.hasConnectionAlert =connectionAlarm.isSelected();
+        state.hasConnectionAlert = connectionAlarm.isSelected();
         mainScene.addTilesToScene();
         mainScene.setStationNames();
 
         // a mechanism to prevent  empty text fields :
         if (!ipAddressField.getText().isEmpty() && !portNumberField.getText().isEmpty() && state.stations != null) {
-            saveStateToFile(state,stage);
+
 
             //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
             mainScene.runBackEndTasks();
@@ -167,15 +161,15 @@ public class ApplicationSettings implements Initializable {
         }
     }
 
-    private void saveStateToFile(State state,Stage stage) {
+    private void saveStateToFile(State state, Stage stage) {
 
         final FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter fileExtension = new FileChooser.ExtensionFilter("Opert files","*.opt");
+        FileChooser.ExtensionFilter fileExtension = new FileChooser.ExtensionFilter("Opert files", "*.opt");
         fileChooser.getExtensionFilters().add(fileExtension);
         File file = fileChooser.showSaveDialog(stage);
-        System.out.println(file.getAbsolutePath() +"this is the file");
+        System.out.println(file.getAbsolutePath() + "this is the file");
 
-        if(file!=null){
+        if (file != null) {
             System.out.println("state is being written to the selected file: ...");
             //the object that we want ot write should be Serializable. and the ExportHandler class handles that.
             ExportHandler exportHandler = new ExportHandler(state);
@@ -190,8 +184,6 @@ public class ApplicationSettings implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
 
         }
 
@@ -221,21 +213,39 @@ public class ApplicationSettings implements Initializable {
     public void setParentController(MainScene mainScene) {
         this.mainScene = mainScene;
     }
-
-    public void addStationToObservableList(MouseEvent mouseEvent) {
+//TODO check this code here:
+    public void openStationAdder(MouseEvent mouseEvent) {
+        Parent sr;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("stationAdder.fxml"));
+            sr = loader.load();
+            StationAdder stationAdder = loader.getController();
+            stationAdder.setParentController(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Stage newStage = new Stage();
+        newStage.setTitle("Station SetUp:");
+        Scene scene = new Scene(sr);
+        newStage.setScene(scene);
+        newStage.setResizable(false);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationSettings.class.getResourceAsStream("img/plusIcon.png"))));
+        newStage.show();
+       /*
         //load the fxml file and associate a controller ot it and save it into the observable array list of Stations .
-        String stationName =addName.getText();
+        String stationName = addName.getText();
         //just make sure some checkboxes are selected :
-        if(!stationName.isBlank() && (addHum.isSelected() || addTemp.isSelected())){
+        if (!stationName.isBlank() && (addHum.isSelected() || addTemp.isSelected())) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("StationTile.fxml"));
             try {
-                Parent root  = loader.load();
+                Parent root = loader.load();
                 StationTile stationTileInstance = loader.getController();
-                if(isEditMode){
-                    state.stations.set(getIndexOfSelectedRow(),new Station(stationName,addTemp.isSelected(),addHum.isSelected(),addAlert.isSelected(),root,stationTileInstance
+                if (isEditMode) {
+                    state.stations.set(getIndexOfSelectedRow(), new Station(stationName, addTemp.isSelected(), addHum.isSelected(), addAlert.isSelected(), root, stationTileInstance
                     ));
-                }else{
-                    state.stations.add (new Station(stationName,addTemp.isSelected(),addHum.isSelected(),addAlert.isSelected(),root,stationTileInstance
+                } else {
+                    state.stations.add(new Station(stationName, addTemp.isSelected(), addHum.isSelected(), addAlert.isSelected(),, root, stationTileInstance
                     ));
                 }
                 // after any manipulation in charts for example adding new chart , the animation for that should be set unanimated,otherwise it throws null pointer exception .
@@ -256,16 +266,18 @@ public class ApplicationSettings implements Initializable {
             addName.setStyle(null);
             addTemp.setStyle(null);
             addHum.setStyle(null);
-        }else{
+        } else {
             //will make the border red , if it is empty
-            if(stationName.isBlank()){
+            if (stationName.isBlank()) {
                 addName.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
-            } if (!addHum.isSelected()) {
+            }
+            if (!addHum.isSelected()) {
                 addHum.setStyle("-fx-check-box-border: #B22222; -fx-border-color: #B22222; -fx-focus-color: #B22222;");
-            }if(!addTemp.isSelected()){
+            }
+            if (!addTemp.isSelected()) {
                 addTemp.setStyle("-fx-check-box-border: #B22222; -fx-border-color: #B22222; -fx-focus-color: #B22222;");
             }
-        }
+        }*/
     }
 
 
@@ -273,29 +285,26 @@ public class ApplicationSettings implements Initializable {
         state.stations.clear();
     }
 
-    public void deleteSpecificRow(MouseEvent mouseEvent){
-        if(!state.stations.isEmpty()) {
+    public void deleteSpecificRow(MouseEvent mouseEvent) {
+        if (!state.stations.isEmpty()) {
             int i = table.getSelectionModel().getFocusedIndex();
             state.stations.remove(i);
-            System.out.println("row"+i);
+            System.out.println("row" + i);
         }
     }
-
+//TODO check this code :
     public void editTableViewContent(MouseEvent mouseEvent) {
-        isEditMode =true;
-         SelectedRowNum  =table.getSelectionModel().getFocusedIndex();
+        isEditMode = true;
+        SelectedRowNum = table.getSelectionModel().getFocusedIndex();
 
-        // load the table selected row data to the add station part .
-        addName.setText(state.stations.get(SelectedRowNum).name);
-        addTemp.setSelected(state.stations.get(SelectedRowNum).includeTemp);
-        addHum.setSelected(state.stations.get(SelectedRowNum).includeHumidity);
-        addAlert.setSelected(state.stations.get(SelectedRowNum).includeAlert);
-
-        addStation.setText("Apply");
     }
 
-    private int getIndexOfSelectedRow(){
+    private int getIndexOfSelectedRow() {
         System.out.println(SelectedRowNum);
         return SelectedRowNum;
+    }
+
+    public void exportConfigurationsToFile() {
+        saveStateToFile(state, stage);
     }
 }

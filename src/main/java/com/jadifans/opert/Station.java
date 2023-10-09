@@ -1,27 +1,27 @@
 package com.jadifans.opert;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 
 import java.io.Serializable;
 
 
 public class Station implements Serializable {
-
-    boolean includeTemp;
-    boolean includeHumidity;
-    boolean includeAlert;
+    Temperature temperature;
+    Humidity humidity;
     String name;
     StationTile stationTile;
     Parent root;
 
-    Station(String name, boolean includeTemp, boolean includeHumidity, boolean includeAlert, Parent root, StationTile stationTile) {
+    Station(String name, Temperature temperature, Humidity humidity, Parent root, StationTile stationTile) {
         this.name =name;
-        this.includeTemp =includeTemp;
-        this.includeHumidity = includeHumidity;
-        this.includeAlert = includeAlert;
+        this.temperature = temperature;
+        this.humidity = humidity;
         this.stationTile = stationTile;
         this.root = root;
-    }
+
+            }
 
     public StationTile getStationTile() {
         return stationTile;
@@ -31,28 +31,20 @@ public class Station implements Serializable {
         this.stationTile = stationTile;
     }
 
-    public boolean isIncludeTemp() {
-        return includeTemp;
+    public void setTemperature(Temperature temperature) {
+        this.temperature = temperature;
     }
 
-    public void setIncludeTemp(boolean includeTemp) {
-        this.includeTemp = includeTemp;
+    public Temperature getTemperature() {
+        return temperature;
     }
 
-    public boolean isIncludeHumidity() {
-        return includeHumidity;
+    public Humidity getHumidity() {
+        return humidity;
     }
 
-    public void setIncludeHumidity(boolean includeHumidity) {
-        this.includeHumidity = includeHumidity;
-    }
-
-    public boolean isIncludeAlert() {
-        return includeAlert;
-    }
-
-    public void setIncludeAlert(boolean includeAlert) {
-        this.includeAlert = includeAlert;
+    public void setHumidity(Humidity humidity) {
+        this.humidity = humidity;
     }
 
     public String getName() {

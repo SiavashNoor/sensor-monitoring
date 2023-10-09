@@ -32,4 +32,10 @@ public class StationTile implements Initializable , Serializable {
     public StationTile(){
     }
 
+
+
+    public void setAreaChartUnAnimated(){
+        this.areaChart.setAnimated(false);
+    }
+
 }

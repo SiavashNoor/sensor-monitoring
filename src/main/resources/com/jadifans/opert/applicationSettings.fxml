@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -30,13 +31,13 @@
             <Cursor fx:constant="HAND" />
          </cursor></Button>
       <Text layoutX="37.0" layoutY="336.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chart Period :" />
-      <Button fx:id="settingsImportButton" layoutX="24.0" layoutY="457.0" mnemonicParsing="false" onMouseClicked="#importSettings" text=" Import Configs">
+      <Button fx:id="settingsImportButton" layoutX="54.0" layoutY="412.0" mnemonicParsing="false" onMouseClicked="#importSettings" text=" Import Configs">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
-      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#d9d9d9" height="37.0" layoutX="82.0" layoutY="410.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="132.0" />
-      <CheckBox fx:id="connectionAlarm" layoutX="95.0" layoutY="420.0" mnemonicParsing="false" text="Connection" />
-      <Text fill="#434343" layoutX="24.0" layoutY="434.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alarms:">
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#d9d9d9" height="37.0" layoutX="377.0" layoutY="313.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="132.0" />
+      <CheckBox fx:id="connectionAlarm" layoutX="390.0" layoutY="323.0" mnemonicParsing="false" text="Connection" />
+      <Text fill="#434343" layoutX="319.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alarms:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -57,25 +58,24 @@
             <Font name="System Bold" size="12.0" />
          </font></Text>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Text layoutX="360.0" layoutY="336.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temp Threshold:" />
-      <TextField fx:id="tempThreshold" layoutX="456.0" layoutY="318.0" prefHeight="26.0" prefWidth="60.0" />
-      <TextField fx:id="addName" layoutX="40.0" layoutY="257.0" promptText="Station Name" />
-      <Button fx:id="addStation" layoutX="467.0" layoutY="257.0" mnemonicParsing="false" onMouseClicked="#addStationToObservableList" text="Add" />
-      <CheckBox fx:id="addTemp" layoutX="205.0" layoutY="261.0" mnemonicParsing="false" text="temp" />
-      <CheckBox fx:id="addHum" layoutX="296.0" layoutY="261.0" mnemonicParsing="false" text="hum" />
-      <CheckBox fx:id="addAlert" layoutX="387.0" layoutY="261.0" mnemonicParsing="false" text="alert" />
-      <TableView fx:id="table" editable="true" layoutX="20.0" layoutY="43.0" prefHeight="200.0" prefWidth="419.0" >
+      <TableView fx:id="table" editable="true" layoutX="20.0" layoutY="43.0" prefHeight="200.0" prefWidth="504.0">
          <columns>
             <TableColumn fx:id="idColumn" prefWidth="36.00000190734863" text="#" />
             <TableColumn fx:id="nameColumn" prefWidth="128.0" text="Station Name" />
-            <TableColumn fx:id="temperatureColumn" prefWidth="95.99998474121094" text="Temperature " />
-            <TableColumn fx:id="humidityColumn" prefWidth="97.60003662109375" text="Humidity" />
-            <TableColumn fx:id="alertColumn" prefWidth="59.19999999999999" text="Alert" />
+            <TableColumn fx:id="temperatureColumn" prefWidth="102.40000915527344" text="Temperature " />
+            <TableColumn fx:id="humidityColumn" prefWidth="124.800048828125" text="Humidity" />
+            <TableColumn fx:id="alertColumn" minWidth="0.0" prefWidth="110.39996337890625" text="Alert" />
          </columns>
       </TableView>
-      <Button fx:id="editTableView" layoutX="467.0" layoutY="211.0" mnemonicParsing="false" text="Edit" onMouseClicked="#editTableViewContent"  />
-      <Button layoutX="461.0" layoutY="169.0" mnemonicParsing="false" text="Delete" onMouseClicked="#deleteSpecificRow" />
-      <Button layoutX="452.0" layoutY="130.0" mnemonicParsing="false" text="Delete All" onMouseClicked="#deleteAllRowsInTableview" />
       <Line endX="388.0" endY="1.52587890625E-5" layoutX="127.0" layoutY="297.0" startX="-100.0" stroke="#d1cfcf" />
+      <Button layoutX="178.0" layoutY="412.0" mnemonicParsing="false" onAction="#exportConfigurationsToFile" text="Export Configs" />
+      <HBox layoutX="240.0" layoutY="253.0" prefHeight="26.0" prefWidth="283.0" spacing="30.0">
+         <children>
+            <Button fx:id="addStation" mnemonicParsing="false" onMouseClicked="#openStationAdder" text="Add" />
+            <Button fx:id="editTableView" mnemonicParsing="false" onMouseClicked="#editTableViewContent" text="Edit" />
+            <Button mnemonicParsing="false" onMouseClicked="#deleteSpecificRow" text="Delete" />
+            <Button mnemonicParsing="false" onMouseClicked="#deleteAllRowsInTableview" text="Delete All" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

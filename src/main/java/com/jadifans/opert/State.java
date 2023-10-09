@@ -18,7 +18,6 @@ public class State implements Serializable {
 //this is transient because it contains unSerializable objects .
    transient  ObservableList<Station> stations = FXCollections.observableArrayList();
 
-   int tempThreshold= 40;
   private State(){
 
   }

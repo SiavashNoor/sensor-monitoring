@@ -20,7 +20,7 @@
                 <Font name="System Bold" size="16.0"/>
             </font>
         </Text>
-        <AreaChart fx:id="areaChart" layoutX="7.0" layoutY="28.0" opacity="0.6" prefHeight="178.0" prefWidth="342.0"
+        <AreaChart fx:id="areaChart" layoutX="7.0" layoutY="28.0" animated="false" opacity="0.6" prefHeight="178.0" prefWidth="342.0"
                    styleClass="chartArea" verticalGridLinesVisible="false">
             <xAxis>
                 <CategoryAxis endMargin="0.0" gapStartAndEnd="false" side="BOTTOM" startMargin="0"
