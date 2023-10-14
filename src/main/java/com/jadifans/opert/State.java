@@ -17,6 +17,8 @@ public class State implements Serializable {
    public String PortNumber;
 //this is transient because it contains unSerializable objects .
    transient  ObservableList<Station> stations = FXCollections.observableArrayList();
+   transient  ObservableList<TableContentRepresent> tableContent = FXCollections.observableArrayList();
+
 
   private State(){
 

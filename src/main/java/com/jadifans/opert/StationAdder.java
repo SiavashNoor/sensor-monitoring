@@ -20,6 +20,13 @@ public class StationAdder implements Initializable {
 
     StringBuilder errorStringText = new StringBuilder();
     boolean canCloseWindow = true;
+    boolean tempUpIsOK = true;
+    boolean tempLowIsOK = true;
+    boolean humLowIsOk = true;
+    boolean humUpIsOK = true;
+    State state = State.getInstance();
+    Stage stage;
+    ApplicationSettings applicationSettings;
 
     @FXML
     public TextField tempLowerValue;
@@ -43,10 +50,6 @@ public class StationAdder implements Initializable {
     public CheckBox humHasLowerThreshold;
     @FXML
     public CheckBox tempHasAlert;
-    State state = State.getInstance();
-    Stage stage;
-    ApplicationSettings applicationSettings;
-
     @FXML
     public TextField nameField;
     @FXML
@@ -58,6 +61,7 @@ public class StationAdder implements Initializable {
     @FXML
     public Button cancelButton;
 
+
     public void closeWindow(MouseEvent mouseEvent) {
         stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
         stage.close();
@@ -67,14 +71,10 @@ public class StationAdder implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         saveStation.setOnMouseClicked(this::addStation);
-        // if (applicationSettings.isEditMode) {
-        //    setupSelectedStation();
-        // }
         controlCheckBoxesAndTextFields();
         addValidationListenersToTextField();
-
-
     }
+
 
     private void addValidationListenersToTextField() {
 
@@ -83,19 +83,15 @@ public class StationAdder implements Initializable {
                 tempUpperValue.setStyle(null);
                 try {
                     Integer.parseInt(newValue);
-                   //
-                    //
-                    canCloseWindow = true;
-
+                    tempUpIsOK = true;
                 } catch (NumberFormatException e) {
 
                     tempUpperValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
-                    canCloseWindow = false;
+                    tempUpIsOK = false;
                 }
             } else {
                 tempUpperValue.setStyle(null);
             }
-            //System.out.println("textfield changed from " + oldValue + " to " + newValue);
         });
 
         tempLowerValue.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -103,17 +99,14 @@ public class StationAdder implements Initializable {
                 tempLowerValue.setStyle(null);
                 try {
                     Integer.parseInt(newValue);
-                    //
-                    //
-                    canCloseWindow = true;
+                    tempLowIsOK = true;
                 } catch (NumberFormatException e) {
                     tempLowerValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
-                    canCloseWindow = false;
+                    tempLowIsOK = false;
                 }
             } else {
                 tempLowerValue.setStyle(null);
             }
-            //System.out.println("textfield changed from " + oldValue + " to " + newValue);
         });
 
         humUpperValue.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -121,17 +114,14 @@ public class StationAdder implements Initializable {
                 humUpperValue.setStyle(null);
                 try {
                     Integer.parseInt(newValue);
-                    //
-                    //
-                    canCloseWindow = true;
+                    humUpIsOK = true;
                 } catch (NumberFormatException e) {
                     humUpperValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
-                    canCloseWindow = false;
+                    humUpIsOK = false;
                 }
             } else {
                 tempUpperValue.setStyle(null);
             }
-            //System.out.println("textfield changed from " + oldValue + " to " + newValue);
         });
 
         humLowerValue.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -139,17 +129,15 @@ public class StationAdder implements Initializable {
                 humLowerValue.setStyle(null);
                 try {
                     Integer.parseInt(newValue);
-                    //
-                    //
-                    canCloseWindow = true;
+                    humLowIsOk = true;
                 } catch (NumberFormatException e) {
                     humLowerValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
-                    canCloseWindow = false;
+                    humLowIsOk = false;
                 }
             } else {
                 tempLowerValue.setStyle(null);
             }
-            //System.out.println("textfield changed from " + oldValue + " to " + newValue);
+
         });
 
     }
@@ -159,7 +147,7 @@ public class StationAdder implements Initializable {
             if (includeTemp.isSelected()) {
                 tempHasUpperThreshold.setDisable(false);
                 tempHasLowerThreshold.setDisable(false);
-                tempHasAlert.setDisable(false);
+
             } else {
                 tempHasUpperThreshold.setSelected(false);
                 tempHasLowerThreshold.setSelected(false);
@@ -171,7 +159,6 @@ public class StationAdder implements Initializable {
                 tempUpperValue.setDisable(true);
                 tempLowerValue.setDisable(true);
                 tempHasAlert.setSelected(false);
-
                 tempUpperValue.setStyle(null);
                 tempLowerValue.setStyle(null);
             }
@@ -181,7 +168,7 @@ public class StationAdder implements Initializable {
             if (includeHum.isSelected()) {
                 humHasUpperThreshold.setDisable(false);
                 humHasLowerThreshold.setDisable(false);
-                humHasAlert.setDisable(false);
+
             } else {
                 humHasUpperThreshold.setSelected(false);
                 humHasLowerThreshold.setSelected(false);
@@ -193,7 +180,6 @@ public class StationAdder implements Initializable {
                 humUpperValue.setDisable(true);
                 humLowerValue.setDisable(true);
                 humHasAlert.setSelected(false);
-
                 humUpperValue.setStyle(null);
                 humLowerValue.setStyle(null);
             }
@@ -201,8 +187,8 @@ public class StationAdder implements Initializable {
 
         tempHasUpperThreshold.setOnAction(event -> {
             if (tempHasUpperThreshold.isSelected()) {
-                if(tempUpperValue.getText().isBlank()){
-                    canCloseWindow = false;
+                if (tempUpperValue.getText().isBlank()) {
+                    tempUpIsOK = false;
                     tempUpperValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
                 }
                 tempUpperValue.setDisable(false);
@@ -211,17 +197,19 @@ public class StationAdder implements Initializable {
                 tempUpperValue.setDisable(true);
                 tempUpperValue.setStyle(null);
                 tempUpperValue.clear();
+                tempUpIsOK = true;
                 if (!tempHasLowerThreshold.isSelected()) {
                     tempHasAlert.setSelected(false);
                     tempHasAlert.setDisable(true);
+
                 }
                 tempUpperValue.clear();
             }
         });
         tempHasLowerThreshold.setOnAction(event -> {
             if (tempHasLowerThreshold.isSelected()) {
-                if(tempLowerValue.getText().isBlank()){
-                    canCloseWindow = false;
+                if (tempLowerValue.getText().isBlank()) {
+                    tempLowIsOK = false;
                     tempLowerValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
                 }
                 tempLowerValue.setDisable(false);
@@ -230,6 +218,7 @@ public class StationAdder implements Initializable {
                 tempLowerValue.setDisable(true);
                 tempLowerValue.clear();
                 tempLowerValue.setStyle(null);
+                tempLowIsOK = true;
 
                 if (!tempHasUpperThreshold.isSelected()) {
                     tempHasAlert.setSelected(false);
@@ -240,8 +229,8 @@ public class StationAdder implements Initializable {
         });
         humHasUpperThreshold.setOnAction(event -> {
             if (humHasUpperThreshold.isSelected()) {
-                if(humUpperValue.getText().isBlank()){
-                    canCloseWindow = false;
+                if (humUpperValue.getText().isBlank()) {
+                    humUpIsOK = false;
                     humUpperValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
                 }
                 humUpperValue.setDisable(false);
@@ -250,6 +239,7 @@ public class StationAdder implements Initializable {
                 humUpperValue.setDisable(true);
                 humUpperValue.setStyle(null);
                 humUpperValue.clear();
+                humUpIsOK = true;
                 if (!humHasLowerThreshold.isSelected()) {
                     humHasAlert.setSelected(false);
                     humHasAlert.setDisable(true);
@@ -258,8 +248,9 @@ public class StationAdder implements Initializable {
         });
         humHasLowerThreshold.setOnAction(event -> {
             if (humHasLowerThreshold.isSelected()) {
-                if(humLowerValue.getText().isBlank()){
-                    canCloseWindow = false;
+                if (humLowerValue.getText().isBlank()) {
+
+                    humLowIsOk = false;
                     humLowerValue.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
                 }
                 humLowerValue.setDisable(false);
@@ -268,6 +259,7 @@ public class StationAdder implements Initializable {
                 humLowerValue.setDisable(true);
                 humLowerValue.clear();
                 humLowerValue.setStyle(null);
+                humLowIsOk = true;
                 if (!humHasUpperThreshold.isSelected()) {
                     humHasAlert.setSelected(false);
                     humHasAlert.setDisable(true);
@@ -278,7 +270,7 @@ public class StationAdder implements Initializable {
 
     private void setupSelectedStation() {
         saveStation.setText("Apply");
-        int i = applicationSettings.SelectedRowNum;
+        int i = applicationSettings.getIndexOfSelectedRow();
         Station station = state.stations.get(i);
 
         nameField.setText(station.name);
@@ -299,58 +291,72 @@ public class StationAdder implements Initializable {
     }
 
     public void addStation(MouseEvent mouseEvent) {
-        System.out.println("the canclosewindow: "+canCloseWindow);
+
+        canCloseWindow = tempLowIsOK & tempLowIsOK & humLowIsOk & humUpIsOK;
         String stationName = nameField.getText();
-        if (canCloseWindow) {
-            //load the fxml file and associate a controller to it and save it into the observable array list of Stations .
-            //just make sure some checkboxes are selected :
-            if (!stationName.isBlank()
-                    && (includeHum.isSelected() || includeTemp.isSelected())
-                    && isThresholdEligible()
-            ) {
-                Temperature t = new Temperature(includeTemp.isSelected(),
-                        tempHasUpperThreshold.isSelected(),
-                        tempHasLowerThreshold.isSelected(),
-                        handleStringToInteger(tempUpperValue.getText()),
-                        handleStringToInteger(tempLowerValue.getText()),
-                        tempHasAlert.isSelected());
 
-                Humidity h = new Humidity(includeHum.isSelected(),
-                        humHasUpperThreshold.isSelected(),
-                        humHasLowerThreshold.isSelected(),
-                        handleStringToInteger(humUpperValue.getText()),
-                        handleStringToInteger(humLowerValue.getText()),
-                        humHasAlert.isSelected());
+        //load the fxml file and associate a controller to it and save it into the observable array list of Stations .
+        //just make sure some checkboxes are selected :
+        if (!stationName.isBlank()
+                && (includeHum.isSelected() || includeTemp.isSelected())) {
+            if (canCloseWindow) {
+                if (isThresholdEligible()) {
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("StationTile.fxml"));
-                try {
-                    //TODO check this code :
-                    Parent root = loader.load();
-                    StationTile stationTileInstance = loader.getController();
-                    if (!applicationSettings.isEditMode) {
-                        state.stations.add(new Station(stationName,
-                                t,
-                                h,
-                                root,
-                                stationTileInstance
-                        ));
-                    } else {
+                    Temperature t = new Temperature(includeTemp.isSelected(),
+                            tempHasUpperThreshold.isSelected(),
+                            tempHasLowerThreshold.isSelected(),
+                            handleStringToInteger(tempUpperValue.getText()),
+                            handleStringToInteger(tempLowerValue.getText()),
+                            tempHasAlert.isSelected());
 
-                        state.stations.add(applicationSettings.SelectedRowNum, new Station(stationName,
-                                t,
-                                h,
-                                root,
-                                stationTileInstance
-                        ));
+                    Humidity h = new Humidity(includeHum.isSelected(),
+                            humHasUpperThreshold.isSelected(),
+                            humHasLowerThreshold.isSelected(),
+                            handleStringToInteger(humUpperValue.getText()),
+                            handleStringToInteger(humLowerValue.getText()),
+                            humHasAlert.isSelected());
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("StationTile.fxml"));
+                    try {
+                        //TODO check this code :
+                        Parent root = loader.load();
+                        StationTile stationTileInstance = loader.getController();
+                        if (!applicationSettings.isEditMode) {
+                            state.stations.add(new Station(stationName,
+                                    t,
+                                    h,
+                                    root,
+                                    stationTileInstance
+                            ));
+                                // inject the Station Data into the
+                            addDataToTable();
+
+                        } else {
+                            if (!state.tableContent.isEmpty() && !state.stations.isEmpty()) {
+                                state.stations.set(applicationSettings.getIndexOfSelectedRow(), new Station(stationName,
+                                        t,
+                                        h,
+                                        root,
+                                        stationTileInstance
+                                ));
+                            }
+                            addDataToTable();
+                            applicationSettings.isEditMode = false;
+                        }
+                        // after any manipulation in charts for example adding new chart , the animation for that should be set un-animated,otherwise it throws null pointer exception .
+                        stationTileInstance.setAreaChartUnAnimated();
+                    } catch (IOException e) {
+                        System.out.println(" failed to create an instance of StationTile!");
+                        throw new RuntimeException(e);
                     }
-                    // after any manipulation in charts for example adding new chart , the animation for that should be set unanimated,otherwise it throws null pointer exception .
-                    stationTileInstance.setAreaChartUnAnimated();
-                } catch (IOException e) {
-                    System.out.println(" failed to create an instance of StationTile!");
-                    throw new RuntimeException(e);
+
+                    stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
+                    stage.close();
+                } else {
+                    errorText.setText("check Upper and lower threshold ");
                 }
-                stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
-                stage.close();
+            } else {
+                errorText.setText("check fields again!");
             }
         } else {
             //will make the border red , if it is empty
@@ -363,15 +369,53 @@ public class StationAdder implements Initializable {
             if (!includeTemp.isSelected()) {
                 includeTemp.setStyle("-fx-check-box-border: #B22222; -fx-border-color: #B22222; -fx-focus-color: #B22222;");
             }
-
         }
+    }
 
-        applicationSettings.isEditMode = false;
+    private void addDataToTable() {
+        String stationName = nameField.getText();
+        String tUp = tempUpperValue.getText();
+        String tLow = tempLowerValue.getText();
+        String tAlert;
+        String hUp = humUpperValue.getText();
+        String hLow = humLowerValue.getText();
+        String hAlert;
+
+        if (tUp.isBlank()) {
+            tUp = "-";
+        }
+        if (tLow.isBlank()) {
+            tLow = "-";
+        }
+        if (hUp.isBlank()) {
+            hUp = "-";
+        }
+        if (hLow.isBlank()) {
+            hLow = "-";
+        }
+        if (tempHasAlert.isSelected()) {
+            tAlert = "Yes";
+        } else {
+            tAlert = "No";
+        }
+        if (humHasAlert.isSelected()) {
+            hAlert = "Yes";
+        } else {
+            hAlert = "No";
+        }
+if(!applicationSettings.isEditMode){
+    state.tableContent.add(new TableContentRepresent(stationName, tUp, tLow, tAlert, hUp, hLow, hAlert));
+}else{
+    state.tableContent.set(applicationSettings.getIndexOfSelectedRow()
+            , new TableContentRepresent(stationName, tUp, tLow, tAlert, hUp, hLow, hAlert));
+}
+
     }
 
     //TODO check this method : do it for temp and hum .
     private boolean isThresholdEligible() {
         boolean b = true;
+
         if (tempHasLowerThreshold.isSelected() && tempHasUpperThreshold.isSelected()) {
             if (Integer.parseInt(tempUpperValue.getText()) <= Integer.parseInt(tempLowerValue.getText())) {
                 b = false;
@@ -382,6 +426,7 @@ public class StationAdder implements Initializable {
                 b = false;
             }
         }
+
         return b;
     }
 
@@ -393,7 +438,6 @@ public class StationAdder implements Initializable {
     private int handleStringToInteger(String s) {
         int r;
         if (s.isBlank()) {
-            errorStringText.append("you have to fill the blank field .\n ");
             System.out.println("handle string to Integer :field is blank");
             r = -10000000;
         } else {
@@ -401,4 +445,5 @@ public class StationAdder implements Initializable {
         }
         return r;
     }
+
 }

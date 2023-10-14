@@ -4,7 +4,6 @@ package com.jadifans.opert;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
-
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -29,10 +27,15 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ApplicationSettings implements Initializable {
-    int SelectedRowNum;
+
+    private boolean portNumberFieldIsOK = false;
+    private boolean IPAddressIsOK = false;
+    int selectedRow;
     public Button editTableView;
     boolean isEditMode = false;
     State state = State.getInstance();
@@ -41,8 +44,7 @@ public class ApplicationSettings implements Initializable {
     MainScene mainScene;
     private final String[] period = {"Instantly", "Hourly", "Daily", "Weekly", "Monthly", "Yearly"};
     private Property<ObservableList<Station>> stationListProperty = new SimpleObjectProperty<>(state.stations);
-    @FXML
-    public TextField tempThreshold;
+    private Property<ObservableList<TableContentRepresent>> tableContent = new SimpleObjectProperty<>(state.tableContent);
     @FXML
     public CheckBox connectionAlarm;
     @FXML
@@ -58,17 +60,21 @@ public class ApplicationSettings implements Initializable {
     @FXML
     public TextField portNumberField;
     @FXML
-    private TableView<Station> table;
+    private TableView<TableContentRepresent> table;
     @FXML
-    private TableColumn<String, Integer> idColumn;
+    private TableColumn<TableContentRepresent, String> nameColumn;
     @FXML
-    private TableColumn<Station, String> nameColumn;
+    public TableColumn<TableContentRepresent, String> tempUpperValueColumn;
     @FXML
-    private TableColumn<Station, Boolean> temperatureColumn;
+    public TableColumn<TableContentRepresent, String> tempLowerValueColumn;
     @FXML
-    private TableColumn<Station, Boolean> humidityColumn;
+    public TableColumn<TableContentRepresent, String> tempHasAlertColumn;
     @FXML
-    private TableColumn<Station, Boolean> alertColumn;
+    public TableColumn<TableContentRepresent, String> humUpperValueColumn;
+    @FXML
+    public TableColumn<TableContentRepresent, String> humLowerValueColumn;
+    @FXML
+    public TableColumn<TableContentRepresent, String> humHasAlertColumn;
 
     @FXML
     public Button addStation;
@@ -82,7 +88,90 @@ public class ApplicationSettings implements Initializable {
         settingsImportButton.setOnMouseClicked(this::importSettings);
         setUpTableView();
         setConnectionAlarmStatus();
+
+        //when we open again the ApplicationSettings stage , the listeners won't work unless the fields are  changed
+        portNumberValidationListener();
+        IPAddressValidationListener();
+        //to check portNumber and IPAddress at first place ,
+
+
     }
+
+    private void IPAddressValidationListener() {
+
+        ipAddressField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            IPAddressREGEXChecker(newValue);
+        }));
+    }
+
+    private boolean IPAddressREGEXChecker(String ip) {
+
+        // Regex for digit from 0 to 255.
+        String zeroTo255
+                = "(\\d{1,2}|(0|1)\\"
+                + "d{2}|2[0-4]\\d|25[0-5])";
+
+        // Regex for a digit from 0 to 255 and
+        // followed by a dot, repeat 4 times.
+        // this is the regex to validate an IP address.
+        String regex
+                = zeroTo255 + "\\."
+                + zeroTo255 + "\\."
+                + zeroTo255 + "\\."
+                + zeroTo255;
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        // If the IP address is empty
+        // return false
+        if (ip == null) {
+            IPAddressIsOK = false;
+        } else {
+            // Pattern class contains matcher() method
+            // to find matching between given IP address
+            // and regular expression.
+            Matcher m = p.matcher(ip);
+            // Return if the IP address
+            // matched the ReGex
+            if (m.matches()) {
+                ipAddressField.setStyle(null);
+                IPAddressIsOK = true;
+
+            } else {
+                IPAddressIsOK = false;
+                ipAddressField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            }
+        }
+
+        return IPAddressIsOK;
+    }
+
+
+    private void portNumberValidationListener() {
+        portNumberField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            validatePortNumber(newValue);
+        }));
+    }
+
+    private void validatePortNumber(String s) {
+
+        try {
+            int i = Integer.parseInt(s);
+            if (i > 0 && i <= 65535) {
+                portNumberField.setStyle(null);
+                portNumberFieldIsOK = true;
+            } else {
+                portNumberFieldIsOK = false;
+                portNumberField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+
+            }
+        } catch (NumberFormatException e) {
+            portNumberField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            portNumberFieldIsOK = false;
+        }
+    }
+
 
     private void setConnectionAlarmStatus() {
         connectionAlarm.setSelected(state.hasConnectionAlert);
@@ -91,26 +180,30 @@ public class ApplicationSettings implements Initializable {
     private void setUpTableView() {
         //the station class need to have getter and setter classes because the PropertyValueFactory won't work without that. .
 
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        temperatureColumn.setCellValueFactory(new PropertyValueFactory<>("includeTemp"));
-        humidityColumn.setCellValueFactory(new PropertyValueFactory<>("includeHumidity"));
-        alertColumn.setCellValueFactory(new PropertyValueFactory<>("includeAlert"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("stationName"));
+        tempUpperValueColumn.setCellValueFactory(new PropertyValueFactory<>("tempUpperValue"));
+        tempLowerValueColumn.setCellValueFactory(new PropertyValueFactory<>("tempLowerValue"));
+        tempHasAlertColumn.setCellValueFactory(new PropertyValueFactory<>("includeTempAlert"));
+        humUpperValueColumn.setCellValueFactory(new PropertyValueFactory<>("humUpperValue"));
+        humLowerValueColumn.setCellValueFactory(new PropertyValueFactory<>("humLowerValue"));
+        humHasAlertColumn.setCellValueFactory(new PropertyValueFactory<>("includeHumAlert"));
         table.setEditable(false);
-        table.itemsProperty().bind(stationListProperty);
+        table.itemsProperty().bind(tableContent);
 
     }
 
 
-
-
     private void setUpPortNumberField() {
         if (state.PortNumber != null) {
+
             portNumberField.setText(state.PortNumber);
+            validatePortNumber(state.PortNumber);
         }
     }
 
     private void setUpIPAddressField() {
         if (state.IPAddress != null) {
+            IPAddressIsOK = IPAddressREGEXChecker(state.IPAddress);
             ipAddressField.setText(state.IPAddress);
         }
     }
@@ -131,16 +224,16 @@ public class ApplicationSettings implements Initializable {
 
 
     public void saveSettings(MouseEvent mouseEvent) {
-        stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
-        state.choiceBoxOption = getPeriodValueFromChoiceBox();
-        state.IPAddress = ipAddressField.getText();
-        state.PortNumber = portNumberField.getText();
-        state.hasConnectionAlert = connectionAlarm.isSelected();
-        mainScene.addTilesToScene();
-        mainScene.setStationNames();
+        if (IPAddressIsOK && portNumberFieldIsOK && state.stations != null) {
+            stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
+            state.choiceBoxOption = getPeriodValueFromChoiceBox();
+            state.IPAddress = ipAddressField.getText();
+            state.PortNumber = portNumberField.getText();
+            state.hasConnectionAlert = connectionAlarm.isSelected();
+            mainScene.addTilesToScene();
+            mainScene.setStationNames();
 
-        // a mechanism to prevent  empty text fields :
-        if (!ipAddressField.getText().isEmpty() && !portNumberField.getText().isEmpty() && state.stations != null) {
+            // a mechanism to prevent  empty text fields :
 
 
             //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
@@ -168,8 +261,8 @@ public class ApplicationSettings implements Initializable {
         fileChooser.getExtensionFilters().add(fileExtension);
         File file = fileChooser.showSaveDialog(stage);
         System.out.println(file.getAbsolutePath() + "this is the file");
-
-        if (file != null) {
+        //TODO check this code:
+        if (file.exists()) {
             System.out.println("state is being written to the selected file: ...");
             //the object that we want ot write should be Serializable. and the ExportHandler class handles that.
             ExportHandler exportHandler = new ExportHandler(state);
@@ -182,7 +275,8 @@ public class ApplicationSettings implements Initializable {
                 fout.close();
                 System.out.println("successful file writing....");
             } catch (IOException e) {
-                e.printStackTrace();
+                //TODO handle this exception
+                System.out.println("couldn't write in to the file ...");
             }
 
         }
@@ -198,9 +292,7 @@ public class ApplicationSettings implements Initializable {
     public void importSettings(MouseEvent mouseEvent) {
         final FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
-        /*if (file != null) {
-            openFile(file);
-        }*/
+
     }
 
     public void openFile(File file) {
@@ -213,7 +305,8 @@ public class ApplicationSettings implements Initializable {
     public void setParentController(MainScene mainScene) {
         this.mainScene = mainScene;
     }
-//TODO check this code here:
+
+    //TODO check this code here:
     public void openStationAdder(MouseEvent mouseEvent) {
         Parent sr;
         try {
@@ -232,76 +325,116 @@ public class ApplicationSettings implements Initializable {
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationSettings.class.getResourceAsStream("img/plusIcon.png"))));
         newStage.show();
-       /*
-        //load the fxml file and associate a controller ot it and save it into the observable array list of Stations .
-        String stationName = addName.getText();
-        //just make sure some checkboxes are selected :
-        if (!stationName.isBlank() && (addHum.isSelected() || addTemp.isSelected())) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("StationTile.fxml"));
-            try {
-                Parent root = loader.load();
-                StationTile stationTileInstance = loader.getController();
-                if (isEditMode) {
-                    state.stations.set(getIndexOfSelectedRow(), new Station(stationName, addTemp.isSelected(), addHum.isSelected(), addAlert.isSelected(), root, stationTileInstance
-                    ));
-                } else {
-                    state.stations.add(new Station(stationName, addTemp.isSelected(), addHum.isSelected(), addAlert.isSelected(),, root, stationTileInstance
-                    ));
-                }
-                // after any manipulation in charts for example adding new chart , the animation for that should be set unanimated,otherwise it throws null pointer exception .
-                mainScene.setChartsUnAnimated();
-                isEditMode = false;
-                addStation.setText("Add");
-            } catch (IOException e) {
-                System.out.println(" failed to create an instance of StationTile!");
-                throw new RuntimeException(e);
-            }
-            //to clear data entries when the data submit was successful.
-            addName.clear();
-            addTemp.setSelected(false);
-            addHum.setSelected(false);
-            addAlert.setSelected(false);
+        mouseEvent.consume();
 
-            //to remove red border around nodes If it was previously added to them.and reset it to the default one .
-            addName.setStyle(null);
-            addTemp.setStyle(null);
-            addHum.setStyle(null);
-        } else {
-            //will make the border red , if it is empty
-            if (stationName.isBlank()) {
-                addName.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
-            }
-            if (!addHum.isSelected()) {
-                addHum.setStyle("-fx-check-box-border: #B22222; -fx-border-color: #B22222; -fx-focus-color: #B22222;");
-            }
-            if (!addTemp.isSelected()) {
-                addTemp.setStyle("-fx-check-box-border: #B22222; -fx-border-color: #B22222; -fx-focus-color: #B22222;");
-            }
-        }*/
+    }
+
+    private void setStationAdderData(StationAdder s, int i) {
+
+        Station station = state.stations.get(i);
+        s.nameField.setText(station.name);
+
+
+        s.includeTemp.setSelected(station.temperature.thisPropertyIncluded);
+        if (station.temperature.thisPropertyIncluded) {
+            s.tempHasLowerThreshold.setDisable(false);
+            s.tempHasUpperThreshold.setDisable(false);
+            s.tempHasAlert.setDisable(false);
+        }
+        s.tempHasUpperThreshold.setSelected(station.temperature.includeUpper);
+        if (station.temperature.includeUpper) {
+            s.tempUpperValue.setDisable(false);
+            s.tempUpperValue.setText(String.valueOf(station.temperature.upperThreshold));
+        }
+        s.tempHasLowerThreshold.setSelected(station.temperature.includeLower);
+        if (station.temperature.includeLower) {
+            s.tempLowerValue.setDisable(false);
+            s.tempLowerValue.setText(String.valueOf(station.temperature.lowerThreshold));
+        }
+        s.tempHasAlert.setSelected(station.temperature.hasAlert);
+
+        s.includeHum.setSelected(station.humidity.thisPropertyIncluded);
+        if (station.humidity.thisPropertyIncluded) {
+            s.humHasLowerThreshold.setDisable(false);
+            s.humHasUpperThreshold.setDisable(false);
+            s.humHasAlert.setDisable(false);
+        }
+        s.humHasUpperThreshold.setSelected(station.humidity.includeUpper);
+        if (station.humidity.includeUpper) {
+            s.humUpperValue.setDisable(false);
+            s.humUpperValue.setText(String.valueOf(station.humidity.upperThreshold));
+        }
+
+
+        s.humHasLowerThreshold.setSelected(station.humidity.includeLower);
+        if (station.humidity.includeLower) {
+            s.humLowerValue.setDisable(false);
+            s.humLowerValue.setText(String.valueOf(station.humidity.lowerThreshold));
+        }
+
+        s.humHasAlert.setSelected(station.humidity.hasAlert);
+
     }
 
 
     public void deleteAllRowsInTableview(MouseEvent mouseEvent) {
         state.stations.clear();
+        state.tableContent.clear();
+        mouseEvent.consume();
     }
 
     public void deleteSpecificRow(MouseEvent mouseEvent) {
+        int i = table.getSelectionModel().getFocusedIndex();
         if (!state.stations.isEmpty()) {
-            int i = table.getSelectionModel().getFocusedIndex();
             state.stations.remove(i);
-            System.out.println("row" + i);
+        }
+
+        if (!state.tableContent.isEmpty()) {
+            state.tableContent.remove(i);
+        }
+        System.out.println("row" + i);
+        mouseEvent.consume();
+    }
+
+    //TODO check this code :
+    public void editTableViewContent(MouseEvent mouseEvent) {
+
+        selectedRow = table.getSelectionModel().getFocusedIndex();
+        if (selectedRow != -1) {
+            editTableView.setStyle(null);
+            isEditMode = true;
+            Parent sr;
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("stationAdder.fxml"));
+                sr = loader.load();
+                StationAdder stationAdder = loader.getController();
+                stationAdder.setParentController(this);
+                stationAdder.saveStation.setText("Apply");
+
+                setStationAdderData(stationAdder, selectedRow);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Stage newStage = new Stage();
+            newStage.setTitle("Edit Station");
+            Scene scene = new Scene(sr);
+            newStage.setScene(scene);
+            newStage.setResizable(false);
+            newStage.initModality(Modality.APPLICATION_MODAL);
+            newStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationSettings.class.getResourceAsStream("img/plusIcon.png"))));
+            newStage.show();
+            mouseEvent.consume();
+
+        } else {
+
+            editTableView.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+
         }
     }
-//TODO check this code :
-    public void editTableViewContent(MouseEvent mouseEvent) {
-        isEditMode = true;
-        SelectedRowNum = table.getSelectionModel().getFocusedIndex();
 
-    }
-
-    private int getIndexOfSelectedRow() {
-        System.out.println(SelectedRowNum);
-        return SelectedRowNum;
+    public int getIndexOfSelectedRow() {
+        return this.selectedRow;
     }
 
     public void exportConfigurationsToFile() {

@@ -20,7 +20,6 @@ public class Station implements Serializable {
         this.humidity = humidity;
         this.stationTile = stationTile;
         this.root = root;
-
             }
 
     public StationTile getStationTile() {
