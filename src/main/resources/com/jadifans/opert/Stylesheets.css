@@ -15,6 +15,7 @@
     -fx-background-radius : 10;
     -fx-effect: dropshadow(gaussian, #a5a5c7, 10, 0.5, 3, 3);
 }
+
 .tempTiles{
     -fx-pref-width : 45;
     -fx-pref-height :28;

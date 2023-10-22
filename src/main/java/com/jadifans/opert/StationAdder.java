@@ -15,16 +15,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StationAdder implements Initializable {
+public class StationAdder extends StateObserver implements Initializable  {
 
 
-    StringBuilder errorStringText = new StringBuilder();
+
     boolean canCloseWindow = true;
     boolean tempUpIsOK = true;
     boolean tempLowIsOK = true;
     boolean humLowIsOk = true;
     boolean humUpIsOK = true;
-    State state = State.getInstance();
+    State state = State.getInstance(this);
     Stage stage;
     ApplicationSettings applicationSettings;
 
@@ -73,6 +73,11 @@ public class StationAdder implements Initializable {
         saveStation.setOnMouseClicked(this::addStation);
         controlCheckBoxesAndTextFields();
         addValidationListenersToTextField();
+    }
+
+    @Override
+    public void  updateCurrentInstance(State s){
+        state =s;
     }
 
 
@@ -273,20 +278,20 @@ public class StationAdder implements Initializable {
         int i = applicationSettings.getIndexOfSelectedRow();
         Station station = state.stations.get(i);
 
-        nameField.setText(station.name);
-        includeTemp.setSelected(station.temperature.thisPropertyIncluded);
-        tempHasUpperThreshold.setSelected(station.temperature.includeUpper);
-        tempHasLowerThreshold.setSelected(station.temperature.includeLower);
-        tempHasAlert.setSelected(station.temperature.hasAlert);
-        tempUpperValue.setText(String.valueOf(station.temperature.upperThreshold));
-        tempLowerValue.setText(String.valueOf(station.temperature.lowerThreshold));
+        nameField.setText(station.getName());
+        includeTemp.setSelected(station.getTemperature().isThisPropertyIncluded());
+        tempHasUpperThreshold.setSelected(station.getTemperature().isIncludeUpper());
+        tempHasLowerThreshold.setSelected(station.getTemperature().isIncludeLower());
+        tempHasAlert.setSelected(station.getTemperature().isHasAlert());
+        tempUpperValue.setText(String.valueOf(station.getTemperature().getUpperThreshold()));
+        tempLowerValue.setText(String.valueOf(station.getTemperature().getLowerThreshold()));
 
-        includeHum.setSelected(station.humidity.thisPropertyIncluded);
-        humHasUpperThreshold.setSelected(station.humidity.includeUpper);
-        humHasLowerThreshold.setSelected(station.humidity.includeLower);
-        humHasAlert.setSelected(station.humidity.hasAlert);
-        humUpperValue.setText(String.valueOf(station.humidity.upperThreshold));
-        humLowerValue.setText(String.valueOf(station.humidity.lowerThreshold));
+        includeHum.setSelected(station.getHumidity().isThisPropertyIncluded());
+        humHasUpperThreshold.setSelected(station.getHumidity().isIncludeUpper());
+        humHasLowerThreshold.setSelected(station.getHumidity().isIncludeLower());
+        humHasAlert.setSelected(station.getHumidity().isHasAlert());
+        humUpperValue.setText(String.valueOf(station.getHumidity().getUpperThreshold()));
+        humLowerValue.setText(String.valueOf(station.getHumidity().getLowerThreshold()));
 
     }
 
@@ -318,7 +323,7 @@ public class StationAdder implements Initializable {
 
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("StationTile.fxml"));
                     try {
-                        //TODO check this code :
+
                         Parent root = loader.load();
                         StationTile stationTileInstance = loader.getController();
                         if (!applicationSettings.isEditMode) {
@@ -328,7 +333,7 @@ public class StationAdder implements Initializable {
                                     root,
                                     stationTileInstance
                             ));
-                                // inject the Station Data into the
+                            // inject the Station Data into the
                             addDataToTable();
 
                         } else {
@@ -403,13 +408,12 @@ public class StationAdder implements Initializable {
         } else {
             hAlert = "No";
         }
-if(!applicationSettings.isEditMode){
-    state.tableContent.add(new TableContentRepresent(stationName, tUp, tLow, tAlert, hUp, hLow, hAlert));
-}else{
-    state.tableContent.set(applicationSettings.getIndexOfSelectedRow()
-            , new TableContentRepresent(stationName, tUp, tLow, tAlert, hUp, hLow, hAlert));
-}
-
+        if (!applicationSettings.isEditMode) {
+            state.tableContent.add(new TableContentRepresent(stationName, tUp, tLow, tAlert, hUp, hLow, hAlert));
+        } else {
+            state.tableContent.set(applicationSettings.getIndexOfSelectedRow()
+                    , new TableContentRepresent(stationName, tUp, tLow, tAlert, hUp, hLow, hAlert));
+        }
     }
 
     //TODO check this method : do it for temp and hum .

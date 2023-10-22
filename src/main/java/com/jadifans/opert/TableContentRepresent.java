@@ -1,5 +1,9 @@
 package com.jadifans.opert;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class TableContentRepresent {
     private String stationName ;
     private String tempUpperValue;
@@ -8,6 +12,7 @@ public class TableContentRepresent {
     private String humUpperValue;
     private String includeTempAlert;
     private String includeHumAlert;
+
 
     public TableContentRepresent(String stationName, String tempUpperValue, String tempLowerValue,String includeTempAlert, String humLowerValue, String humUpperValue,  String includeHumAlert) {
         this.stationName = stationName;
@@ -19,33 +24,37 @@ public class TableContentRepresent {
         this.includeHumAlert = includeHumAlert;
     }
 
+    public TableContentRepresent(){}
+
+    @XmlElement
     public String getStationName() {
         return stationName;
     }
-
+    @XmlElement
     public String getTempUpperValue() {
         return tempUpperValue;
     }
-
+    @XmlElement
     public String getTempLowerValue() {
         return tempLowerValue;
     }
-
+    @XmlElement
     public String getHumLowerValue() {
         return humLowerValue;
     }
-
+    @XmlElement
     public String getHumUpperValue() {
         return humUpperValue;
     }
-
+    @XmlElement
     public String getIncludeTempAlert() {
         return includeTempAlert;
     }
-
+    @XmlElement
     public String getIncludeHumAlert() {
         return includeHumAlert;
     }
+
 
 
     public void setStationName(String stationName) {

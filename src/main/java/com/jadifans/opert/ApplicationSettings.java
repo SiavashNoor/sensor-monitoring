@@ -1,6 +1,5 @@
 package com.jadifans.opert;
 
-
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -18,12 +17,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.awt.*;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -31,19 +26,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class ApplicationSettings implements Initializable {
+public class ApplicationSettings extends StateObserver implements Initializable {
 
     private boolean portNumberFieldIsOK = false;
     private boolean IPAddressIsOK = false;
     int selectedRow;
     public Button editTableView;
     boolean isEditMode = false;
-    State state = State.getInstance();
+    State state = State.getInstance(this);
     Stage stage;
-    Desktop desktop = Desktop.getDesktop();
+
     MainScene mainScene;
     private final String[] period = {"Instantly", "Hourly", "Daily", "Weekly", "Monthly", "Yearly"};
-    private Property<ObservableList<Station>> stationListProperty = new SimpleObjectProperty<>(state.stations);
     private Property<ObservableList<TableContentRepresent>> tableContent = new SimpleObjectProperty<>(state.tableContent);
     @FXML
     public CheckBox connectionAlarm;
@@ -82,19 +76,26 @@ public class ApplicationSettings implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        settingsImportButton.setOnMouseClicked(this::importSettings);
+        setUpComponents();
+        setUpTableView();
+    }
+
+    private void setUpComponents() {
+        setConnectionAlarmStatus();
+        setUpPortNumberField();
         setUpChoiceBox();
         setUpIPAddressField();
-        setUpPortNumberField();
-        settingsImportButton.setOnMouseClicked(this::importSettings);
-        setUpTableView();
-        setConnectionAlarmStatus();
-
         //when we open again the ApplicationSettings stage , the listeners won't work unless the fields are  changed
         portNumberValidationListener();
         IPAddressValidationListener();
         //to check portNumber and IPAddress at first place ,
 
+    }
 
+    @Override
+    public void  updateCurrentInstance(State s){
+        state =s;
     }
 
     private void IPAddressValidationListener() {
@@ -174,7 +175,7 @@ public class ApplicationSettings implements Initializable {
 
 
     private void setConnectionAlarmStatus() {
-        connectionAlarm.setSelected(state.hasConnectionAlert);
+        connectionAlarm.setSelected(state.isConnectionAlert());
     }
 
     private void setUpTableView() {
@@ -194,27 +195,27 @@ public class ApplicationSettings implements Initializable {
 
 
     private void setUpPortNumberField() {
-        if (state.PortNumber != null) {
+        if (state.getPortNumber() != null) {
 
-            portNumberField.setText(state.PortNumber);
-            validatePortNumber(state.PortNumber);
+            portNumberField.setText(state.getPortNumber());
+            validatePortNumber(state.getPortNumber());
         }
     }
 
     private void setUpIPAddressField() {
-        if (state.IPAddress != null) {
-            IPAddressIsOK = IPAddressREGEXChecker(state.IPAddress);
-            ipAddressField.setText(state.IPAddress);
+        if (state.getIPAddress() != null) {
+            IPAddressIsOK = IPAddressREGEXChecker(state.getIPAddress());
+            ipAddressField.setText(state.getIPAddress());
         }
     }
 
 
     public void setUpChoiceBox() {
         periodChoiceBox.getItems().addAll(period);
-        if (state.choiceBoxOption == null) {
+        if (state.getChoiceBoxOption() == null) {
             periodChoiceBox.setValue(period[0]);
         } else {
-            periodChoiceBox.setValue(state.choiceBoxOption);
+            periodChoiceBox.setValue(state.getChoiceBoxOption());
         }
     }
 
@@ -226,16 +227,14 @@ public class ApplicationSettings implements Initializable {
     public void saveSettings(MouseEvent mouseEvent) {
         if (IPAddressIsOK && portNumberFieldIsOK && state.stations != null) {
             stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
-            state.choiceBoxOption = getPeriodValueFromChoiceBox();
-            state.IPAddress = ipAddressField.getText();
-            state.PortNumber = portNumberField.getText();
-            state.hasConnectionAlert = connectionAlarm.isSelected();
+            state.setChoiceBoxOption(getPeriodValueFromChoiceBox());
+            state.setIPAddress(ipAddressField.getText());
+            state.setPortNumber(portNumberField.getText());
+            state.setConnectionAlert(connectionAlarm.isSelected());
             mainScene.addTilesToScene();
             mainScene.setStationNames();
 
             // a mechanism to prevent  empty text fields :
-
-
             //after the save button is pushed and if everything were ok this line will run the backend part in mainScene.
             mainScene.runBackEndTasks();
             //updating charts instantly if any change is applied to the settings .for example any change in period of charts.
@@ -260,24 +259,13 @@ public class ApplicationSettings implements Initializable {
         FileChooser.ExtensionFilter fileExtension = new FileChooser.ExtensionFilter("Opert files", "*.opt");
         fileChooser.getExtensionFilters().add(fileExtension);
         File file = fileChooser.showSaveDialog(stage);
-        System.out.println(file.getAbsolutePath() + "this is the file");
-        //TODO check this code:
+
         if (file.exists()) {
             System.out.println("state is being written to the selected file: ...");
             //the object that we want ot write should be Serializable. and the ExportHandler class handles that.
-            ExportHandler exportHandler = new ExportHandler(state);
+            ExportHandler exportHandler = new ExportHandler(state,file);
+            exportHandler.writeObjectToFile();
 
-            try (final FileOutputStream fout = new FileOutputStream(file.getAbsolutePath());
-                 final ObjectOutputStream out = new ObjectOutputStream(fout)) {
-                out.writeObject(state);
-                out.flush();
-                out.close();
-                fout.close();
-                System.out.println("successful file writing....");
-            } catch (IOException e) {
-                //TODO handle this exception
-                System.out.println("couldn't write in to the file ...");
-            }
 
         }
 
@@ -290,23 +278,37 @@ public class ApplicationSettings implements Initializable {
     }
 
     public void importSettings(MouseEvent mouseEvent) {
+
         final FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
+        ImportHandler importHandler = new ImportHandler(file);
+        State.UseThisInstance((State)importHandler.ConvertXmlToObject(),this);
+        updateThisStage();
+        System.out.println("this is the state instance in application settings    "+state);
+        System.out.println(state.getChoiceBoxOption());
+        System.out.println(state.getIPAddress());
+
 
     }
 
-    public void openFile(File file) {
-        try {
-            desktop.open(file);
-        } catch (IOException ignored) {
-        }
+    private void updateThisStage() {
+
+        //to fill again components like textFields or checkboxes;
+        setUpComponents();
+
+
+        //yessss you made it : need this to lines to update again the table content :
+        //first re-instantiate the tableContent then bind it to the table
+        tableContent = new SimpleObjectProperty<>(state.tableContent);
+        table.itemsProperty().bind(tableContent);
     }
+
 
     public void setParentController(MainScene mainScene) {
         this.mainScene = mainScene;
     }
 
-    //TODO check this code here:
+
     public void openStationAdder(MouseEvent mouseEvent) {
         Parent sr;
         try {
@@ -332,47 +334,46 @@ public class ApplicationSettings implements Initializable {
     private void setStationAdderData(StationAdder s, int i) {
 
         Station station = state.stations.get(i);
-        s.nameField.setText(station.name);
+        s.nameField.setText(station.getName());
 
 
-        s.includeTemp.setSelected(station.temperature.thisPropertyIncluded);
-        if (station.temperature.thisPropertyIncluded) {
+        s.includeTemp.setSelected(station.getTemperature().isThisPropertyIncluded());
+        if (station.getTemperature().isThisPropertyIncluded()) {
             s.tempHasLowerThreshold.setDisable(false);
             s.tempHasUpperThreshold.setDisable(false);
             s.tempHasAlert.setDisable(false);
         }
-        s.tempHasUpperThreshold.setSelected(station.temperature.includeUpper);
-        if (station.temperature.includeUpper) {
+        s.tempHasUpperThreshold.setSelected(station.getTemperature().isIncludeUpper());
+        if (station.getTemperature().isIncludeUpper()) {
             s.tempUpperValue.setDisable(false);
-            s.tempUpperValue.setText(String.valueOf(station.temperature.upperThreshold));
+            s.tempUpperValue.setText(String.valueOf(station.getTemperature().getUpperThreshold()));
         }
-        s.tempHasLowerThreshold.setSelected(station.temperature.includeLower);
-        if (station.temperature.includeLower) {
+        s.tempHasLowerThreshold.setSelected(station.getTemperature().isIncludeLower());
+        if (station.getTemperature().isIncludeLower()) {
             s.tempLowerValue.setDisable(false);
-            s.tempLowerValue.setText(String.valueOf(station.temperature.lowerThreshold));
+            s.tempLowerValue.setText(String.valueOf(station.getTemperature().getLowerThreshold()));
         }
-        s.tempHasAlert.setSelected(station.temperature.hasAlert);
+        s.tempHasAlert.setSelected(station.getTemperature().isHasAlert());
 
-        s.includeHum.setSelected(station.humidity.thisPropertyIncluded);
-        if (station.humidity.thisPropertyIncluded) {
+        s.includeHum.setSelected(station.getHumidity().isThisPropertyIncluded());
+        if (station.getHumidity().isThisPropertyIncluded()) {
             s.humHasLowerThreshold.setDisable(false);
             s.humHasUpperThreshold.setDisable(false);
             s.humHasAlert.setDisable(false);
         }
-        s.humHasUpperThreshold.setSelected(station.humidity.includeUpper);
-        if (station.humidity.includeUpper) {
+        s.humHasUpperThreshold.setSelected(station.getHumidity().isIncludeUpper());
+        if (station.getHumidity().isIncludeUpper()) {
             s.humUpperValue.setDisable(false);
-            s.humUpperValue.setText(String.valueOf(station.humidity.upperThreshold));
+            s.humUpperValue.setText(String.valueOf(station.getHumidity().getUpperThreshold()));
         }
 
 
-        s.humHasLowerThreshold.setSelected(station.humidity.includeLower);
-        if (station.humidity.includeLower) {
+        s.humHasLowerThreshold.setSelected(station.getHumidity().isIncludeLower());
+        if (station.getHumidity().isIncludeLower()) {
             s.humLowerValue.setDisable(false);
-            s.humLowerValue.setText(String.valueOf(station.humidity.lowerThreshold));
+            s.humLowerValue.setText(String.valueOf(station.getHumidity().getLowerThreshold()));
         }
-
-        s.humHasAlert.setSelected(station.humidity.hasAlert);
+        s.humHasAlert.setSelected(station.getHumidity().isHasAlert());
 
     }
 
@@ -396,7 +397,7 @@ public class ApplicationSettings implements Initializable {
         mouseEvent.consume();
     }
 
-    //TODO check this code :
+
     public void editTableViewContent(MouseEvent mouseEvent) {
 
         selectedRow = table.getSelectionModel().getFocusedIndex();

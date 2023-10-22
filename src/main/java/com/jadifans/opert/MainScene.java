@@ -30,13 +30,13 @@ import java.util.*;
  * if data points have same X value they would be shown in the same column. whether  the X values are  Stirngs or Numbers.
  * and also good to remember that to ignore error in charts set the animation false
  **/
-public class MainScene implements Initializable {
+public class MainScene extends StateObserver implements Initializable  {
 
     boolean isApplicationTerminated = false;
     SensorServer sensorServer = new SensorServer();
     Stage stage;
     private boolean taskIsRunning = false;
-    State state = State.getInstance();
+    State state = State.getInstance(this);
     boolean serverIsConnected;
     private double xOffset = 0;
     private double yOffset = 0;
@@ -67,13 +67,16 @@ public class MainScene implements Initializable {
     public MainScene() {
     }
 
+    @Override
+    public void  updateCurrentInstance(State s){
+        state =s;
+    }
 
     public void closeApplication(MouseEvent event) {
         stage = (Stage) ((Circle) event.getSource()).getScene().getWindow();
         isApplicationTerminated = true;
         stage.close();
         Platform.exit();
-
     }
 
 
@@ -129,6 +132,9 @@ public class MainScene implements Initializable {
         Settings.setOnMouseClicked(this::openSettingsWindow);
         githubLink.setOnMouseClicked(this::openGithubLink);
         addTilesToScene();
+
+        //
+        State.assignForChanges(this);
     }
 
 
@@ -149,6 +155,7 @@ public class MainScene implements Initializable {
         stage.setResizable(false);
         stage.getIcons().add(new Image(Objects.requireNonNull(MainScene.class.getResourceAsStream("img/IdeaIcon.png"))));
         stage.show();
+        mouseEvent.consume();
     }
 
     public void runBackEndTasks() {
@@ -173,28 +180,39 @@ public class MainScene implements Initializable {
         }
     }
 
-//TODO need to review this code .
+
     private void checkForAlarms() {
-        if (isThereAnyDataAboveThreshold() || !serverIsConnected) {
+        if (isThereAnyDataAboveThreshold() || (!serverIsConnected && state.isConnectionAlert())) {
                 AlertPlayer player = new AlertPlayer("/com/jadifans/opert/soundEffects/alarm.mp3");
                 player.playAlert();
         }
     }
 
-//TODO need to review this code.
+
     public boolean isThereAnyDataAboveThreshold() {
-        boolean isAbove = false;
+        boolean exceededCondition1 = false;
+        boolean exceededCondition2 = false;
 
         if (!DataSample.AllDataSamples.isEmpty() && !state.stations.isEmpty()) {
             for (int i = 0; i < IterationSize(); i++) {
-                if ( state.stations.get(i).temperature.checkThreshold(  DataSample.AllDataSamples.getLast().temperature[i] )||
-                        state.stations.get(i).humidity.checkThreshold(DataSample.AllDataSamples.getLast().humidity[i])) {
-                    isAbove = true;
+                if(state.stations.get(i).getTemperature().isHasAlert()){
+                    if ( !state.stations.get(i).getTemperature().checkThresholdIsOK(DataSample.AllDataSamples.getLast().temperature[i])){
+                        exceededCondition1 = true;
+                    }
+                }
+                if(state.stations.get(i).getHumidity().isHasAlert()){
+                    if (!state.stations.get(i).getHumidity().checkThresholdIsOK(DataSample.AllDataSamples.getLast().humidity[i])) {
+                        exceededCondition2 = true;
+                    }
+                }
+                if(exceededCondition1||exceededCondition2){
+                    state.stations.get(i).getRoot().setStyle("-fx-background-color: #cc8685;");
                 }
             }
         }
-        return isAbove;
+        return exceededCondition1 || exceededCondition2;
     }
+
 
     private void updateConnectionStatus(boolean serverIsConnected) {
         ///////////////////set connection status here using boolean value isConnected
@@ -207,32 +225,34 @@ public class MainScene implements Initializable {
         }
     }
 
+
     private void updateLabels() {
         // labels are updated based on last dataSample.
         if (!DataSample.AllDataSamples.isEmpty()) {
             for (int i = 0; i < IterationSize(); i++) {
-                state.stations.get(i).stationTile.temperatureLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[i]));
-                state.stations.get(i).stationTile.humidityLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[i]));
+                state.stations.get(i).getStationTile().temperatureLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().temperature[i]));
+                state.stations.get(i).getStationTile().humidityLabel.setText(String.valueOf(DataSample.AllDataSamples.getLast().humidity[i]));
             }
         }
     }
+
 
     //tiles are added to tilePane to crowd it.
     public void addTilesToScene() {
         tilePane.getChildren().clear();
         for (int i = 0; i < state.stations.size(); i++) {
-            tilePane.getChildren().add(state.stations.get(i).root);
+            tilePane.getChildren().add(state.stations.get(i).getRoot());
         }
     }
 
     public void setStationNames() {
         for (int i = 0; i < state.stations.size(); i++) {
-            state.stations.get(i).stationTile.chartName.setText(state.stations.get(i).name);
+            state.stations.get(i).getStationTile().chartName.setText(state.stations.get(i).getName());
         }
     }
 
     public void updateCharts() {
-        makeTrimmedDataSamples(state.choiceBoxOption);
+        makeTrimmedDataSamples(state.getChoiceBoxOption());
         makeSeries();
         injectSeriesToCharts();
     }
@@ -240,19 +260,18 @@ public class MainScene implements Initializable {
 
     private void injectSeriesToCharts() {
         for (int i = 0; i < state.stations.size(); i++) {
-            state.stations.get(i).stationTile.areaChart.getData().clear();
+            state.stations.get(i).getStationTile().areaChart.getData().clear();
 
-            if (state.stations.get(i).temperature.thisPropertyIncluded) {
-                state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.tempSeries);
+            if (state.stations.get(i).getTemperature().isThisPropertyIncluded()) {
+                state.stations.get(i).getStationTile().areaChart.getData().add(state.stations.get(i).getStationTile().tempSeries);
             } else {
-                state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
+                state.stations.get(i).getStationTile().areaChart.getData().add(new XYChart.Series<>());
             }
-            state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
-            state.stations.get(i).stationTile.areaChart.getData().add(new XYChart.Series<>());
+            state.stations.get(i).getStationTile().areaChart.getData().add(new XYChart.Series<>());
+            state.stations.get(i).getStationTile().areaChart.getData().add(new XYChart.Series<>());
 
-            if (state.stations.get(i).humidity.thisPropertyIncluded) {
-                System.out.println("this is the problem fountain stattions size : " + state.stations.size() + "  " + state.stations);
-                state.stations.get(i).stationTile.areaChart.getData().add(state.stations.get(i).stationTile.humidSeries);
+            if (state.stations.get(i).getHumidity().isThisPropertyIncluded()) {
+                state.stations.get(i).getStationTile().areaChart.getData().add(state.stations.get(i).getStationTile().humidSeries);
             }
         }
     }
@@ -261,18 +280,18 @@ public class MainScene implements Initializable {
     private void makeSeries() {
 
         for (int i = 0; i < state.stations.size(); i++) {
-            state.stations.get(i).stationTile.tempSeries.getData().clear();
-            state.stations.get(i).stationTile.humidSeries.getData().clear();
+            state.stations.get(i).getStationTile().tempSeries.getData().clear();
+            state.stations.get(i).getStationTile().humidSeries.getData().clear();
         }
         for (int i = 0; i < state.stations.size(); i++) {
             if (i < IterationSize()) {
                 for (int j = 0; j < trimmedDataSamples.size(); j++) {
-                    state.stations.get(i).stationTile.tempSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).temperature[i]));
-                    state.stations.get(i).stationTile.humidSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).humidity[i]));
+                    state.stations.get(i).getStationTile().tempSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).temperature[i]));
+                    state.stations.get(i).getStationTile().humidSeries.getData().add(new XYChart.Data<>(xValues[j], trimmedDataSamples.get(j).humidity[i]));
                 }
             } else {
-                state.stations.get(i).stationTile.tempSeries.getData().add(new XYChart.Data<>());
-                state.stations.get(i).stationTile.humidSeries.getData().add(new XYChart.Data<>());
+                state.stations.get(i).getStationTile().tempSeries.getData().add(new XYChart.Data<>());
+                state.stations.get(i).getStationTile().humidSeries.getData().add(new XYChart.Data<>());
             }
         }
     }
@@ -331,7 +350,7 @@ public class MainScene implements Initializable {
 
 
     private int IterationSize() {
-        //TODO solve the hardcoded variable .
+
         //this is number is hard-coded .it shows  the size of Data.
         return Math.min(4, state.stations.size());
     }
@@ -339,7 +358,7 @@ public class MainScene implements Initializable {
 
     public void setChartsUnAnimated() {
         for (int i = 0; i < state.stations.size(); i++) {
-            state.stations.get(i).stationTile.areaChart.setAnimated(false);
+            state.stations.get(i).getStationTile().areaChart.setAnimated(false);
         }
     }
 }

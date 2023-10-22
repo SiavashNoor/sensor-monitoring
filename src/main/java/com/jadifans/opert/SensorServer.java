@@ -9,11 +9,11 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class SensorServer  {
+public class SensorServer extends StateObserver  {
 
     boolean successfulConnection = true;
     Document doc = null;
-    State state = State.getInstance();
+    State state = State.getInstance(this);
     SensorServer(){
     }
 
@@ -62,10 +62,16 @@ public class SensorServer  {
     private String getServerAddress() {
         AtomicReference<StringBuilder> str = new AtomicReference<>(new StringBuilder());
         str.get().append("http://");
-        str.get().append(state.IPAddress);
+        str.get().append(state.getIPAddress());
+
         str.get().append(":");
-        str.get().append(state.PortNumber);
+        str.get().append(state.getPortNumber());
         return str.toString().trim();
+    }
+
+    @Override
+    public void  updateCurrentInstance(State s){
+        state =s;
     }
 }
 

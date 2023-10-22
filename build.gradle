@@ -43,16 +43,20 @@ dependencies {
     implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.1'
         //using this dependency caused me to get the error/ no class def found /
     //implementation 'org.openjfx:javafx-swing:21-ea+5'
-
     implementation group: 'org.openjfx', name: 'javafx-web', version: '19'
     implementation group: 'org.openjfx', name: 'javafx-media', version: '19'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: '19'
     implementation group: 'org.openjfx', name: 'javafx-base', version: '19'
     implementation group: 'org.openjfx', name: 'javafx-controls', version: '19'
     implementation group: 'org.openjfx', name: 'javafx-fxml', version: '19'
+   // implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b180830.0359'
 
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.16.1'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
+   implementation('javax.xml.bind:jaxb-api:2.3.1')
+
+    implementation('org.glassfish.jaxb:jaxb-runtime:2.3.1')
 }
 
 

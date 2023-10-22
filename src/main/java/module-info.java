@@ -21,8 +21,11 @@ module com.jadifans.opert {
     requires  org.jsoup;
     requires com.google.gson;
 
+    requires java.xml;
+    requires java.xml.bind;
+    requires com.sun.xml.bind;
     ////was here:
-    opens com.jadifans.opert to javafx.fxml;
+    opens com.jadifans.opert to javafx.fxml,java.xml.bind;
     exports com.jadifans.opert;
 
 
