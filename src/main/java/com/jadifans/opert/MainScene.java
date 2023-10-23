@@ -337,14 +337,17 @@ public class MainScene extends StateObserver implements Initializable  {
 
     private void trimDataSamples(int stepFactor) {
         trimmedDataSamples.clear();
+
         int size = DataSample.AllDataSamples.size();
-        int lastIndex = size - 1;
-        int remainder = lastIndex % stepFactor;
-        for (int i = 0; i < trimmedListSize; i++) {
-            if (lastIndex - (i * stepFactor + remainder) >= 0) {
-                trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
-                System.out.println("selected indexes:" + (lastIndex - (i * stepFactor + remainder)));
-            } else break;
+        if (size != 0) {
+            int lastIndex = size - 1;
+            int remainder = lastIndex % stepFactor;
+            for (int i = 0; i < trimmedListSize; i++) {
+                if (lastIndex - (i * stepFactor + remainder) >= 0) {
+                    trimmedDataSamples.addFirst(DataSample.AllDataSamples.get(lastIndex - (i * stepFactor + remainder)));
+                    System.out.println("selected indexes:" + (lastIndex - (i * stepFactor + remainder)));
+                } else break;
+            }
         }
     }
 

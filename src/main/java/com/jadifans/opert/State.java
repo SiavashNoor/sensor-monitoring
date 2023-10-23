@@ -55,7 +55,7 @@ public class State implements Serializable{
     }
 
 
-    public static void UseThisInstance(State s,ApplicationSettings as) {
+    public static void UseThisInstance(State s) {
         for(int i=0;i<s.stations.size();i++){
             FXMLLoader loader = new FXMLLoader(State.class.getResource("StationTile.fxml"));
             try {

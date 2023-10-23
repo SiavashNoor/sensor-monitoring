@@ -260,12 +260,11 @@ public class ApplicationSettings extends StateObserver implements Initializable 
         fileChooser.getExtensionFilters().add(fileExtension);
         File file = fileChooser.showSaveDialog(stage);
 
-        if (file.exists()) {
+        if (file!=null) {
             System.out.println("state is being written to the selected file: ...");
             //the object that we want ot write should be Serializable. and the ExportHandler class handles that.
             ExportHandler exportHandler = new ExportHandler(state,file);
             exportHandler.writeObjectToFile();
-
 
         }
 
@@ -281,23 +280,21 @@ public class ApplicationSettings extends StateObserver implements Initializable 
 
         final FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
-        ImportHandler importHandler = new ImportHandler(file);
-        State.UseThisInstance((State)importHandler.ConvertXmlToObject(),this);
-        updateThisStage();
-        System.out.println("this is the state instance in application settings    "+state);
-        System.out.println(state.getChoiceBoxOption());
-        System.out.println(state.getIPAddress());
-
-
+        if(file!=null) {
+            ImportHandler importHandler = new ImportHandler(file);
+            State.UseThisInstance((State) importHandler.ConvertXmlToObject());
+            updateThisStage();
+            System.out.println("this is the state instance in application settings    " + state);
+            System.out.println(state.getChoiceBoxOption());
+            System.out.println(state.getIPAddress());
+        }
     }
 
     private void updateThisStage() {
-
         //to fill again components like textFields or checkboxes;
         setUpComponents();
 
-
-        //yessss you made it : need this to lines to update again the table content :
+        //yessss you made it : need this two lines to update again the table content :
         //first re-instantiate the tableContent then bind it to the table
         tableContent = new SimpleObjectProperty<>(state.tableContent);
         table.itemsProperty().bind(tableContent);
@@ -328,7 +325,6 @@ public class ApplicationSettings extends StateObserver implements Initializable 
         newStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationSettings.class.getResourceAsStream("img/plusIcon.png"))));
         newStage.show();
         mouseEvent.consume();
-
     }
 
     private void setStationAdderData(StationAdder s, int i) {
@@ -366,15 +362,12 @@ public class ApplicationSettings extends StateObserver implements Initializable 
             s.humUpperValue.setDisable(false);
             s.humUpperValue.setText(String.valueOf(station.getHumidity().getUpperThreshold()));
         }
-
-
         s.humHasLowerThreshold.setSelected(station.getHumidity().isIncludeLower());
         if (station.getHumidity().isIncludeLower()) {
             s.humLowerValue.setDisable(false);
             s.humLowerValue.setText(String.valueOf(station.getHumidity().getLowerThreshold()));
         }
         s.humHasAlert.setSelected(station.getHumidity().isHasAlert());
-
     }
 
 
