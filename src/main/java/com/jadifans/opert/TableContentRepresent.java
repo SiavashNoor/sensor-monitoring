@@ -14,7 +14,7 @@ public class TableContentRepresent {
     private String includeHumAlert;
 
 
-    public TableContentRepresent(String stationName, String tempUpperValue, String tempLowerValue,String includeTempAlert, String humLowerValue, String humUpperValue,  String includeHumAlert) {
+    public TableContentRepresent(String stationName, String tempUpperValue, String tempLowerValue,String includeTempAlert,String humUpperValue, String humLowerValue, String includeHumAlert) {
         this.stationName = stationName;
         this.tempUpperValue = tempUpperValue;
         this.tempLowerValue = tempLowerValue;

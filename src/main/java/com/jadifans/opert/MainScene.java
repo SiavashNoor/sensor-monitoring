@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -31,7 +32,6 @@ import java.util.*;
  * and also good to remember that to ignore error in charts set the animation false
  **/
 public class MainScene extends StateObserver implements Initializable  {
-
     boolean isApplicationTerminated = false;
     SensorServer sensorServer = new SensorServer();
     Stage stage;
@@ -43,8 +43,10 @@ public class MainScene extends StateObserver implements Initializable  {
     private final String[] xValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
     int trimmedListSize = 16;
     LinkedList<DataSample> trimmedDataSamples = new LinkedList<>();
+    private final int STATION_SIZE =4;
     int timerTaskDelay = 8000;
     int timerTaskPeriod = 60000;
+
 
     @FXML
     public TilePane tilePane;
@@ -132,8 +134,6 @@ public class MainScene extends StateObserver implements Initializable  {
         Settings.setOnMouseClicked(this::openSettingsWindow);
         githubLink.setOnMouseClicked(this::openGithubLink);
         addTilesToScene();
-
-        //
         State.assignForChanges(this);
     }
 
@@ -207,6 +207,8 @@ public class MainScene extends StateObserver implements Initializable  {
                 }
                 if(exceededCondition1||exceededCondition2){
                     state.stations.get(i).getRoot().setStyle("-fx-background-color: #cc8685;");
+                }else{
+                     state.stations.get(i).getRoot().setStyle("-fx-background-color: #dfdff2;");
                 }
             }
         }
@@ -353,9 +355,8 @@ public class MainScene extends StateObserver implements Initializable  {
 
 
     private int IterationSize() {
-
         //this is number is hard-coded .it shows  the size of Data.
-        return Math.min(4, state.stations.size());
+        return Math.min(STATION_SIZE, state.stations.size());
     }
 
 
@@ -363,6 +364,18 @@ public class MainScene extends StateObserver implements Initializable  {
         for (int i = 0; i < state.stations.size(); i++) {
             state.stations.get(i).getStationTile().areaChart.setAnimated(false);
         }
+    }
+
+
+    public void startUpApplicationWithThisConfig(String configFilePath) {
+        File file = new File(configFilePath);
+        ImportHandler importHandler = new ImportHandler(file);
+        State.UseThisInstance((State) importHandler.ConvertXmlToObject());
+        addTilesToScene();
+        setStationNames();
+        runBackEndTasks();
+        updateCharts();
+
     }
 }
 

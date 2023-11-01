@@ -103,7 +103,7 @@
          <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Opert   v1.1.0">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Opert   v1.3.0">
                      <font>
                         <Font size="11.0" />
                      </font>

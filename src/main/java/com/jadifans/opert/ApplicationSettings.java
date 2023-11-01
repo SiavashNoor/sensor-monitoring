@@ -129,9 +129,7 @@ public class ApplicationSettings extends StateObserver implements Initializable 
         if (ip == null) {
             IPAddressIsOK = false;
         } else {
-            // Pattern class contains matcher() method
-            // to find matching between given IP address
-            // and regular expression.
+
             Matcher m = p.matcher(ip);
             // Return if the IP address
             // matched the ReGex
@@ -225,8 +223,9 @@ public class ApplicationSettings extends StateObserver implements Initializable 
 
 
     public void saveSettings(MouseEvent mouseEvent) {
+        stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
         if (IPAddressIsOK && portNumberFieldIsOK && state.stations != null) {
-            stage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
+
             state.setChoiceBoxOption(getPeriodValueFromChoiceBox());
             state.setIPAddress(ipAddressField.getText());
             state.setPortNumber(portNumberField.getText());
@@ -251,7 +250,9 @@ public class ApplicationSettings extends StateObserver implements Initializable 
                 System.out.println(" there is no stations to be shown please add new stations :");
             }
         }
+
     }
+
 
     private void saveStateToFile(State state, Stage stage) {
 
@@ -277,18 +278,17 @@ public class ApplicationSettings extends StateObserver implements Initializable 
     }
 
     public void importSettings(MouseEvent mouseEvent) {
-
         final FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
         if(file!=null) {
             ImportHandler importHandler = new ImportHandler(file);
             State.UseThisInstance((State) importHandler.ConvertXmlToObject());
             updateThisStage();
-            System.out.println("this is the state instance in application settings    " + state);
-            System.out.println(state.getChoiceBoxOption());
-            System.out.println(state.getIPAddress());
         }
+
     }
+
+
 
     private void updateThisStage() {
         //to fill again components like textFields or checkboxes;
@@ -434,4 +434,8 @@ public class ApplicationSettings extends StateObserver implements Initializable 
     public void exportConfigurationsToFile() {
         saveStateToFile(state, stage);
     }
+
+
+
+
 }

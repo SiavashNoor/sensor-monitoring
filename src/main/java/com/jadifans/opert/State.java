@@ -72,12 +72,6 @@ public class State implements Serializable{
         setInstance(s);
         informObservers();
 
-        System.out.println("this is from unmarshalling :     ");
-        System.out.println(state.getIPAddress());
-        System.out.println(state.getPortNumber());
-        System.out.println("this is the unmarsharller instance  of state s :  "+s);
-        System.out.println("this is the state instance in State after setInstance     "+state);
-        System.out.println("-------------------------");
     }
 
     private static void informObservers() {

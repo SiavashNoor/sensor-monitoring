@@ -6,7 +6,7 @@ module com.jadifans.opert {
     requires javafx.fxml;
     //newly added :
 
-     requires javafx.base;
+    requires javafx.base;
    requires javafx.graphics;
     requires javafx.media;
 
@@ -20,6 +20,7 @@ module com.jadifans.opert {
     requires org.kordamp.ikonli.javafx;
     requires  org.jsoup;
     requires com.google.gson;
+
 
     requires java.xml;
     requires java.xml.bind;
