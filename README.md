@@ -1,4 +1,4 @@
-# sensor-monitoring
+# sensor-monitoring ( OPERT PROJECT )
 We have really expensive sattelite communication devices at our office which are in different places ,outdoor and indoor ,
 we had to track the teperature and humidity for each device keep them in the recommeded ranges . so I started to develope a software
 for that to meet our demands  : Monitoring Temperature and Humidity of crucial ones.
